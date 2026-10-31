@@ -17,41 +17,60 @@ from . import graphs, ledger
 from .cognition import review_receipt
 from .domain import GraphInput, LedgerInput, RunSpec, canonical, digest, json_object
 from .examples import graph_example, initial_prompt, ledger_example
+from .hosting import HostedPolicy, Principal, data_root, hosted_mode, private_store, submit_hosted
 from .providers import ProviderConfig, load_environment
 from .service import parse_record, replay
+from .spending import SpendLedger
 from .storage import Store
 from .worker import launch
+
+
+def current_principal() -> Principal:
+    claims = dict(st.user)
+    return HostedPolicy.from_env().authenticate(claims.get("is_logged_in") is True, claims)
+
+
+def check_store_access(store: Store) -> None:
+    if hosted_mode() and private_store(current_principal()).root != store.root:
+        raise ValueError("private_store_access_denied")
 
 
 def start_button(
     lab: Literal["ledger", "graph", "revision"],
     payload: dict[str, JsonValue],
-    store: Store,
+    store: Store | None,
     provider: str,
     model: str,
 ) -> None:
+    if store is None:
+        st.info("Public demo: explore the exact checks and recorded runs. Live experiments require an authorized login.")
+        return
     st.caption("Live generation · up to 12 requests · 5 minutes · 2,048 output tokens/request")
     if st.button("Run with live model", type="primary", key="run-" + lab):
         try:
-            config = replace(
-                ProviderConfig.from_env(provider, model),
-                output_mode=cast(
-                    Literal["json_prompt", "json_schema"],
-                    st.session_state.get("output_mode", "json_prompt"),
-                ),
-            )
+            check_store_access(store)
             spec = RunSpec(lab=lab, payload=payload)
-            run_id = store.enqueue(uuid.uuid4().hex, json_object(spec), config.public())
-            launch(store, run_id)
+            if hosted_mode():
+                run_id = submit_hosted(current_principal(), spec, uuid.uuid4().hex)
+            else:
+                config = replace(
+                    ProviderConfig.from_env(provider, model),
+                    output_mode=cast(
+                        Literal["json_prompt", "json_schema"],
+                        st.session_state.get("output_mode", "json_prompt"),
+                    ),
+                )
+                run_id = store.enqueue(uuid.uuid4().hex, json_object(spec), config.public())
+                launch(store, run_id)
             st.session_state["selected_run"] = run_id
             st.success("Run started. Open Run inspector to follow progress and inspect the result.")
         except (ValueError, ValidationError, OSError):
             st.error(
-                "Cannot start: check provider/model/key settings, input, and whether a run is already active."
+                "Cannot start: check access, provider configuration, input, and available run capacity."
             )
 
 
-def ledger_page(store: Store, provider: str, model: str) -> None:
+def ledger_page(store: Store | None, provider: str, model: str) -> None:
     st.title("01 / What does the evidence establish?")
     st.write(
         "A total of 100 can conceal a deficit. A checked total does not settle every question about its parts."
@@ -64,6 +83,7 @@ def ledger_page(store: Store, provider: str, model: str) -> None:
             "Editable input · matching units and snapshots matter",
             json.dumps(json_object(data), indent=2),
             height=240,
+            max_chars=32768,
             key="ledger-" + preset + actor,
         )
     try:
@@ -100,7 +120,7 @@ def ledger_page(store: Store, provider: str, model: str) -> None:
         )
 
 
-def graph_page(store: Store, provider: str, model: str) -> None:
+def graph_page(store: Store | None, provider: str, model: str) -> None:
     st.title("02 / Can locally valid pieces fit together?")
     st.write(
         "A→B says +1. B→C says +1. A→C says +3. Each pair works; together they cannot describe one set of values."
@@ -110,6 +130,7 @@ def graph_page(store: Store, provider: str, model: str) -> None:
             "Exact difference constraints · only marked edges may be repaired",
             json.dumps(json_object(graph_example()), indent=2),
             height=300,
+            max_chars=32768,
         )
     try:
         data = parse_record(raw, GraphInput)
@@ -131,18 +152,20 @@ def graph_page(store: Store, provider: str, model: str) -> None:
         )
 
 
-def revision_page(store: Store, provider: str, model: str) -> None:
+def revision_page(store: Store | None, provider: str, model: str) -> None:
     st.title("03 / Can an agent improve without approving itself?")
     st.write(
         "Observe → revise → compare → review. Nine requests test a single child against its parent; ties and failures remain visible."
     )
-    active = store.active_prompt()
+    if store is not None:
+        check_store_access(store)
+    active = store.active_prompt() if store is not None else None
     parent = active or json_object(initial_prompt())
     st.caption("Parent: " + digest(parent))
     with st.expander("Protected core", expanded=False):
         st.write(parent["core"])
     instructions = st.text_area(
-        "Editable parent instructions", str(parent["instructions"]), height=140
+        "Editable parent instructions", str(parent["instructions"]), height=140, max_chars=4000
     )
     if instructions != parent["instructions"]:
         parent = {
@@ -177,6 +200,11 @@ def show_review(receipt: dict[str, JsonValue]) -> None:
 
 @st.fragment(run_every="2s")
 def inspector(store: Store) -> None:
+    try:
+        check_store_access(store)
+    except ValueError:
+        st.warning("Your live session expired or access was revoked. Log in again to inspect private runs.")
+        return
     rows = store.list_runs()
     if not rows:
         st.info("No runs yet. Start a live lab or inspect an included replay bundle below.")
@@ -261,8 +289,11 @@ def overview() -> None:
         "**Five-minute tour:** evidence → obstruction → revision → receipt. Start with the checked examples, then run your chosen live model."
     )
     st.caption(
-        "Local single-user research software. Permission controls are simulated roles, not production authentication."
+        "The ledger actor is a simulation. Hosted live experiments require a separate authorized login."
     )
+    if hosted_mode():
+        st.write("**Anomalon:** Owed is a working research exhibit on the path to Omega Engine V1.0RC. The broader Pre-Genesis → Genesis → quantum mechanics → Omega Engine story belongs to the Anomalon home; this workbench demonstrates three scoped ideas.")
+        st.link_button("Explore Owed on GitHub", "https://github.com/dbccpage/owed-ai")
     proof = Path("evidence/lean-verification.json")
     with st.expander("Formal supplement and research lineage"):
         st.write(
@@ -293,26 +324,56 @@ def main() -> None:
     st.set_page_config(
         page_title="Owed · Accountable Agent Workbench", page_icon="◈", layout="wide"
     )
-    store = Store(Path(os.getenv("WORKBENCH_DATA_DIR", "data")))
-    store.recover()
+    try:
+        hosted = hosted_mode()
+        policy = HostedPolicy.from_env() if hosted else None
+    except ValueError:
+        st.error("Invalid hosting configuration. Live access is disabled.")
+        st.stop()
+    store: Store | None = None
+    if not hosted:
+        store = Store(data_root())
+    elif policy is not None and policy.live_enabled:
+        try:
+            store = private_store(current_principal())
+        except ValueError:
+            pass
+    if store is not None:
+        store.recover()
     with st.sidebar:
         st.title("◈ Owed")
         page = st.radio(
             "Workbench", ["Overview", "Evidence", "Composition", "Revision", "Run inspector"]
         )
         st.divider()
-        names = ["openrouter", "anthropic", "compatible", "local"]
-        configured = os.getenv("WORKBENCH_PROVIDER", "openrouter")
-        provider = st.selectbox(
-            "Provider", names, index=names.index(configured) if configured in names else 0
-        )
-        model = st.text_input("Explicit model ID", value=os.getenv("WORKBENCH_MODEL", ""))
-        st.selectbox(
-            "Output mode",
-            ["json_schema", "json_prompt"],
-            key="output_mode",
-            help="Native JSON schema requires model support. JSON prompt mode also uses strict local validation.",
-        )
+        if hosted and policy is not None:
+            provider, model = "openrouter", policy.model
+            st.caption("Public demo · recorded evidence is available without an account.")
+            if policy.live_enabled:
+                if dict(st.user).get("is_logged_in") is True:
+                    if st.button("Log out"):
+                        st.logout()
+                    if store is None:
+                        st.warning("This login is not authorized or has expired.")
+                    else:
+                        st.success("Authorized live workspace")
+                        st.caption("Model: " + model)
+                        st.json(SpendLedger(data_root() / "control").usage(current_principal().owner))
+                elif st.button("Log in for live experiments"):
+                    st.login()
+            else:
+                st.caption("Live experiments are currently disabled.")
+        else:
+            names = ["openrouter", "anthropic", "compatible", "local"]
+            configured = os.getenv("WORKBENCH_PROVIDER", "openrouter")
+            provider = st.selectbox(
+                "Provider", names, index=names.index(configured) if configured in names else 0
+            )
+            model = st.text_input("Explicit model ID", value=os.getenv("WORKBENCH_MODEL", ""))
+            st.selectbox(
+                "Output mode", ["json_schema", "json_prompt"], key="output_mode",
+                help="Native JSON schema requires model support. Both modes use host validation.",
+            )
         st.caption(
             "Credentials stay in your environment or ignored .env. No request is made until you start a run."
         )
@@ -326,7 +387,8 @@ def main() -> None:
         revision_page(store, provider, model)
     else:
         st.title("Run inspector")
-        inspector(store)
+        if store is not None:
+            inspector(store)
         samples = sorted(Path("examples/live").glob("*/*.json"))
         if samples:
             with st.expander("Recorded live demonstrations · no API key needed"):
@@ -344,7 +406,7 @@ def main() -> None:
                         "Integrity and semantic replay matched:",
                         digest(bundle["receipt"]) == bundle["sha256"] and replay(bundle["receipt"]),
                     )
-        uploaded = st.file_uploader("Verify an exported bundle without a model", type="json")
+        uploaded = None if hosted else st.file_uploader("Verify an exported bundle without a model", type="json")
         if uploaded and st.button("Replay uploaded bundle"):
             try:
                 bundle = json.loads(uploaded.getvalue())

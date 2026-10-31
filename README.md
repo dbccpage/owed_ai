@@ -47,6 +47,12 @@ That model was available during the recorded validation; availability can change
 
 ## Reproduce a result
 
+For a public demo with Google-authenticated live experiments, see the
+[Render deployment guide](docs/deployment.md). The Blueprint starts with live access
+disabled. Hosted operators receive isolated stores and share transactional request
+and spending controls. `workbench.anomalon.com` is the planned product address;
+`anomalon.com` remains the future home of the broader Omega Engine programme.
+
 ```powershell
 uv run anomalon check ledger
 uv run anomalon check graph
@@ -99,6 +105,6 @@ On restricted Windows runners, pytest may need a writable `--basetemp`; Streamli
 
 See [validation evidence](evidence/README.md), the [five-minute tour](docs/walkthrough.md), [architecture](docs/architecture.md), and [research crosswalk](docs/source-crosswalk.md). The original [experiment proposal](proof_knowledge_obligations_mvp.md) is preserved.
 
-This is a local, single-user research MVP. Its finite results do not establish general epistemic completeness, production security, universal LGGR claims, or autonomous scientific discovery. No GitHub remote or deployment is required.
+This is a research MVP with local operation and an optional single-instance hosted mode. Its finite results do not establish general epistemic completeness, audited production security, universal LGGR claims, or autonomous scientific discovery. No GitHub remote or deployment is required for local use.
 
 The first [Cognitive Optimization slice](docs/cognitive-optimization.md) pairs a short question/result/next-check presentation with a deterministic audit of structured proposal/evidence mismatches. It leaves original receipts unchanged and treats human-comprehension benefits as hypotheses to test.

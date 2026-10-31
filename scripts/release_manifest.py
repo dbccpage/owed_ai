@@ -24,10 +24,13 @@ def main():
             ".gitattributes",
             ".env.example",
             "app.py",
+            "Dockerfile",
+            ".dockerignore",
+            "render.yaml",
             "proof_knowledge_obligations_mvp.md",
         )
     ]
-    for directory in ("src", "tests", "scripts", "docs", "fixtures", "examples", "evidence"):
+    for directory in ("src", "tests", "scripts", "docs", "fixtures", "examples", "evidence", ".github"):
         paths.extend(
             p
             for p in (ROOT / directory).rglob("*")
