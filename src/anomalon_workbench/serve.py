@@ -49,6 +49,7 @@ def main() -> None:
             os.setgroups([])
             os.setgid(account.pw_gid)
             os.setuid(account.pw_uid)
+            os.environ["HOME"] = account.pw_dir
     os.environ.setdefault("WORKBENCH_MODE", "hosted")
     if not hosted_mode():
         raise ValueError("serve_requires_hosted_mode")
@@ -74,6 +75,7 @@ def main() -> None:
         "--server.headless=true", "--browser.gatherUsageStats=false",
         "--server.enableCORS=true", "--server.enableXsrfProtection=true",
         "--server.enableStaticServing=false", "--server.maxUploadSize=1",
+        "--client.showErrorDetails=false",
     ]
     cli.main()
 

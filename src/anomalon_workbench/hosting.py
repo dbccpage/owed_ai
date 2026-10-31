@@ -57,10 +57,15 @@ class HostedPolicy(Record):
         enabled = os.getenv("WORKBENCH_LIVE_ENABLED", "false")
         if enabled not in ("true", "false"):
             raise ValueError("invalid_live_switch")
+        subjects = json.loads(os.getenv("WORKBENCH_ALLOWED_SUBJECTS", "[]"))
+        if not isinstance(subjects, list) or any(
+            not isinstance(s, str) or not s.strip() for s in subjects
+        ):
+            raise ValueError("subject_list_required")
         policy = cls(
             live_enabled=enabled == "true",
             issuer=os.getenv("WORKBENCH_AUTH_ISSUER", ""),
-            subjects=tuple(json.loads(os.getenv("WORKBENCH_ALLOWED_SUBJECTS", "[]"))),
+            subjects=tuple(subjects),
             model=os.getenv("WORKBENCH_HOSTED_MODEL", "openai/gpt-4.1-mini"),
             **{
                 field: int(os.getenv("WORKBENCH_" + field.upper(), str(default)))

@@ -33,12 +33,20 @@ def main():
         uid = next(line for line in status.splitlines() if line.startswith("Uid:"))
         assert set(uid.split()[1:]) == {"10001"}
         command("exec", "--user", "10001", name, "/app/.venv/bin/python", "-c",
+                "from streamlit.testing.v1 import AppTest; "
+                "a=AppTest.from_file('/app/app.py').run(); assert not a.exception; "
+                "a.sidebar.radio[0].set_value('Run inspector').run(); assert not a.exception; "
+                "assert not any(s.label=='Run' for s in a.selectbox)")
+        command("exec", "--user", "10001", name, "/app/.venv/bin/python", "-c",
                 "from pathlib import Path; Path('/var/data/owed/persistence-check').write_text('retained')")
         command("restart", name)
         assert command("exec", "--user", "10001", name, "cat",
                        "/var/data/owed/persistence-check") == "retained"
-        print(json.dumps({"health": True, "unprivileged_server": True, "persistent_volume": True,
+        print(json.dumps({"health": True, "public_ui": True, "unprivileged_server": True, "persistent_volume": True,
                           "scope": "Real Docker image, public mode, no provider credentials"}))
+    except Exception:
+        print(command("logs", name))  # This test container receives no real credentials.
+        raise
     finally:
         subprocess.run(["docker", "rm", "-f", name], check=False, capture_output=True)
         subprocess.run(["docker", "volume", "rm", name], check=False, capture_output=True)

@@ -67,6 +67,13 @@ def test_tenant_store_and_prompt_isolation(hosted):
     with pytest.raises(FileNotFoundError):
         bob.read(secret_artifact)
     assert bob.active_prompt() is None
+    bob.cancel(run)
+    assert not alice.cancelled(run)
+    assert alice.claim(run, 1)
+    alice.finish(run, "completed", {"result": {"eligible": True, "child": {"instructions": "test-only candidate"}}})
+    alice.admit(run, "operator")
+    assert alice.active_prompt()["instructions"] == "test-only candidate"
+    assert bob.active_prompt() is None
     with pytest.raises(ValueError):
         private_store(Principal(owner="../alice", expires=int(time.time()) + 60))
 

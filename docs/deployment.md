@@ -46,10 +46,17 @@ The ledger's viewer/operator toggle remains a mathematical simulation.
 5. Set `OPENROUTER_API_KEY` to a **dedicated, provider-limited deployment key**.
    Configure its credit limit/reset in OpenRouter; the application never modifies
    keys or account settings. Keep personal development keys out of this deployment.
-6. Set `WORKBENCH_ALLOWED_SUBJECTS` to a JSON list of approved Google subject IDs.
-   Set `WORKBENCH_LIVE_ENABLED=true` and redeploy. An empty list denies all operators.
+6. Set `WORKBENCH_LIVE_ENABLED=true` and redeploy with the allowlist still empty.
+   After Google login, the account-identifier expander shows that user's own subject
+   ID. Verify the operator's identity out of band, then set `WORKBENCH_ALLOWED_SUBJECTS`
+   to a JSON list of approved subject IDs and redeploy. An empty list denies all operators.
    Complete an actual Google sign-in and verify the identity/allowlist before sharing
    live access. Google account configuration is not replaced by our loopback fixture.
+
+Logout clears the current Streamlit session and its browser identity cookie. Existing
+tabs can retain their previously authenticated session until token expiry; it is not
+a global Google-session revocation mechanism. Removing a subject from the server
+allowlist and redeploying revokes access across application processes.
 
 The server model is `openai/gpt-4.1-mini`, native schema mode, through OpenRouter's
 fixed HTTPS endpoint. Hosted visitors cannot override credentials, URLs, provider,

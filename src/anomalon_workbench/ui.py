@@ -355,6 +355,9 @@ def main() -> None:
                         st.logout()
                     if store is None:
                         st.warning("This login is not authorized or has expired.")
+                        with st.expander("Account identifier for access requests"):
+                            st.caption("Share this subject identifier with the workbench operator. It does not grant access by itself.")
+                            st.code(str(dict(st.user).get("sub", "unavailable")))
                     else:
                         st.success("Authorized live workspace")
                         st.caption("Model: " + model)
@@ -375,7 +378,8 @@ def main() -> None:
                 help="Native JSON schema requires model support. Both modes use host validation.",
             )
         st.caption(
-            "Credentials stay in your environment or ignored .env. No request is made until you start a run."
+            "No model request is made until you start a live experiment."
+            if hosted else "Credentials stay in your environment or ignored .env. No request is made until you start a run."
         )
     if page == "Overview":
         overview()
