@@ -1,0 +1,6 @@
+{
+  "endpoint": "GET /api/v1/key",
+  "http_status": 401,
+  "error_code": 401,
+  "message": "API key expired."
+}

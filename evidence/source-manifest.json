@@ -1,0 +1,52 @@
+{
+  "source_root": "C:\\Users\\a343o\\source\\repos\\anomalon",
+  "date": "2026-10-31",
+  "scope": "Documents inspected as design provenance, not imported implementations or validation of source estate",
+  "sources": [
+    {
+      "path": "omega_engine_pfp/README.md",
+      "sha256": "daf69315df3c0743439cec7a3ed1d445ba6e53b483e53fa049488b7e96867ebe"
+    },
+    {
+      "path": "omega_engine_pfp/CONTEXT.md",
+      "sha256": "ac5a7c88d0a185dcf85efde4ed47f97b37b434aa3ed457aae324cc0c8ce2f5bb"
+    },
+    {
+      "path": "omega_engine_prompt_civilization/documentation/README.md",
+      "sha256": "e7f3c41e63d54fe90cb08850d71ce693632485ca6543d765d632025e61c29742"
+    },
+    {
+      "path": "omega_engine_prompt_civilization/documentation/curriculum/400_prompt_civ_foundations/README.md",
+      "sha256": "06347bf89d77e6580a061844047910e40a63b97e187eb5fe9ea18cf45ca1e5b1"
+    },
+    {
+      "path": "omega_engine_epistemic_immune_system/antiskills/README.md",
+      "sha256": "312796e77d508c1668199e7e610e5285a2e8bc1837707098570c76730d146449"
+    },
+    {
+      "path": "omega_engine_governance/README.md",
+      "sha256": "5ffeae3d187e1c8d4c61e5e7dc7581cd8e08e6718f5b55ecee47b5ac51f355a4"
+    },
+    {
+      "path": "omega_engine_governance/contracts/contracts_pfp/lggr_classify_request_v1.contract.yaml",
+      "sha256": "9cb9f61b4ac11a58defc10beb68650a51a07fbeeb44e4a6e4fc811c7e0a5b6ef"
+    },
+    {
+      "path": "omega_engine_pfp/infrastructure/adapters/mssn_research/genesis_crosswalk.md",
+      "sha256": "f41255db402a73a8a20cd6c68aa0c650fee619fe8d790e8bb493159ab930e538"
+    },
+    {
+      "path": "omega_engine_pfp/tests/demo_004/b_cohomology/c011_cycle_rank_ladder_coboundary_repair/README.md",
+      "sha256": "f2c7bc0a5303b9cabdd3f5b845e207c9261173a7e0d3a196b652e91d1a142cbb"
+    },
+    {
+      "path": "omega_engine_cognitive_operations/documentation/cognitive_warfare.md",
+      "sha256": "7fb01457c58ae0e225a61582b693e251d4643864a24a5a72dec974dd09d65a0d"
+    },
+    {
+      "path": "omega_engine_cognitive_operations/documentation/cognitive_obstruction_modeling.md",
+      "sha256": "9d5f5030a3ca62d1c12cf6dfb6a513c1df964de10daebd1dfa0e2c1a29f9ab43"
+    }
+  ],
+  "local_proposal_sha256": "17062c40b6011e582b56d364d85f2ce07549ab8c73747b80ea14e6387a97859f"
+}

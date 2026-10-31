@@ -1,0 +1,6 @@
+name = "AnomalonLedger"
+version = "0.0.1"
+defaultTargets = ["Ledger"]
+
+[[lean_lib]]
+name = "Ledger"

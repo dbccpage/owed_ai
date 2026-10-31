@@ -218,3 +218,23 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Owed workbench local data and exact-check artifacts
+.env
+.env.*
+!.env.example
+.venv/
+.uv-cache/
+__pycache__/
+.pytest_cache/
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+data/
+dist/
+lean/.lake/
+*.olean
+*.ilean
+*.trace
+*.log

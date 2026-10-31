@@ -1,0 +1,13 @@
+[
+  {"case":"total-only", "expected":"underdetermined with mixed witnesses", "test":"test_ledger_branches"},
+  {"case":"matching-positive", "expected":"supported", "test":"test_ledger_branches"},
+  {"case":"matching-negative", "expected":"refuted", "test":"test_ledger_branches"},
+  {"case":"other-snapshot", "expected":"open obligation; no discharge", "test":"test_counts_scope_and_wrong_actor"},
+  {"case":"wrong-units", "expected":"not_evaluated; denied", "test":"test_frozen_fixtures"},
+  {"case":"contradictory-observations", "expected":"inconsistent; denied", "test":"test_contradiction_and_corrupted_witnesses"},
+  {"case":"proof-target-mismatch", "expected":"underdetermined despite checked total", "test":"test_proposals_and_replay"},
+  {"case":"new-premise-equivalent-to-target", "expected":"proposal premise adds no accepted observation", "test":"test_unaccepted_premise_is_not_evidence"},
+  {"case":"changed-bytes-old-receipt", "expected":"artifact_integrity_failure", "test":"test_store_idempotence_tamper_and_recovery"},
+  {"case":"supported-wrong-actor", "expected":"supported plus denied authorization", "test":"test_counts_scope_and_wrong_actor"},
+  {"case":"checker-timeout-or-crash", "expected":"not_evaluated, never refuted", "test":"test_checker_failure"}
+]

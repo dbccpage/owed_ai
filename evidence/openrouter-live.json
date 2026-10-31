@@ -1,0 +1,64 @@
+{
+  "attempt": "20261031T193654Z-c432c060",
+  "provider": {
+    "provider": "openrouter",
+    "model": "openai/gpt-4.1-mini",
+    "base_url": "https://openrouter.ai/api/v1",
+    "output_mode": "json_schema",
+    "key_env": "OPENROUTER_API_KEY"
+  },
+  "results": [
+    {
+      "lab": "ledger",
+      "run_id": "f83715b6d44a48a6a02d1a146565d3b4",
+      "status": "completed",
+      "worker_exit_code": 0,
+      "requests": 1,
+      "replay_matched": true,
+      "receipt_sha256": "1f19d2c46131c9ea0bae700b38af7a4edcc505af6533d4346f2639f7ddc0eeba",
+      "elapsed_seconds": 2.719,
+      "progress_event_count": 4,
+      "cognitive_review_recorded": true,
+      "reported_input_tokens": 577,
+      "reported_output_tokens": 198,
+      "reported_cost_usd": 0.0005476,
+      "execution_error": null
+    },
+    {
+      "lab": "graph",
+      "run_id": "88ce7575d71944cda39ed1fd3cf74723",
+      "status": "completed",
+      "worker_exit_code": 0,
+      "requests": 1,
+      "replay_matched": true,
+      "receipt_sha256": "3ff53b96bebf8bfc9fc5e1bd740ae6b9f5a787f9088ade47cf4809667c146d49",
+      "elapsed_seconds": 2.281,
+      "progress_event_count": 4,
+      "cognitive_review_recorded": true,
+      "reported_input_tokens": 512,
+      "reported_output_tokens": 192,
+      "reported_cost_usd": 0.000512,
+      "execution_error": null
+    },
+    {
+      "lab": "revision",
+      "run_id": "c7ffb81958b149c4950e7693cd6c8455",
+      "status": "completed",
+      "worker_exit_code": 0,
+      "requests": 9,
+      "replay_matched": true,
+      "receipt_sha256": "af89109c9df084362e008312e88753d83e1e1a24f9a5dd6449382fbae17d78c2",
+      "elapsed_seconds": 19.359,
+      "progress_event_count": 19,
+      "cognitive_review_recorded": true,
+      "reported_input_tokens": 5908,
+      "reported_output_tokens": 1837,
+      "reported_cost_usd": 0.0053024,
+      "execution_error": null
+    }
+  ],
+  "requested_lab": "all",
+  "requested_scope_passed": true,
+  "execution_path": "SQLite queue -> separate Python worker -> provider -> persisted receipt -> offline replay",
+  "scope": "These recorded runs only; fresh generation is nondeterministic. Unattempted labs are not validated."
+}

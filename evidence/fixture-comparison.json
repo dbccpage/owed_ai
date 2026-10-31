@@ -1,0 +1,189 @@
+{
+  "cases": [
+    {
+      "id": "total-only",
+      "expected": "underdetermined",
+      "proof_promotion": "supported",
+      "checklist": "underdetermined",
+      "executable": "underdetermined",
+      "authorized": false,
+      "witnesses_checked": true
+    },
+    {
+      "id": "positive",
+      "expected": "supported",
+      "proof_promotion": "supported",
+      "checklist": "supported",
+      "executable": "supported",
+      "authorized": true,
+      "witnesses_checked": true
+    },
+    {
+      "id": "negative",
+      "expected": "refuted",
+      "proof_promotion": "supported",
+      "checklist": "refuted",
+      "executable": "refuted",
+      "authorized": false,
+      "witnesses_checked": true
+    },
+    {
+      "id": "stale",
+      "expected": "underdetermined",
+      "proof_promotion": "supported",
+      "checklist": "underdetermined",
+      "executable": "underdetermined",
+      "authorized": false,
+      "witnesses_checked": true
+    },
+    {
+      "id": "unit-error",
+      "expected": "not_evaluated",
+      "proof_promotion": "not_evaluated",
+      "checklist": "not_evaluated",
+      "executable": "not_evaluated",
+      "authorized": false,
+      "witnesses_checked": true
+    },
+    {
+      "id": "contradiction",
+      "expected": "inconsistent",
+      "proof_promotion": "not_evaluated",
+      "checklist": "inconsistent",
+      "executable": "inconsistent",
+      "authorized": false,
+      "witnesses_checked": true
+    },
+    {
+      "id": "predicate-mismatch",
+      "expected": "underdetermined",
+      "proof_promotion": "supported",
+      "checklist": "underdetermined",
+      "executable": "underdetermined",
+      "authorized": false,
+      "witnesses_checked": true
+    },
+    {
+      "id": "wrong-actor",
+      "expected": "supported",
+      "proof_promotion": "supported",
+      "checklist": "supported",
+      "executable": "supported",
+      "authorized": false,
+      "witnesses_checked": true
+    },
+    {
+      "id": "boolean-observation",
+      "expected": "supported",
+      "proof_promotion": "supported",
+      "checklist": "supported",
+      "executable": "supported",
+      "authorized": false,
+      "witnesses_checked": true
+    },
+    {
+      "id": "outside-model",
+      "expected": "inconsistent",
+      "proof_promotion": "not_evaluated",
+      "checklist": "inconsistent",
+      "executable": "inconsistent",
+      "authorized": false,
+      "witnesses_checked": true
+    }
+  ],
+  "metrics": {
+    "proof_promotion": {
+      "correct": {
+        "numerator": 4,
+        "denominator": 10
+      },
+      "unsupported_acceptance": {
+        "numerator": 4,
+        "denominator": 7
+      },
+      "supported": {
+        "numerator": 3,
+        "denominator": 3
+      },
+      "refuted": {
+        "numerator": 0,
+        "denominator": 1
+      },
+      "underdetermined": {
+        "numerator": 0,
+        "denominator": 3
+      },
+      "inconsistent": {
+        "numerator": 0,
+        "denominator": 2
+      },
+      "not_evaluated": {
+        "numerator": 1,
+        "denominator": 1
+      }
+    },
+    "checklist": {
+      "correct": {
+        "numerator": 10,
+        "denominator": 10
+      },
+      "unsupported_acceptance": {
+        "numerator": 0,
+        "denominator": 7
+      },
+      "supported": {
+        "numerator": 3,
+        "denominator": 3
+      },
+      "refuted": {
+        "numerator": 1,
+        "denominator": 1
+      },
+      "underdetermined": {
+        "numerator": 3,
+        "denominator": 3
+      },
+      "inconsistent": {
+        "numerator": 2,
+        "denominator": 2
+      },
+      "not_evaluated": {
+        "numerator": 1,
+        "denominator": 1
+      }
+    },
+    "executable": {
+      "correct": {
+        "numerator": 10,
+        "denominator": 10
+      },
+      "unsupported_acceptance": {
+        "numerator": 0,
+        "denominator": 7
+      },
+      "supported": {
+        "numerator": 3,
+        "denominator": 3
+      },
+      "refuted": {
+        "numerator": 1,
+        "denominator": 1
+      },
+      "underdetermined": {
+        "numerator": 3,
+        "denominator": 3
+      },
+      "inconsistent": {
+        "numerator": 2,
+        "denominator": 2
+      },
+      "not_evaluated": {
+        "numerator": 1,
+        "denominator": 1
+      }
+    }
+  },
+  "fixture_sha256": "1ae6f2b707b3073393329c4981f8f162fbc3cd6d3fef644de2f119d3cfafb221",
+  "interpretation": "The independent checklist and executable obligations agree on these finite cases. No superiority claim.",
+  "additional_acceptance": "Premise injection, receipt tampering, checker timeout/crash and provider failure are asserted in tests/test_runs.py and tests/test_checkers.py."
+}

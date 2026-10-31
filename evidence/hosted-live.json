@@ -1,0 +1,58 @@
+{
+  "scope": "Local signed-token OIDC fixture + real browser + real OpenRouter worker requests; not a Google/Render/DNS validation",
+  "results": [
+    {
+      "lab": "graph",
+      "status": "completed",
+      "receipt_sha256": "28ab055765cc6b94e4a4fe6f4680758daac4292c8c104fea42a8a80a21728054",
+      "replay_matched": true,
+      "requests": 1,
+      "reported_cost_usd": 0.0004816,
+      "parent_correct": null,
+      "child_correct": null,
+      "outcome": null,
+      "admitted": null
+    },
+    {
+      "lab": "ledger",
+      "status": "completed",
+      "receipt_sha256": "f76b0b3700cea5686035110a81c764bf94d093d0edc37ea254ac25e4e9b2df2b",
+      "replay_matched": true,
+      "requests": 1,
+      "reported_cost_usd": 0.0005268,
+      "parent_correct": null,
+      "child_correct": null,
+      "outcome": null,
+      "admitted": null
+    },
+    {
+      "lab": "revision",
+      "status": "completed",
+      "receipt_sha256": "be34f6a73881c71538fc227bc2f2411667b5f8124f605e1fcee6ae9f12dd267e",
+      "replay_matched": true,
+      "requests": 9,
+      "reported_cost_usd": 0.005712,
+      "parent_correct": 4,
+      "child_correct": 3,
+      "outcome": "regressed",
+      "admitted": false
+    }
+  ],
+  "operator_usage": [
+    {
+      "utc_day": "2026-10-31",
+      "requests": 0,
+      "charged_microdollars": 0,
+      "uncertain_reservations": 0,
+      "halted": false
+    },
+    {
+      "utc_day": "2026-10-31",
+      "requests": 11,
+      "charged_microdollars": 6724,
+      "uncertain_reservations": 0,
+      "halted": false
+    }
+  ],
+  "private_data_exported": false
+}

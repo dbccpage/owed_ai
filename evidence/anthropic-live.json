@@ -1,0 +1,33 @@
+{
+  "provider": {
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "base_url": "https://api.anthropic.com/v1",
+    "output_mode": "json_schema",
+    "key_env": "ANTHROPIC_API_KEY"
+  },
+  "results": [
+    {
+      "lab": "ledger",
+      "status": "completed",
+      "requests": 1,
+      "replay_matched": true,
+      "receipt_sha256": "33a42511342e8a63c6cd9187175afdc1b61b5ded05d178fe31c44b9a01512893"
+    },
+    {
+      "lab": "graph",
+      "status": "completed",
+      "requests": 1,
+      "replay_matched": true,
+      "receipt_sha256": "8e9111f843f6b5d92a6a51e830e1015b9d0b6ec2bdd51713a12959973ad787db"
+    },
+    {
+      "lab": "revision",
+      "status": "completed",
+      "requests": 9,
+      "replay_matched": true,
+      "receipt_sha256": "41fc2014e6cf2d99277ed6d344dd1d11187944be18d3a8ed6ea25be2b587ff9f"
+    }
+  ],
+  "scope": "These recorded runs only; fresh generation is nondeterministic"
+}

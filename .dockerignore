@@ -1,0 +1,21 @@
+# Allowlist: .env, private stores, caches, local transcripts and Git never enter context.
+*
+!Dockerfile
+!.dockerignore
+!pyproject.toml
+!uv.lock
+!README.md
+!LICENSE
+!app.py
+!src/
+!src/**
+src/**/__pycache__/
+!examples/
+!examples/live/
+!examples/live/**
+!evidence/
+!evidence/lean-verification.json
+!lean/
+!lean/Ledger.lean
+!lean/lean-toolchain
+!lean/lakefile.toml

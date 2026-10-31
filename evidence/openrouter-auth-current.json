@@ -1,0 +1,6 @@
+{
+  "endpoint": "GET /api/v1/key",
+  "http_status": 200,
+  "error_code": null,
+  "message": "Authenticated"
+}

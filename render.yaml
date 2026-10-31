@@ -1,0 +1,50 @@
+services:
+  - type: web
+    name: owed-workbench
+    runtime: docker
+    plan: 1c-2g
+    region: virginia
+    numInstances: 1
+    autoDeployTrigger: off
+    healthCheckPath: /_stcore/health
+    disk:
+      name: owed-private-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: WORKBENCH_MODE
+        value: hosted
+      - key: WORKBENCH_LIVE_ENABLED
+        value: "false"
+      - key: WORKBENCH_DATA_DIR
+        value: /var/data/owed
+      - key: WORKBENCH_PUBLIC_URL
+        value: https://workbench.anomalon.com
+      - key: WORKBENCH_AUTH_ISSUER
+        value: https://accounts.google.com
+      - key: WORKBENCH_AUTH_METADATA_URL
+        value: https://accounts.google.com/.well-known/openid-configuration
+      - key: WORKBENCH_ALLOWED_SUBJECTS
+        value: "[]"
+      - key: WORKBENCH_AUTH_CLIENT_ID
+        sync: false
+      - key: WORKBENCH_AUTH_CLIENT_SECRET
+        sync: false
+      - key: WORKBENCH_COOKIE_SECRET
+        generateValue: true
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: WORKBENCH_HOSTED_MODEL
+        value: openai/gpt-4.1-mini
+      - key: WORKBENCH_DAILY_REQUESTS
+        value: "120"
+      - key: WORKBENCH_USER_DAILY_REQUESTS
+        value: "24"
+      - key: WORKBENCH_DAILY_MICRODOLLARS
+        value: "2000000"
+      - key: WORKBENCH_USER_DAILY_MICRODOLLARS
+        value: "500000"
+      - key: WORKBENCH_REQUEST_MICRODOLLARS
+        value: "100000"
+      - key: WORKBENCH_CONCURRENT_RUNS
+        value: "1"

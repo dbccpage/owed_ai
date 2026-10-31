@@ -1,0 +1,26 @@
+name: Validate workbench
+on:
+  push:
+    branches: [main, feat/render-hosted-mvp]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: validate-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+jobs:
+  python-and-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install uv==0.9.28
+      - run: uv sync --locked
+      - run: uv run ruff check src tests scripts app.py
+      - run: uv run mypy src
+      - run: uv run pytest -q
+      - run: docker build -t owed:validation .
+      - run: uv run python scripts/check_container.py

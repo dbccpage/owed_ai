@@ -1,0 +1,2 @@
+# Preserve exact bytes across clones: receipts and provenance bind file hashes.
+* -text
