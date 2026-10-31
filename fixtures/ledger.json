@@ -1,0 +1,12 @@
+[
+  {"id":"total-only","input":{"observations":[{"field":"total","value":100}]},"verdict":"underdetermined","authorized":false},
+  {"id":"positive","input":{"observations":[{"field":"b","value":20}],"actor":"operator"},"verdict":"supported","authorized":true},
+  {"id":"negative","input":{"observations":[{"field":"b","value":-20}]},"verdict":"refuted","authorized":false},
+  {"id":"stale","input":{"observations":[{"field":"b","value":20,"snapshot":"old"}]},"verdict":"underdetermined","authorized":false},
+  {"id":"unit-error","input":{"observations":[{"field":"b","value":20,"units":"cents"}]},"verdict":"not_evaluated","authorized":false},
+  {"id":"contradiction","input":{"observations":[{"field":"b","value":20},{"field":"b","value":-20}]},"verdict":"inconsistent","authorized":false},
+  {"id":"predicate-mismatch","input":{"observations":[{"field":"total","value":100}]},"verdict":"underdetermined","authorized":false},
+  {"id":"wrong-actor","input":{"observations":[{"field":"b","value":20}],"actor":"viewer"},"verdict":"supported","authorized":false},
+  {"id":"boolean-observation","input":{"observations":[{"field":"b_nonnegative","value":true}]},"verdict":"supported","authorized":false},
+  {"id":"outside-model","input":{"observations":[{"field":"total","value":101}]},"verdict":"inconsistent","authorized":false}
+]

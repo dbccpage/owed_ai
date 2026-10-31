@@ -1,0 +1,48 @@
+{
+  "graph": {
+    "receipt_sha256": "8e9111f843f6b5d92a6a51e830e1015b9d0b6ec2bdd51713a12959973ad787db",
+    "review": {
+      "version": "cognitive-review/1",
+      "source_hash": "4823718727c89ab82faea6908d2e3eb5f9ef0bfa74aa05ffa0959a4f678b7e96",
+      "question": "Do these constraints admit a global solution?",
+      "checked_result": "refuted",
+      "signals": [
+        {
+          "code": "verdict_mismatch",
+          "detail": "The model proposed inconsistent; the host checked refuted."
+        }
+      ],
+      "next_check": "Inspect the nonzero cycle residual, then verify a new version changing only editable constraints.",
+      "scope": "Structured proposal/evidence comparison only; not a validated human-cognition or general hallucination detector"
+    }
+  },
+  "ledger": {
+    "receipt_sha256": "33a42511342e8a63c6cd9187175afdc1b61b5ded05d178fe31c44b9a01512893",
+    "review": {
+      "version": "cognitive-review/1",
+      "source_hash": "12d2f7eb748c37a8eb1f106435aa2a1bce046c8a04f97349a91daeaef5ccded7",
+      "question": "Are both reserves nonnegative?",
+      "checked_result": "underdetermined",
+      "signals": [],
+      "next_check": "Observe whether B is nonnegative in this snapshot",
+      "scope": "Structured proposal/evidence comparison only; not a validated human-cognition or general hallucination detector"
+    }
+  },
+  "revision": {
+    "receipt_sha256": "41fc2014e6cf2d99277ed6d344dd1d11187944be18d3a8ed6ea25be2b587ff9f",
+    "review": {
+      "version": "cognitive-review/1",
+      "source_hash": "e73c33098090085a2aac86a02bdb458f20e29886afdf308d8f17bbb9a42f9942",
+      "question": "Did the child improve, and is it eligible for human review?",
+      "checked_result": "tie",
+      "signals": [
+        {
+          "code": "no_measured_improvement",
+          "detail": "Parent 3/4; child 3/4. Do not describe this as improvement."
+        }
+      ],
+      "next_check": "Inspect the failed case rows before proposing another revision.",
+      "scope": "Structured proposal/evidence comparison only; not a validated human-cognition or general hallucination detector"
+    }
+  }
+}
