@@ -66,7 +66,7 @@ uv run anomalon replay replay.json
 uv run anomalon admit RUN_ID --actor operator
 ```
 
-`run ... --input file.json` accepts the same bounded input records edited in the UI. A revision input may contain a `parent` prompt record. With no input, the latest explicitly admitted prompt is used. Admission is a **local simulated role decision**, not production authentication. It is not automatic, including on a tie or perfect score.
+`run ... --input file.json` accepts the same bounded input records edited in the UI. A revision input may contain a `parent` prompt record. With no input, the latest explicitly admitted prompt is used. CLI admission is a **local simulated role decision**. Hosted UI admission additionally requires an authorized login and applies only to that operator's workspace. It is not automatic, including on a tie or perfect score.
 
 Use `cancel RUN_ID` to stop new requests; an in-flight call may finish before cancellation is observed. A worker watchdog enforces the total deadline. `recover` marks abandoned jobs interrupted after their deadline and grace interval, without resubmitting uncertain requests. SQLite admits one active run, and duplicate worker launches cannot claim it twice.
 

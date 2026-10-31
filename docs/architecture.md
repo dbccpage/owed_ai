@@ -2,6 +2,15 @@
 
 The UI and CLI construct the same `RunSpec`. SQLite admits one active run; a fresh Python worker atomically claims it. The worker calls application services, which use a provider port and exact domain checkers. It writes progress and a content-addressed receipt. The UI only reads that state and requests cancellation or human admission.
 
+Hosted mode adds an outer admission boundary: Streamlit verifies an OIDC identity,
+then `hosting.py` checks issuer, subject allowlist and expiry before opening that
+operator's store. Anonymous visitors use the pure checkers and curated public
+replays without opening any private store. Each private store retains its own
+single-run constraint, artifacts and active prompt. `spending.py` coordinates a
+shared concurrency lease and atomic per-request monetary reservation across stores.
+Workers independently validate their scoped context before using the fixed hosted
+provider. Billing reservations live outside deterministic semantic receipts.
+
 ```text
 Streamlit / CLI → RunSpec → SQLite admission → Python worker
                                                ├─ model adapter → provisional JSON
@@ -24,4 +33,7 @@ Semantic replay is deliberately strict about request hashes. A changed experimen
 
 SQLite uses atomic admission and worker claim transitions. It does not automatically repeat provider requests following crashes or timeouts. A watchdog bounds the worker independently of HTTP timeout behavior. A watchdog-aborted run may contain only partial progress, and is not marked replay-complete.
 
-No distributed queues, agent framework, production identity service, vector store, generated-code executor, or broad estate dependency is included. Python `Protocol` ports permit later adapters without importing those systems into this release.
+No distributed queue, custom identity provider, vector store, generated-code executor,
+or broad estate dependency is included. Hosted login integrates standard OIDC;
+the loopback identity fixture is testing-only. Python `Protocol` ports permit later
+adapters without importing those systems into this release.

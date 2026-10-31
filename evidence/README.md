@@ -1,5 +1,9 @@
 # Validation evidence · v0.0.1.0
 
+Latest hosted-mode preparation is recorded in [hosted validation](hosted-validation.md),
+including Linux container CI, OIDC protocol testing, isolation and spending controls.
+The table below preserves the original local MVP validation baseline.
+
 Validated locally on Windows with Python 3.12.12 on October 31, 2026.
 
 | Layer | Observed result |
