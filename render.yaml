@@ -34,7 +34,7 @@ services:
         sync: false
       - key: WORKBENCH_COOKIE_SECRET
         generateValue: true
-      - key: OPENROUTER_API_KEY
+      - key: WORKBENCH_OPENROUTER_API_KEY
         sync: false
       - key: WORKBENCH_HOSTED_MODEL
         value: openai/gpt-4.1-mini

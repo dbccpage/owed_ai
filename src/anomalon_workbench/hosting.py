@@ -112,9 +112,13 @@ class HostedPolicy(Record):
 
     def provider(self) -> ProviderConfig:
         # Hosted visitors cannot select a model, endpoint, credential, or fallback.
+        key_env = (
+            "WORKBENCH_OPENROUTER_API_KEY"
+            if "WORKBENCH_OPENROUTER_API_KEY" in os.environ else "OPENROUTER_API_KEY"
+        )
         config = ProviderConfig(
             "openrouter", self.model, "https://openrouter.ai/api/v1", "json_schema",
-            "OPENROUTER_API_KEY", os.getenv("OPENROUTER_API_KEY", ""),
+            key_env, os.getenv(key_env, ""),
         )
         config.validate()
         return config

@@ -21,6 +21,7 @@ from anomalon_workbench.spending import MeteredProvider, SpendLedger
 
 @pytest.fixture
 def hosted(tmp_path, monkeypatch):
+    monkeypatch.setenv("WORKBENCH_OPENROUTER_API_KEY", "test-only-deployment-credential")
     monkeypatch.setenv("WORKBENCH_MODE", "hosted")
     monkeypatch.setenv("WORKBENCH_LIVE_ENABLED", "true")
     monkeypatch.setenv("WORKBENCH_AUTH_ISSUER", "https://accounts.google.com")
@@ -52,6 +53,22 @@ def test_render_cannot_start_in_local_mode(monkeypatch):
     monkeypatch.setenv("WORKBENCH_MODE", "local")
     with pytest.raises(ValueError):
         hosted_mode()
+
+
+def test_hosted_dedicated_key_name_takes_precedence(hosted, monkeypatch):
+    monkeypatch.delenv("WORKBENCH_OPENROUTER_API_KEY")
+    assert hosted.provider().key_env == "OPENROUTER_API_KEY"
+    monkeypatch.setenv("WORKBENCH_OPENROUTER_API_KEY", "dedicated-test-key")
+    config = hosted.provider()
+    assert config.key_env == "WORKBENCH_OPENROUTER_API_KEY"
+    assert config.key == "dedicated-test-key"
+    assert "dedicated-test-key" not in canonical(config.public())
+
+
+def test_empty_dedicated_key_does_not_borrow_development_key(hosted, monkeypatch):
+    monkeypatch.setenv("WORKBENCH_OPENROUTER_API_KEY", "")
+    with pytest.raises(ValueError):
+        hosted.provider()
 
 
 def test_tenant_store_and_prompt_isolation(hosted):
