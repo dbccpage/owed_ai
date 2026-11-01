@@ -37,7 +37,7 @@ def main():
             if p.is_file() and "__pycache__" not in p.parts and p.name != "release-manifest.json"
         )
     paths.extend(
-        ROOT / "lean" / name for name in ("Ledger.lean", "Migration.lean", "lean-toolchain", "lakefile.toml")
+        ROOT / "lean" / name for name in ("Ledger.lean", "Migration.lean", "lean-toolchain", "lakefile.toml", "lake-manifest.json")
     )
     secrets = [
         v.encode()
