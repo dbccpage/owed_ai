@@ -1,10 +1,14 @@
 # Validation evidence · v0.0.1.0
 
-The migration release candidate is documented in the
+The deployed migration challenge is documented in the
 [requirements-to-tests report](../docs/migration-acceptance.md),
 [browser observations](migration-browser.json), [core timings](migration-core.json),
 and [three-theorem Lean audit](migration-lean.json). Historical ledger/provider
-results below remain separate. The migration candidate has not been deployed.
+results below remain separate. The [PR review](migration-pr-review.json) binds the
+reviewed head and merged tree; [deployment evidence](migration-deployment.json)
+records the public Chrome journey at [owed.anomalon.com](https://owed.anomalon.com/),
+the downloaded synthetic receipt, and remaining hosted checks. Live experiments
+remain disabled.
 
 Latest hosted-mode preparation is recorded in [hosted validation](hosted-validation.md),
 including Linux container CI, OIDC protocol testing, isolation and spending controls.

@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-01",
+  "pull_request": "https://github.com/dbccpage/owed_ai/pull/4",
+  "reviewed_head": "c18d582f0ce3358cc4cfc542871bad13421edb92",
+  "merge_commit": "86c2d90ee99fe4fb71330a524c390783260b596b",
+  "merged_at_utc": "2026-11-01T21:00:52Z",
+  "reviewed_and_merged_trees_equal": true,
+  "merge_blocking_findings": 0,
+  "independent_local_validation": {
+    "pytest_passed": 274,
+    "pytest_seconds": 19.45,
+    "ruff": "passed",
+    "strict_mypy": "passed",
+    "typed_modules": 21,
+    "migration_lean_theorems_passed": 3,
+    "lean_toolchain": "4.19.0"
+  },
+  "reviewed_head_ci": {
+    "url": "https://github.com/dbccpage/owed_ai/actions/runs/41349230700",
+    "conclusion": "success",
+    "includes": ["tests", "ruff", "strict typing", "Docker build", "container migration journey", "proof source matching", "offline replay", "temporary cleanup", "volume restart"]
+  },
+  "scope": "Review and validation of the exact PR head, plus verified merged tree equality. Hosted rollout and browser validation are recorded separately; no Google login or provider spending-cap validation is implied."
+}

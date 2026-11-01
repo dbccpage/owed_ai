@@ -1,9 +1,21 @@
-# Migration release and later custom domain
+# Migration release and custom domain
 
-The release candidate changes the default journey and adds migration core modules,
+The release changes the default journey and adds migration core modules,
 CLI, independent row/witness checks, three Lean model theorems and source-bound
 proof evidence. Existing labs and live-provider policy remain available. Live model
-experiments stay **disabled**. The candidate has not been deployed.
+experiments stay **disabled**. PR #4 was reviewed and merged as
+`86c2d90ee99fe4fb71330a524c390783260b596b`, then manually deployed to
+[owed.anomalon.com](https://owed.anomalon.com/). The reviewed and merged source
+trees match. See [PR review](../evidence/migration-pr-review.json) and
+[deployment evidence](../evidence/migration-deployment.json).
+
+Normal Chrome checks through the public hostname passed the preview, independently
+checked ambiguity witness, accepted correspondence, committed repair and all six
+execution properties. Browser replay, receipt download and independent CLI replay,
+valid/unsupported receipt imports, proof-artifact status and changed-snapshot
+invalidation also passed. The evidence record distinguishes these observations
+from local fault-mode tests and outstanding hosted checks. No live model call,
+Google login or spending-cap validation is implied.
 
 ## Build and local preview
 
@@ -53,14 +65,15 @@ health and the earlier three-lab UI. Reconfirm live-off and credentials after th
 rollback. Domain routing and persistent disk state do not roll back with code.
 See [Render rollback behavior](https://render.com/docs/rollbacks).
 
-## Later domain setup: owed.anomalon.com
+## Domain setup: owed.anomalon.com
 
 The owner completed this connection on November 1, 2026. The CNAME resolves to
 `owed-workbench.onrender.com`; certificate-validated HTTPS returned 200 for the app
 shell and `/_stcore/health`. [Validation evidence](../evidence/domain-validation.json)
-records the scope: browser interaction through this hostname was not rechecked by
-the HTTP probe, and this does not publish the migration candidate. The checklist
-below remains useful for reproducing or repairing the domain setup.
+records the scope of the earlier HTTP-only probe. Subsequent interactive checks
+and the migration rollout are recorded separately in
+[deployment evidence](../evidence/migration-deployment.json). The checklist below
+remains useful for reproducing or repairing the domain setup.
 No registration or paid-resource change is needed merely to propose a subdomain.
 
 1. In the actual Render service Settings → Custom Domains, add `owed.anomalon.com`.

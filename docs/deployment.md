@@ -4,11 +4,13 @@ Current public endpoint: [owed.anomalon.com](https://owed.anomalon.com/), with
 [the Render endpoint](https://owed-workbench.onrender.com/) retained as a fallback.
 The public-only service uses free compute and ephemeral state; live model execution
 is disabled. The paid persistent Blueprint below is a separate future configuration.
-The migration release candidate and domain checklist are in
-[migration release instructions](migration-release.md). The owner completed the
+The migration challenge is deployed from merged PR #4, commit `86c2d90`.
+See the [migration release record](migration-release.md) and
+[hosted validation evidence](../evidence/migration-deployment.json) for the actual
+browser journey, receipt replay and remaining checks. The owner completed the
 domain connection; CNAME and certificate-validated HTTPS health/app-shell checks
-passed on November 1, 2026. This operation did not deploy the migration candidate
-or modify live-experiment settings. See [domain evidence](../evidence/domain-validation.json).
+passed on November 1, 2026. Live model experiments remain disabled; Google login
+and a dedicated provider-side spending cap remain future live-launch gates.
 
 Use **owed.anomalon.com** for Owed. Reserve **anomalon.com** for the wider
 Anomalon story and the future Omega Engine V1.0RC product home. The apex can later
