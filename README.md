@@ -2,22 +2,26 @@
 
 v0.0.1.0 · from Anomalon / Omega Engine · [dbccpage/owed_ai](https://github.com/dbccpage/owed_ai)
 
-## Migration challenge (release candidate)
+## Migration challenge — live public demo
 
 **The total was right. The balances went to the wrong accounts.**
 
 Run a synthetic customer-account migration, inspect why its passing total and row
 checks leave ownership unresolved, obtain the missing correspondence, and inspect
-an actually committed SQLite repair. The default local page follows this journey;
+an actually committed SQLite repair. The default public and local page follows this journey;
 the original research labs remain available in the sidebar.
 
 The current public deployment is **[owed.anomalon.com](https://owed.anomalon.com/)**
 ([Render fallback](https://owed-workbench.onrender.com/)).
-It serves the earlier three-lab release at `7d81005`; the migration challenge is on
-the review branch `feat/migration-challenge` and has not been deployed. Live model
-experiments remain disabled. DNS and certificate-validated HTTPS health/app-shell
-checks passed on November 1, 2026; see [domain evidence](evidence/domain-validation.json).
-The domain connection does not publish the migration release candidate.
+PR #4 is merged, and the migration challenge was deployed from `86c2d90`.
+**Live model experiments remain disabled.** On November 1, 2026, normal Chrome
+validation through this hostname passed preview, witness verification, accepted
+evidence, committed repair, export, browser/CLI replay, receipt import checks and
+snapshot invalidation. Hosted missing/stale/conflicting evidence checks, stale
+refresh, case generation and session reset also pass. See the
+[deployment evidence](evidence/migration-deployment.json)
+for exact scope and deferred live-launch gates, and the [review record](evidence/migration-pr-review.json)
+for the 274-test, typing, lint, container and Lean validation results.
 
 ```powershell
 uv sync --locked

@@ -201,3 +201,27 @@ passed; see `evidence/domain-validation.json`. This supersedes the proposed-doma
 status above. It does not alter the audited migration code, publish PR #4, or
 complete Google/live-operator verification. No live-experiment configuration was
 changed by this documentation operation.
+
+### PR review and hosted rollout — November 1, 2026
+
+PR #4 was independently reviewed at `c18d582f0ce3358cc4cfc542871bad13421edb92`:
+274 tests passed in 19.45s, Ruff and strict mypy (21 modules) passed, and all three
+migration Lean checks passed. Its Linux/container CI also passed. The merge commit
+`86c2d90ee99fe4fb71330a524c390783260b596b` has the same source tree.
+See `evidence/migration-pr-review.json` for the exact bindings.
+
+The migration challenge is now deployed at https://owed.anomalon.com/ with live
+model experiments disabled. Normal Chrome validation exercised the main journey,
+receipt export and offline browser/CLI replay, valid/unsupported imports, the
+source-bound proof artifact and snapshot invalidation. The current scoped report
+in `evidence/migration-deployment.json` supersedes historical rollout-pending
+statements above and explicitly lists any remaining hosted checks. Google login,
+provider spending-cap configuration and human comprehension measurement remain
+unverified.
+
+Hosted completion: missing evidence remains unresolved; stale evidence is excluded
+and a current-authority refresh enables the supported repair; contradictory evidence
+has zero compatible mappings and admits no repair. Generation/reset passed for
+seeds 0 and 1. Render confirms **Deploy succeeded / Live** for `86c2d90`, and the
+live-experiment flag was rechecked as false after these tests. The public synthetic
+release checks are complete; the deferred live-launch gates above remain separate.
