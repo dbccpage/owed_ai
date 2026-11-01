@@ -17,7 +17,12 @@
     "synthetic_migration_examples_regenerated_and_replayed": true
   },
   "real_google_login_verified": false,
-  "dedicated_openrouter_key_cap_verified": false,
+  "google_oauth_client_created": true,
+  "google_callback_uri": "https://owed.anomalon.com/oauth2callback",
+  "dedicated_openrouter_key_cap_verified": true,
+  "provider_cap_evidence": "openrouter-deployment-cap.json",
+  "dedicated_deployment_key_variable": "WORKBENCH_OPENROUTER_API_KEY",
+  "dedicated_key_name_compatibility_tests": {"pytest_passed": 284, "pytest_seconds": 15.97, "ruff": "passed", "strict_mypy": "passed"},
   "deployed_by_this_record": false,
   "limits": "Local contract and UI tests are not Google account verification. No credentials, identity claims or tokens are retained here. No live model requests were made. Existing public deployment evidence remains bound to its historical source commit."
 }

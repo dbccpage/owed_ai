@@ -1,0 +1,11 @@
+{
+  "checked_at_utc": "2026-11-01T22:49:12.489900+00:00",
+  "provider": "OpenRouter",
+  "verification_endpoint": "https://openrouter.ai/api/v1/key",
+  "http_status": 200,
+  "credit_limit_usd": 2,
+  "limit_reset": "daily",
+  "expires_at": "2027-01-30T22:42:12.311Z",
+  "model_requests_made": 0,
+  "scope": "Provider-reported configuration of the dedicated key, not a spending-exhaustion experiment. Credential and account usage values excluded."
+}

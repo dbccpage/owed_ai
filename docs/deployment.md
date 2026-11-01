@@ -12,6 +12,12 @@ domain connection; CNAME and certificate-validated HTTPS health/app-shell checks
 passed on November 1, 2026. Live model experiments remain disabled; Google login
 and a dedicated provider-side spending cap remain future live-launch gates.
 
+The dedicated deployment key's provider-reported **$2/day** limit and daily reset
+were verified on November 1, 2026 without a model request; see
+[cap evidence](../evidence/openrouter-deployment-cap.json). Real Google login and
+deployment binding remain separate checks. This metadata check is not a billing
+exhaustion experiment. Live experiments remain disabled.
+
 Use **owed.anomalon.com** for Owed. Reserve **anomalon.com** for the wider
 Anomalon story and the future Omega Engine V1.0RC product home. The apex can later
 link Pre-Genesis, Genesis, quantum mechanics, the engine, research repositories,
@@ -55,9 +61,12 @@ The ledger's viewer/operator toggle remains a mathematical simulation.
    environment settings. The Blueprint generates `WORKBENCH_COOKIE_SECRET`; retain
    it across restarts. Do not commit any of these values. The entrypoint writes the
    OIDC TOML to an owner-only temporary file, outside the image and run archive.
-5. Set `OPENROUTER_API_KEY` to a **dedicated, provider-limited deployment key**.
+5. Set `WORKBENCH_OPENROUTER_API_KEY` to a **dedicated, provider-limited deployment key**.
    Configure its credit limit/reset in OpenRouter; the application never modifies
    keys or account settings. Keep personal development keys out of this deployment.
+   Existing deployments can use `OPENROUTER_API_KEY` when the dedicated variable is
+   absent. A defined but empty dedicated variable fails closed; it never borrows a
+   development key. Local CLI/provider configuration still uses the standard names.
 6. Set `WORKBENCH_AUTH_ENABLED=true`, leave `WORKBENCH_LIVE_ENABLED=false`, and redeploy.
    This enables Google login/logout and identity inspection while every live model
    submission remains denied. The verified account-identifier expander shows only
