@@ -14,6 +14,6 @@
       "propext"
     ]
   },
-  "output": "AnomalonLedger.witness_membership : InModel 80 20 \u00e2\u02c6\u00a7 InModel 120 (-20)\nAnomalonLedger.observation_ambiguity : Q 80 20 = Q 120 (-20) \u00e2\u02c6\u00a7 P 80 20 \u00e2\u2030\u00a0 P 120 (-20)\nAnomalonLedger.no_total_decider : \u00c2\u00ac\u00e2\u02c6\u0192 d, \u00e2\u02c6\u20ac (a b : Int), InModel a b \u00e2\u2020\u2019 d (Q a b) = P a b\nAnomalonLedger.extra_observation_suffices (a b : Int) (h : InModel a b) : P a b = decide (0 \u00e2\u2030\u00a4 b)\n'AnomalonLedger.witness_membership' does not depend on any axioms\n'AnomalonLedger.observation_ambiguity' does not depend on any axioms\n'AnomalonLedger.no_total_decider' does not depend on any axioms\n'AnomalonLedger.extra_observation_suffices' depends on axioms: [propext]\n",
+  "output": "AnomalonLedger.witness_membership : InModel 80 20 \u2227 InModel 120 (-20)\nAnomalonLedger.observation_ambiguity : Q 80 20 = Q 120 (-20) \u2227 P 80 20 \u2260 P 120 (-20)\nAnomalonLedger.no_total_decider : \u00ac\u2203 d, \u2200 (a b : Int), InModel a b \u2192 d (Q a b) = P a b\nAnomalonLedger.extra_observation_suffices (a b : Int) (h : InModel a b) : P a b = decide (0 \u2264 b)\n'AnomalonLedger.witness_membership' does not depend on any axioms\n'AnomalonLedger.observation_ambiguity' does not depend on any axioms\n'AnomalonLedger.no_total_decider' does not depend on any axioms\n'AnomalonLedger.extra_observation_suffices' depends on axioms: [propext]\n",
   "scope": "Four named finite-ledger results only; not evidence truth or authorization"
 }

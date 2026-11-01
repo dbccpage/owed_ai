@@ -19,6 +19,20 @@ jobs:
           python-version: '3.12'
       - run: pip install uv==0.9.28
       - run: uv sync --locked
+      - name: Install pinned Lean supplement toolchain
+        uses: leanprover/lean-action@fe408643ea7367d8c0404a8be3975bb145f5fb64 # v1
+        with:
+          lake-package-directory: lean
+          auto-config: "false"
+          build: "false"
+          test: "false"
+          lint: "false"
+          use-mathlib-cache: "false"
+          use-github-cache: "false"
+      - name: Fresh ledger and migration theorem checks with axiom audits
+        run: |
+          uv run python scripts/check_lean.py
+          uv run python scripts/check_migration_lean.py
       - run: uv run ruff check src tests scripts app.py
       - run: uv run mypy src
       - run: uv run pytest -q

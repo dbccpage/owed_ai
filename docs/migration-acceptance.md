@@ -225,3 +225,25 @@ has zero compatible mappings and admits no repair. Generation/reset passed for
 seeds 0 and 1. Render confirms **Deploy succeeded / Live** for `86c2d90`, and the
 live-experiment flag was rechecked as false after these tests. The public synthetic
 release checks are complete; the deferred live-launch gates above remain separate.
+
+### Corrective review follow-up — November 1, 2026
+
+The later review of original head `c18d582` found three defects in verification
+custody. New regressions reproduced all three before repair (11 failures among
+14 initial cases). Acquisition and offline replay now share the action/response
+contract; inadmissible responses never reach admission, and invalid historical
+receipts cannot be resumed. Replay feedback binds the exact receipt digest and
+is invalidated by a new case, evidence, restart, reset or scope change.
+
+The proof reader now requires the exact source keys, valid hashes, pinned release
+metadata, command, integer zero exit, all three declarations and matching permitted
+axiom audits. A vacuous empty manifest, malformed structure, missing fields,
+duplicate JSON keys, unapproved axioms or changed source/toolchain fails closed.
+This remains recorded build evidence; self-consistent report forgery is not
+authentication and no Python/SQL equivalence theorem is claimed.
+
+The complete local suite passes 316 cases, Ruff and strict mypy (21 modules) pass,
+and fresh Lean 4.19.0 checks pass all four ledger and three migration results.
+The workflow now invokes both actual Lean audits before Python/container checks.
+See `evidence/verification-corrections.json`; prior hosted observations above do
+not certify deployment of these corrections. Live experiments remain disabled.

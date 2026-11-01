@@ -2,9 +2,10 @@
 
 import hashlib
 import json
-import re
 import subprocess
 from pathlib import Path
+
+from anomalon_workbench.migration_proof import MigrationProofReport, audit_migration_output
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -12,22 +13,15 @@ ROOT = Path(__file__).resolve().parents[1]
 def main() -> None:
     command = ["lean", "Migration.lean"]
     version = subprocess.run(
-        ["lean", "--version"], cwd=ROOT / "lean", capture_output=True, text=True, check=True
+        ["lean", "--version"], cwd=ROOT / "lean", capture_output=True,
+        encoding="utf-8", check=True, timeout=60,
     )
-    result = subprocess.run(command, cwd=ROOT / "lean", capture_output=True, text=True)
+    result = subprocess.run(command, cwd=ROOT / "lean", capture_output=True,
+                            encoding="utf-8", timeout=60)
     output = result.stdout + result.stderr
     if result.returncode or "4.19.0" not in version.stdout or "sorry" in output:
         raise RuntimeError(output)
-    axioms = {}
-    for name in ("conservation", "insufficient_total", "ownership"):
-        match = re.search(r"'OwedMigration\." + name + r"' depends on axioms: \[([^\]]*)\]", output)
-        empty = f"'OwedMigration.{name}' does not depend on any axioms" in output
-        if not match and not empty:
-            raise RuntimeError("missing_theorem_audit")
-        used = sorted(s.strip() for s in match[1].split(",") if s.strip()) if match else []
-        if not set(used) <= {"propext", "Quot.sound", "Classical.choice"}:
-            raise RuntimeError("undeclared_axiom")
-        axioms[name] = used
+    axioms = audit_migration_output(output)
     report = {
         "status": "verified_during_build",
         "version": version.stdout.strip(),
@@ -42,8 +36,10 @@ def main() -> None:
         "boundary": "Model results only; Python and committed SQLite rows require separate runtime checks.",
         "output": output,
     }
+    validated = MigrationProofReport.model_validate_json(json.dumps(report))
     (ROOT / "evidence/migration-lean.json").write_text(
-        json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n"
+        json.dumps(validated.model_dump(mode="json"), indent=2) + "\n",
+        encoding="utf-8", newline="\n",
     )
     print("Three mandatory migration results checked; axiom audit passed.")
 

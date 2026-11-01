@@ -10,6 +10,13 @@ records the public Chrome journey at [owed.anomalon.com](https://owed.anomalon.c
 the downloaded synthetic receipt, all four evidence modes and deferred live-launch gates. Live experiments
 remain disabled.
 
+The [verification corrections](verification-corrections.json) reproduce and repair
+the three follow-up findings: acquisition/replay evidence contracts, receipt-bound
+replay feedback, and strict proof-report completeness. The corrected local suite
+has 316 passing tests and all seven Lean theorems were freshly checked. CI now runs
+both pinned Lean audits before Python/container validation. Hosted rollout remains
+a separate recorded operation.
+
 Latest hosted-mode preparation is recorded in [hosted validation](hosted-validation.md),
 including Linux container CI, OIDC protocol testing, isolation and spending controls.
 The table below preserves the original local MVP validation baseline.

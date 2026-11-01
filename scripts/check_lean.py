@@ -19,10 +19,10 @@ ALLOWED = {"propext", "Quot.sound", "Classical.choice"}
 
 def main() -> None:
     version = subprocess.run(
-        ["lean", "--version"], cwd=LEAN, capture_output=True, text=True, timeout=60
+        ["lean", "--version"], cwd=LEAN, capture_output=True, encoding="utf-8", timeout=60
     )
     checked = subprocess.run(
-        ["lean", "Ledger.lean"], cwd=LEAN, capture_output=True, text=True, timeout=60
+        ["lean", "Ledger.lean"], cwd=LEAN, capture_output=True, encoding="utf-8", timeout=60
     )
     output = checked.stdout + checked.stderr
     declarations = {}
@@ -50,7 +50,7 @@ def main() -> None:
     }
     destination = ROOT / "evidence" / "lean-verification.json"
     destination.parent.mkdir(exist_ok=True)
-    destination.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    destination.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n")
     print("Four named Lean results checked; source-bound axiom audit written.")
 
 

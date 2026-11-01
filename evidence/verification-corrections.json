@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-01",
+  "reviewed_original_head": "c18d582f0ce3358cc4cfc542871bad13421edb92",
+  "corrective_base": "ba5334c2c3cef4bbb8124151331156c432efc425",
+  "pr_7_reviewed_head": "e278b81da5721472109c3d27246965758266638a",
+  "pr_7_merged": true,
+  "initial_reproductions": {"failed": 11, "passed": 3},
+  "corrections": {
+    "acquisition_and_replay": "A shared response/action contract rejects overbroad observations before acceptance or admission, including stale and unavailable responses. Offline replay enforces the same contract. Invalid historical receipts cannot be resumed.",
+    "replay_badge": "The displayed result binds the exact receipt digest. New evidence, another case, restart, reset and changed scope invalidate prior feedback, including legacy session booleans.",
+    "proof_evidence": "A strict bounded report requires the exact source manifest, pinned toolchain metadata, command, integer zero exit status, all three statements and matching allowed axiom audits. Empty, missing, malformed, duplicate, oversized or stale evidence fails closed."
+  },
+  "local_validation": {
+    "pytest_passed": 316,
+    "pytest_seconds": 15.29,
+    "new_regression_cases": 32,
+    "ruff": "passed",
+    "strict_mypy": "passed",
+    "typed_modules": 21,
+    "fresh_ledger_theorems": 4,
+    "fresh_migration_theorems": 3,
+    "toolchain": "leanprover/lean4:v4.19.0"
+  },
+  "ci_configuration": {
+    "lean_setup_action": "leanprover/lean-action@fe408643ea7367d8c0404a8be3975bb145f5fb64",
+    "fresh_checks": ["scripts/check_lean.py", "scripts/check_migration_lean.py"],
+    "mathlib": false
+  },
+  "retained_ci_failure": {"run": "https://github.com/dbccpage/owed_ai/actions/runs/41360541257", "reason": "Official Lean setup action requires a Lake manifest even when build/test are disabled; generated and retained the empty-dependency manifest with lake update."},
+  "live_model_requests": 0,
+  "live_experiments_enabled": false,
+  "scope": "Focused correction of the three supplied review findings. Recorded proof evidence still is not an authenticated signature or end-to-end proof of Python/SQL. Google login and hosted rollout are tracked separately; this local record does not assert that the corrective code is deployed."
+}

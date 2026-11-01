@@ -222,6 +222,15 @@ class EvidencePort(Protocol):
     def obtain(self, scope: Scope, action: EvidenceAction) -> Observation: ...
 
 
+def response_matches_action(action: EvidenceAction, observation: Observation) -> bool:
+    """Same acquisition/replay contract, including excluded or unavailable responses."""
+    if observation.status == "unavailable":
+        return not observation.links
+    return action.kind == "full_crosswalk" or (
+        action.kind == "source" and all(p.source == action.source for p in observation.links)
+    )
+
+
 def select_action(
     scenario: Scenario, observations: tuple[Observation, ...]
 ) -> EvidenceAction | None:

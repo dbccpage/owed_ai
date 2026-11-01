@@ -27,7 +27,9 @@ def test_public_guided_migration_session_and_replay(monkeypatch, tmp_path):
     assert not any("remains history" in w.value for w in app.warning)
     app.session_state["migration_receipt"] = receipt
     next(b for b in app.button if b.label == "Replay this receipt offline").click().run()
-    assert app.session_state["migration_replay"] is True
+    from anomalon_workbench.domain import digest
+
+    assert app.session_state["migration_replay"] == {"receipt_digest": digest(receipt), "matched": True}
     other = AppTest.from_file(str(root / "app.py"), default_timeout=20).run()
     assert "migration_receipt" not in other.session_state
     next(b for b in app.button if b.label == "Change snapshot and crosswalk version").click().run()
