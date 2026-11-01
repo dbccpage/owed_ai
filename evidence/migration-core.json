@@ -1,0 +1,12 @@
+{
+  "environment": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.12",
+  "accounts": 3,
+  "seconds": {
+    "repaired": 0.01147520006634295,
+    "unresolved": 0.003648800076916814,
+    "conflicting": 0.003375000087544322
+  },
+  "formal_status": "incomplete",
+  "scope": "Three local core runs; not browser usability or Render cold-start measurements"
+}
