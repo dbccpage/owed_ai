@@ -7,7 +7,7 @@ and [three-theorem Lean audit](migration-lean.json). Historical ledger/provider
 results below remain separate. The [PR review](migration-pr-review.json) binds the
 reviewed head and merged tree; [deployment evidence](migration-deployment.json)
 records the public Chrome journey at [owed.anomalon.com](https://owed.anomalon.com/),
-the downloaded synthetic receipt, and remaining hosted checks. Live experiments
+the downloaded synthetic receipt, all four evidence modes and deferred live-launch gates. Live experiments
 remain disabled.
 
 Latest hosted-mode preparation is recorded in [hosted validation](hosted-validation.md),

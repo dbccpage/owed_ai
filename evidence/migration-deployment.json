@@ -7,6 +7,12 @@
   "render_deployment": "dep-dbjqj84s728c738hthf0",
   "render_deployment_url": "https://dashboard.render.com/web/srv-dbj5eih42hec73c30q6g/deploys/dep-dbjqj84s728c738hthf0",
   "deployment_trigger": "Manual deploy of the exact reviewed merge commit in the owner's normal Chrome",
+  "render_final_status": "Deploy succeeded | Live",
+  "render_reported_deploy_duration_seconds": 57.7,
+  "render_live_log_at_utc": "2026-11-01T21:06:34Z",
+  "post_validation_live_flag_rechecked": true,
+  "post_validation_WORKBENCH_LIVE_ENABLED": false,
+  "validation_recorded_at_utc": "2026-11-01T21:32:05Z",
   "render_configuration_observed": {
     "compute": "Free Docker service, Oregon",
     "repository": "dbccpage/owed_ai",
@@ -69,6 +75,7 @@
     "cli_result": {"offline_replay_matched": true, "execution_authorized": false}
   },
   "screenshots": ["migration-hosted-landing.png", "migration-hosted-repair.png", "migration-hosted-proof.png", "migration-hosted-missing.png", "migration-hosted-stale.png", "migration-hosted-conflict.png"],
-  "remaining_hosted_checks": ["Render final deployment badge"],
+  "remaining_hosted_checks": [],
+  "deferred_live_launch_gates": ["Real Google login validation", "Dedicated provider-side spending cap"],
   "limits": "This records observed public synthetic behavior, including all four evidence modes. The larger local generated-case audit remains separate. No live model requests, real Google login, provider spending-cap validation, durable run storage, production security certification, Render cold-start benchmark, fresh Lean compilation on Render, or human comprehension study is claimed."
 }

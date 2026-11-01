@@ -20,7 +20,7 @@ evidence, committed repair, export, browser/CLI replay, receipt import checks an
 snapshot invalidation. Hosted missing/stale/conflicting evidence checks, stale
 refresh, case generation and session reset also pass. See the
 [deployment evidence](evidence/migration-deployment.json)
-for exact scope and remaining checks, and the [review record](evidence/migration-pr-review.json)
+for exact scope and deferred live-launch gates, and the [review record](evidence/migration-pr-review.json)
 for the 274-test, typing, lint, container and Lean validation results.
 
 ```powershell

@@ -218,3 +218,10 @@ in `evidence/migration-deployment.json` supersedes historical rollout-pending
 statements above and explicitly lists any remaining hosted checks. Google login,
 provider spending-cap configuration and human comprehension measurement remain
 unverified.
+
+Hosted completion: missing evidence remains unresolved; stale evidence is excluded
+and a current-authority refresh enables the supported repair; contradictory evidence
+has zero compatible mappings and admits no repair. Generation/reset passed for
+seeds 0 and 1. Render confirms **Deploy succeeded / Live** for `86c2d90`, and the
+live-experiment flag was rechecked as false after these tests. The public synthetic
+release checks are complete; the deferred live-launch gates above remain separate.
