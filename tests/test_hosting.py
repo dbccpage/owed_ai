@@ -217,3 +217,80 @@ def test_public_demo_does_not_open_private_store_or_offer_paid_actions(hosted, m
         assert not any(s.label in ("Provider", "Run") for s in app.selectbox)
         assert not app.get("file_uploader")
     assert any(s.label == "Recorded lab" for s in app.selectbox)
+
+
+@pytest.mark.parametrize("logged_in", [False, True])
+def test_login_validation_never_opens_store_or_enables_live_calls(hosted, monkeypatch, logged_in):
+    monkeypatch.setenv("WORKBENCH_LIVE_ENABLED", "false")
+    monkeypatch.setenv("WORKBENCH_AUTH_ENABLED", "true")
+    claims = {"is_logged_in": logged_in, "iss": hosted.issuer, "sub": "alice",
+              "exp": int(time.time()) + 3600}
+    monkeypatch.setattr("anomalon_workbench.ui.st.user", claims)
+    forbidden = Mock(side_effect=AssertionError("login is not execution authority"))
+    monkeypatch.setattr("anomalon_workbench.ui.private_store", forbidden)
+    monkeypatch.setattr("anomalon_workbench.ui.Store", forbidden)
+    monkeypatch.setattr("anomalon_workbench.hosting.HostedPolicy.provider", forbidden)
+    policy = HostedPolicy.from_env()
+    assert policy.login_subject(True, claims) == "alice"
+    with pytest.raises(ValueError, match="live_access_denied"):
+        policy.authenticate(True, claims)
+    with pytest.raises(ValueError, match="live_access_denied"):
+        submit_hosted(Principal(owner="a" * 64, expires=claims["exp"]),
+                      RunSpec(lab="ledger", payload=json_object(ledger_example())), "blocked")
+    app = AppTest.from_file(str(Path(__file__).parents[1] / "app.py")).run()
+    for page in ("Migration challenge", "Evidence", "Composition", "Revision", "Run inspector"):
+        app.sidebar.radio[0].set_value(page).run()
+        assert not app.exception
+        assert not any(b.label == "Run with live model" for b in app.button)
+    assert any("Live experiments are currently disabled" in c.value for c in app.caption)
+    if logged_in:
+        assert any("Sign-in verified" in s.value for s in app.success)
+        assert any(b.label == "Log out" for b in app.button)
+    else:
+        assert any(b.label == "Log in with Google" for b in app.button)
+    forbidden.assert_not_called()
+
+
+@pytest.mark.parametrize("change", [{"iss": "https://wrong.example"}, {"exp": 1},
+                                    {"exp": True}, {"sub": ""}])
+def test_login_validation_rejects_invalid_identity(hosted, change):
+    claims = {"iss": hosted.issuer, "sub": "alice", "exp": int(time.time()) + 3600, **change}
+    with pytest.raises(ValueError, match="login_not_verified"):
+        hosted.login_subject(True, claims)
+
+
+def test_auth_switch_validation_and_legacy_live_configuration(hosted, monkeypatch):
+    assert HostedPolicy.from_env().auth_enabled  # Existing live deployments remain compatible.
+    monkeypatch.setenv("WORKBENCH_AUTH_ENABLED", "false")
+    with pytest.raises(ValueError, match="live_requires_auth"):
+        HostedPolicy.from_env()
+    monkeypatch.setenv("WORKBENCH_LIVE_ENABLED", "false")
+    monkeypatch.setenv("WORKBENCH_AUTH_ENABLED", "yes")
+    with pytest.raises(ValueError, match="invalid_live_switch"):
+        HostedPolicy.from_env()
+
+
+def test_entrypoint_configures_oidc_with_live_execution_disabled(hosted, monkeypatch, tmp_path):
+    import tomllib
+
+    from anomalon_workbench import serve
+
+    monkeypatch.setenv("WORKBENCH_LIVE_ENABLED", "false")
+    monkeypatch.setenv("WORKBENCH_AUTH_ENABLED", "true")
+    monkeypatch.setenv("WORKBENCH_CONTAINER", "false")
+    monkeypatch.setenv("WORKBENCH_PUBLIC_URL", "https://owed.anomalon.com")
+    monkeypatch.setenv("WORKBENCH_COOKIE_SECRET", "x" * 32)
+    monkeypatch.setenv("WORKBENCH_AUTH_CLIENT_ID", "test-client")
+    monkeypatch.setenv("WORKBENCH_AUTH_CLIENT_SECRET", "test-secret")
+    monkeypatch.setenv("STREAMLIT_SECRETS_FILES", "unused-test-placeholder")
+    monkeypatch.setattr(serve, "load_environment", lambda: None)
+    mkstemp = serve.tempfile.mkstemp
+    monkeypatch.setattr(serve.tempfile, "mkstemp", lambda **kw: mkstemp(dir=tmp_path, **kw))
+    server = Mock()
+    monkeypatch.setattr("streamlit.web.cli.main", server)
+    serve.main()
+    import os
+    document = Path(os.environ["STREAMLIT_SECRETS_FILES"])
+    assert tomllib.loads(document.read_text())["auth"]["redirect_uri"] == "https://owed.anomalon.com/oauth2callback"
+    server.assert_called_once()
+    assert not HostedPolicy.from_env().live_enabled

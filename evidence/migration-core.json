@@ -3,9 +3,9 @@
   "python": "3.12.12",
   "accounts": 3,
   "seconds": {
-    "repaired": 0.02890460006892681,
-    "unresolved": 0.009680199902504683,
-    "conflicting": 0.010605299845337868
+    "repaired": 0.013509099837392569,
+    "unresolved": 0.00746409990824759,
+    "conflicting": 0.006304799811914563
   },
   "formal_artifact": {
     "status": "verified_during_build",

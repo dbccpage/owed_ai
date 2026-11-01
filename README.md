@@ -93,6 +93,8 @@ For a public demo with Google-authenticated live experiments, see the
 disabled. Hosted operators receive isolated stores and share transactional request
 and spending controls. [owed.anomalon.com](https://owed.anomalon.com/) is the public product address;
 `anomalon.com` remains the future home of the broader Omega Engine programme.
+`WORKBENCH_AUTH_ENABLED=true` permits Google sign-in validation while
+`WORKBENCH_LIVE_ENABLED=false` continues to block all live model experiments.
 
 ```powershell
 uv run anomalon check ledger

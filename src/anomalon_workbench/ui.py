@@ -349,23 +349,30 @@ def main() -> None:
         if hosted and policy is not None:
             provider, model = "openrouter", policy.model
             st.caption("Public demo · recorded evidence is available without an account.")
-            if policy.live_enabled:
+            if not policy.live_enabled:
+                st.caption("Live experiments are currently disabled.")
+            if policy.auth_enabled:
                 if dict(st.user).get("is_logged_in") is True:
                     if st.button("Log out"):
                         st.logout()
-                    if store is None:
-                        st.warning("This login is not authorized or has expired.")
+                    try:
+                        subject = policy.login_subject(True, dict(st.user))
+                    except ValueError:
+                        st.warning("This login could not be verified or has expired.")
+                    else:
+                        if not policy.live_enabled:
+                            st.success("Sign-in verified. Live experiments remain disabled.")
+                        elif store is None:
+                            st.warning("This login is not authorized for live experiments.")
                         with st.expander("Account identifier for access requests"):
                             st.caption("Share this subject identifier with the workbench operator. It does not grant access by itself.")
-                            st.code(str(dict(st.user).get("sub", "unavailable")))
-                    else:
+                            st.code(subject)
+                    if store is not None:
                         st.success("Authorized live workspace")
                         st.caption("Model: " + model)
                         st.json(SpendLedger(data_root() / "control").usage(current_principal().owner))
-                elif st.button("Log in for live experiments"):
+                elif st.button("Log in with Google"):
                     st.login()
-            else:
-                st.caption("Live experiments are currently disabled.")
         else:
             names = ["openrouter", "anthropic", "compatible", "local"]
             configured = os.getenv("WORKBENCH_PROVIDER", "openrouter")
