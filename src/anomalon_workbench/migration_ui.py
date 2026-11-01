@@ -4,7 +4,7 @@ from typing import cast
 
 import streamlit as st
 
-from .domain import digest
+from .domain import canonical, digest
 from .migration import Account, Scenario, evaluate, select_action, verify_witness
 from .migration_demo import Mode, Receipt, SyntheticAuthority, export, fixture, replay, run
 from .migration_proof import proof_status
@@ -76,7 +76,8 @@ def page() -> None:
         st.session_state["migration_receipt"] = run(
             scenario, candidate, SyntheticAuthority(scenario, authority, mode), acquire=False
         )
-    receipt = cast(Receipt | None, st.session_state.get("migration_receipt"))
+    stored = st.session_state.get("migration_receipt")
+    receipt = Receipt.model_validate_json(canonical(stored)) if stored is not None else None
     if receipt is None:
         engineering()
         return
@@ -120,7 +121,8 @@ def page() -> None:
                     "Mapping B": next(
                         q.destination for q in witness.second.links if q.source == p.source
                     ),
-                    "Affected": p.source == witness.source,
+                    "Affected": p.destination
+                    != next(q.destination for q in witness.second.links if q.source == p.source),
                 }
                 for p in witness.first.links
             ]
@@ -165,7 +167,32 @@ def page() -> None:
         st.warning(
             "Eight evidence actions reached. Export this unresolved receipt and reset to try a new run."
         )
-    st.write("Current candidate ownership:", receipt.final.ownership.value)
+    if receipt.steps:
+        status = receipt.final.evidence_status[-1]
+        observation = receipt.steps[-1].observation
+        st.write("Evidence response:", status, "· source:", observation.authority)
+        if status == "unavailable":
+            st.warning(
+                "The source did not supply a correspondence. Ownership remains unresolved; no repair can be admitted."
+            )
+        elif status == "stale":
+            st.warning(
+                "The crosswalk belongs to another scope and was excluded. Refresh it for this snapshot."
+            )
+        elif status == "accepted":
+            st.caption(
+                "Accepted in this synthetic scenario: "
+                + observation.scope.snapshot
+                + " / "
+                + observation.scope.crosswalk
+            )
+            st.table(
+                [
+                    {"Source account": p.source, "Authoritative destination": p.destination}
+                    for p in observation.links
+                ]
+            )
+    st.write("Original candidate ownership:", receipt.final.ownership.value)
     st.write("Remaining obligation:", receipt.final.obligation.explanation)
     if receipt.final.mismatch:
         st.warning(
@@ -176,12 +203,27 @@ def page() -> None:
         st.write("Conflicting observation digests:", list(receipt.final.conflicts))
     if receipt.execution:
         st.subheader("4. Repaired, committed, and independently checked")
+        if receipt.repaired:
+            st.write(
+                "Repaired plan ownership:",
+                evaluate(scenario, receipt.repaired, receipt.observations).ownership.value,
+            )
         st.table(
             [{"Destination": d, "Repaired balance (cents)": c} for d, c in receipt.execution.rows]
         )
         st.table(
             [
-                {"Property": key, "Result": str(value)}
+                {
+                    "Property": {
+                        "committed": "Transaction committed",
+                        "total_preserved": "Total preserved",
+                        "row_count_preserved": "Row count preserved",
+                        "identity_coverage": "All destination identities covered",
+                        "execution_conforms": "Database matches the admitted plan",
+                        "ownership_preserved": "Per-account balances preserved",
+                    }.get(key, key),
+                    "Result": str(value),
+                }
                 for key, value in receipt.execution.model_dump().items()
                 if key != "rows"
             ]
@@ -228,7 +270,14 @@ def engineering() -> None:
         st.code(
             "uv run python scripts/migration_validation.py\nuv run pytest tests/test_migration.py -q\nuv run python scripts/check_migration_lean.py"
         )
-        st.write("Formal supplement:", proof_status())
+        formal = proof_status()
+        st.write(
+            "Formal supplement:",
+            "Verified during build"
+            if formal["status"] == "verified_during_build"
+            else "Not verified for this build",
+        )
+        st.json(formal)
         st.write(
             "Conservation is proved for finite reindexing; the counterexample separates ownership from totals; ownership follows conditionally from a bijective crosswalk and the inverse-lookup model. Runtime checks compare actual SQLite rows. This is not an end-to-end formal verification of Python or SQL."
         )

@@ -141,6 +141,8 @@ def test_faults_metadata_and_offline_replay_boundaries(monkeypatch):
     missing = run(s, candidate, Down())
     assert missing.final.ownership == Verdict.UNDERDETERMINED
     assert "external secret" not in export(missing)
+    absent = run(s, candidate, SyntheticAuthority(s, truth, "missing"))
+    assert all(o.links == () for o in absent.observations)
     good = run(s, candidate, SyntheticAuthority(s, truth))
     monkeypatch.setattr(
         "anomalon_workbench.migration_demo.execute", lambda *a, **k: pytest.fail("offline executed")
@@ -153,6 +155,34 @@ def test_faults_metadata_and_offline_replay_boundaries(monkeypatch):
     bundle["receipt"]["execution"]["committed"] = False
     bundle["sha256"] = digest(bundle["receipt"])
     assert not replay(canonical(bundle))
+
+
+def test_import_adversarial_contract():
+    import json
+
+    from anomalon_workbench.domain import canonical, digest
+
+    s, candidate, truth = fixture()
+    good = run(s, candidate, SyntheticAuthority(s, truth))
+    for field in (
+        "identity_coverage",
+        "total_preserved",
+        "row_count_preserved",
+        "execution_conforms",
+        "ownership_preserved",
+    ):
+        bundle = json.loads(export(good))
+        bundle["receipt"]["execution"][field] = False
+        bundle["sha256"] = digest(bundle["receipt"])
+        assert not replay(canonical(bundle))
+    bundle = json.loads(export(good))
+    for key in ("execution", "repaired", "admission"):
+        bundle["receipt"][key] = None
+    bundle["sha256"] = digest(bundle["receipt"])
+    assert not replay(canonical(bundle))
+    for raw in ("[]", "null", '"text"', '{"receipt":{},"receipt":{}}', "[" * 2000 + "]" * 2000):
+        with pytest.raises(ValueError):
+            replay(raw)
 
 
 def test_scope_admission_input_bounds_and_build_proof(tmp_path, monkeypatch):
@@ -177,7 +207,10 @@ def test_scope_admission_input_bounds_and_build_proof(tmp_path, monkeypatch):
         Scope(snapshot="s", roster="r", crosswalk="c", unit="dollar")
     with pytest.raises(ValidationError):
         Scenario(seed=0, scope=s.scope, accounts=s.accounts * 3, destinations=s.destinations * 3)
-    assert evaluate(s, Plan(version=1, links=truth.links[:1]), evidence).ownership == Verdict.NOT_EVALUATED
+    assert (
+        evaluate(s, Plan(version=1, links=truth.links[:1]), evidence).ownership
+        == Verdict.NOT_EVALUATED
+    )
     monkeypatch.chdir(tmp_path)
     assert proof_status()["status"] == "not_verified_for_this_build"
 

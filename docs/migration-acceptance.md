@@ -110,3 +110,55 @@ Before release, inspect the real responsive journey, verify package/container
 inclusion, retain browser observations, refresh example receipts after source changes,
 and run the full acceptance audit. The production service has not been changed by
 these increments. Current release candidate is not declared complete.
+
+## Increment 3 audit — November 1, 2026
+
+The actual local browser journey now passes at 1280×900 and 390×844, including
+committed repair, offline replay, downloaded export replayed by the CLI, scope
+invalidation, missing/conflicting evidence, keyboard operation, another seed and
+session reset. Mobile document width equals viewport width (390px). See
+`evidence/migration-browser.json` and its screenshots. Human comprehension targets
+remain unmeasured; these observations establish operability and readable layout.
+
+Warm local automation measured 494ms from challenge click to a checked witness,
+570ms for evidence-to-repaired result, and 2709ms for a fresh desktop tab to its
+primary action. These single observations include automation overhead; they are
+not a timing distribution or Render measurements.
+
+The original PR head `d859cf3` passed [Linux/container CI](https://github.com/dbccpage/owed_ai/actions/runs/41344160907),
+including an actual image build, health, uid 10001, public pages and volume restart.
+The container smoke check now additionally exercises the full migration, proof
+source match, replay and temporary cleanup; await its result at the current head.
+
+Substantive review findings and recurrence conditions:
+
+- **AB — missing evidence disclosure:** unavailable adapter responses initially
+  carried correspondence links. They now carry none. The test asserts empty links
+  and no secret exception text in the resulting receipt.
+- **RL — import semantics:** recomputing a digest alone could permit false stored
+  property flags or removal of a justified repair. Replay now verifies every
+  execution flag, plan validity, identity coverage, version, action lineage and
+  required repair presence. Adversarial tests recompute the outer hash and still
+  require rejection.
+- **SK — affected rows:** browser review showed a second changed witness row was
+  not marked. The display now compares both mappings row by row, marking both.
+- **HP — reload custody:** source reload changed Python class identity and falsely
+  displayed an unchanged snapshot as stale. Session records are reconstructed
+  through their canonical schema; serialized-session regression checks and the
+  repeated browser journey preserve unchanged scope. Real scope changes still
+  invalidate admission without rewriting history.
+- **ASK — silent unavailable result:** a failed source request initially left only
+  a generic mapping count. The UI now names source/status and explains why no
+  repair is permitted; a fault-mode UI assertion prevents the silent presentation.
+
+Local full suite at the beginning of this audit: 274 passed (12.53 seconds).
+Final counts/current-head results are recorded after the last regression run.
+M06's bounded import audit and M09's actual desktop/mobile operability review now
+pass locally. Remaining release gate: final current-head validation and artifact
+audit. Production migration publication and custom-domain/DNS setup are separate
+operations; the current production release remains live-model-disabled.
+
+Latest local regression run after the audit repairs: **274 passed in 23.61s**;
+Ruff and strict mypy (21 modules) passed; all three mandatory migration proofs
+passed. Three-account core repair was 15.76ms in that sample. These timings are
+single local observations with different scopes; no broader performance claim.

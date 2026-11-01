@@ -22,6 +22,7 @@ from .migration import (
     Scope,
     evaluate,
     select_action,
+    valid_plan,
     verify_witness,
 )
 from .migration_execution import Admission, Execution, admit, execute
@@ -55,7 +56,7 @@ class SyntheticAuthority:
             links = (first, Link(source=first.source, destination=other))
         return Observation(
             scope=observed_scope,
-            links=links,
+            links=() if self.mode == "missing" else links,
             status="unavailable" if self.mode == "missing" else "observed",
         )
 
@@ -242,10 +243,17 @@ def replay(raw: str) -> bool:
         raise ValueError("bundle_too_large")
     from .service import unique_object
 
-    bundle = json.loads(raw, object_pairs_hook=unique_object)
+    try:
+        bundle = json.loads(raw, object_pairs_hook=unique_object)
+    except (RecursionError, TypeError) as exc:
+        raise ValueError("invalid_bundle_structure") from exc
+    if not isinstance(bundle, dict):
+        raise ValueError("bundle_object_required")
     if set(bundle) != {"sha256", "receipt"} or digest(bundle["receipt"]) != bundle["sha256"]:
         return False
     r = Receipt.model_validate_json(canonical(bundle["receipt"]))
+    if not valid_plan(r.scenario, r.original):
+        return False
     expected_id = digest(
         {
             "scenario": digest(r.scenario),
@@ -294,14 +302,24 @@ def replay(raw: str) -> bool:
             or not execution.committed
             or execution.total_preserved != total
             or execution.row_count_preserved != count
+            or execution.identity_coverage
+            != (set(dict(execution.rows)) == set(r.scenario.destinations))
             or execution.ownership_preserved != owned
         ):
             return False
     if r.repaired is not None:
+        if (
+            not valid_plan(r.scenario, r.repaired)
+            or r.repaired.origin != "evidence_repair"
+            or r.repaired.version != r.original.version + 1
+        ):
+            return False
         if r.admission != admit(r.scenario, r.repaired, r.observations):
             return False
     elif r.admission is not None:
         return False
+    elif r.steps and r.final.compatible_count == 1:
+        return False  # acquisition reached a justified mapping: repair cannot be silently omitted
     return True
 
 
@@ -320,7 +338,10 @@ def main() -> None:
     if args.replay:
         with args.replay.open(encoding="utf-8") as handle:
             raw = handle.read(100001)
-        matched = replay(raw)
+        try:
+            matched = replay(raw)
+        except (ValueError, KeyError, TypeError, RecursionError):
+            parser.error("Invalid, oversized or unsupported receipt; nothing executed")
         print(json.dumps({"offline_replay_matched": matched, "execution_authorized": False}))
         if not matched:
             raise SystemExit(1)

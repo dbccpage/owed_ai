@@ -22,6 +22,7 @@ class Execution(Record):
     committed: bool
     total_preserved: bool
     row_count_preserved: bool
+    identity_coverage: bool
     execution_conforms: bool
     ownership_preserved: bool | None
 
@@ -91,6 +92,7 @@ def execute(
         committed=True,
         total_preserved=sum(c for _, c in rows) == sum(balances.values()),
         row_count_preserved=len(rows) == len(balances),
+        identity_coverage=set(dict(rows)) == set(scenario.destinations),
         execution_conforms=dict(rows) == expected,
         ownership_preserved=ownership,
     )

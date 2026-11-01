@@ -37,12 +37,35 @@ def main():
                 "a=AppTest.from_file('/app/app.py').run(); assert not a.exception; "
                 "a.sidebar.radio[0].set_value('Run inspector').run(); assert not a.exception; "
                 "assert not any(s.label=='Run' for s in a.selectbox)")
+        migration_check = """
+from pathlib import Path
+from streamlit.testing.v1 import AppTest
+from anomalon_workbench.migration_demo import export, replay
+from anomalon_workbench.migration_proof import proof_status
+before = set(Path('/tmp').glob('owed-migration-*'))
+assert proof_status()['status'] == 'verified_during_build'
+app = AppTest.from_file('/app/app.py', default_timeout=20).run()
+assert not app.exception
+next(b for b in app.button if b.label == 'Run the migration challenge').click().run()
+assert not app.exception
+assert app.session_state['migration_receipt'].initial.ownership == 'underdetermined'
+next(b for b in app.button if b.label == 'Obtain selected evidence and apply justified repair').click().run()
+assert not app.exception
+receipt = app.session_state['migration_receipt']
+assert receipt.execution.ownership_preserved and receipt.execution.identity_coverage
+assert replay(export(receipt))
+assert not any(b.label == 'Run with live model' for b in app.button)
+assert set(Path('/tmp').glob('owed-migration-*')) == before
+"""
+        command("exec", "--user", "10001", name, "/app/.venv/bin/python", "-c", migration_check)
         command("exec", "--user", "10001", name, "/app/.venv/bin/python", "-c",
                 "from pathlib import Path; Path('/var/data/owed/persistence-check').write_text('retained')")
         command("restart", name)
         assert command("exec", "--user", "10001", name, "cat",
                        "/var/data/owed/persistence-check") == "retained"
-        print(json.dumps({"health": True, "public_ui": True, "unprivileged_server": True, "persistent_volume": True,
+        print(json.dumps({"health": True, "public_ui": True, "migration_journey": True,
+                          "migration_proof_sources": True, "temporary_cleanup": True,
+                          "unprivileged_server": True, "persistent_volume": True,
                           "scope": "Real Docker image, public mode, no provider credentials"}))
     except Exception:
         print(command("logs", name))  # This test container receives no real credentials.

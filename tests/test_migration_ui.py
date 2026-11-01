@@ -21,6 +21,11 @@ def test_public_guided_migration_session_and_replay(monkeypatch, tmp_path):
     assert not app.exception
     receipt = app.session_state["migration_receipt"]
     assert receipt.execution.ownership_preserved
+    app.session_state["migration_receipt"] = receipt.model_dump(mode="json")
+    app.run()
+    assert not app.exception
+    assert not any("remains history" in w.value for w in app.warning)
+    app.session_state["migration_receipt"] = receipt
     next(b for b in app.button if b.label == "Replay this receipt offline").click().run()
     assert app.session_state["migration_replay"] is True
     other = AppTest.from_file(str(root / "app.py"), default_timeout=20).run()
@@ -43,6 +48,8 @@ def test_public_missing_stale_and_conflicting_modes(monkeypatch):
         assert not app.exception
         receipt = app.session_state["migration_receipt"]
         assert receipt.execution is None
+        if mode == "missing":
+            assert any("source did not supply" in w.value for w in app.warning)
         if mode == "stale":
             next(b for b in app.button if b.label == "Refresh stale crosswalk from current authority").click().run()
             assert not app.exception
