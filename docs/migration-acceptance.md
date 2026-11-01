@@ -162,3 +162,33 @@ Latest local regression run after the audit repairs: **274 passed in 23.61s**;
 Ruff and strict mypy (21 modules) passed; all three mandatory migration proofs
 passed. Three-account core repair was 15.76ms in that sample. These timings are
 single local observations with different scopes; no broader performance claim.
+
+## Final release-candidate audit
+
+Audited application code: `466d53d0e210ba14af7b2dcdcd8e056a399bc27b`.
+Its [extended Linux/container workflow](https://github.com/dbccpage/owed_ai/actions/runs/41345708824)
+passed tests, Ruff, strict typing, actual Docker build and full migration execution
+under uid 10001, proof-source matching, replay, temporary cleanup and volume restart.
+The final documentation/configuration follow-up is tracked in draft PR #4.
+
+| Acceptance IDs | Final result and evidence ceiling |
+|---|---|
+| M01–M02 | Pass: real transactions/rollback/rerun rejection, separate committed-row observer, independently verified ambiguity witnesses and corruption rejection |
+| M03–M04 | Pass: explicit source port, finite informative-action selection, scope validation, missing/stale/invalid/conflicting evidence and tool failure behavior |
+| M05–M06 | Pass: exact simulated admission binding, changed-input denial, safe bounded JSON replay, forged flags/lineage/repair rejection, no query or execution during replay |
+| M07 | Pass: 200 seeds across two families, 2–6 accounts, varied IDs/order/amounts, equal/negative balances, partial/correct/incorrect mappings; no universal correctness or model-performance claim |
+| M08 | Pass: all three Lean 4.19.0 statements and axiom audit, build source digest checks; Python/SQL conformance remains separate |
+| M09 | Pass: default guided journey, browser keyboard interaction, 1280×900 and 390×844 layout, session reset/isolation, unavailable/conflicting branches, source-change invalidation and actual downloaded receipt replay |
+| M10 | Pass: scriptable CLI, three reproducible receipts, named-environment timings, architecture/walkthrough/portfolio description, package and release/rollback instructions, reviewable draft PR |
+
+Artifact audit: 125 manifest file digests matched both worktree and source-archive
+members. Wheel/source builds succeeded and the configured-secret/private-data scan
+passed. This is integrity evidence, not a signature or authentication of the author.
+
+This completes the requested local implementation and release preparation. No PR
+merge or migration production rollout is implied. The proposed hostname is
+**owed.anomalon.com**; actual DNS/TLS setup, hosted migration validation, Google
+live-operator verification and provider-side spending cap remain later release
+operations. The existing public demo remains live-model-disabled. Human
+comprehension targets are unmeasured; browser operability is verified, not human
+learning outcomes or full accessibility certification.

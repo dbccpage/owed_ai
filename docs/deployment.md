@@ -1,6 +1,13 @@
 # Render deployment and the Anomalon home
 
-Use **workbench.anomalon.com** for Owed. Reserve **anomalon.com** for the wider
+Current public endpoint: [Owed on Render](https://owed-workbench.onrender.com/).
+The public-only service uses free compute and ephemeral state; live model execution
+is disabled. The paid persistent Blueprint below is a separate future configuration.
+The migration release candidate and its later `owed.anomalon.com` checklist are in
+[migration release instructions](migration-release.md); that hostname is not yet
+verified live. Keep the Render endpoint available through any later DNS transition.
+
+Use **owed.anomalon.com** for Owed. Reserve **anomalon.com** for the wider
 Anomalon story and the future Omega Engine V1.0RC product home. The apex can later
 link Pre-Genesis, Genesis, quantum mechanics, the engine, research repositories,
 and individual products. This release does not claim to implement that full estate.
@@ -33,11 +40,11 @@ The ledger's viewer/operator toggle remains a mathematical simulation.
 1. Review the paid service and disk configuration in `render.yaml`, then create a
    Render Blueprint from the reviewed branch. Leave `WORKBENCH_LIVE_ENABLED=false`
    for the first public deploy. Configure service billing in Render separately.
-2. Add `workbench.anomalon.com` as a Render custom domain. Use the exact DNS target
+2. Add `owed.anomalon.com` as a Render custom domain. Use the exact DNS target
    Render supplies; do not point the apex domain away from its future home.
 3. Create a Google OAuth **Web application** client, configure the consent audience
    and test users as appropriate, and register the exact authorized redirect URI:
-   `https://workbench.anomalon.com/oauth2callback`. If testing on Render's temporary
+   `https://owed.anomalon.com/oauth2callback`. If testing on Render's temporary
    hostname, register that callback too and set `WORKBENCH_PUBLIC_URL` to that origin.
 4. Set `WORKBENCH_AUTH_CLIENT_ID` and `WORKBENCH_AUTH_CLIENT_SECRET` in Render's secret
    environment settings. The Blueprint generates `WORKBENCH_COOKIE_SECRET`; retain

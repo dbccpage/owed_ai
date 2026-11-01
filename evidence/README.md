@@ -1,5 +1,11 @@
 # Validation evidence · v0.0.1.0
 
+The migration release candidate is documented in the
+[requirements-to-tests report](../docs/migration-acceptance.md),
+[browser observations](migration-browser.json), [core timings](migration-core.json),
+and [three-theorem Lean audit](migration-lean.json). Historical ledger/provider
+results below remain separate. The migration candidate has not been deployed.
+
 Latest hosted-mode preparation is recorded in [hosted validation](hosted-validation.md),
 including Linux container CI, OIDC protocol testing, isolation and spending controls.
 The table below preserves the original local MVP validation baseline.

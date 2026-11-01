@@ -85,7 +85,7 @@ That model was available during the recorded validation; availability can change
 For a public demo with Google-authenticated live experiments, see the
 [Render deployment guide](docs/deployment.md). The Blueprint starts with live access
 disabled. Hosted operators receive isolated stores and share transactional request
-and spending controls. `workbench.anomalon.com` is the planned product address;
+and spending controls. `owed.anomalon.com` is the planned product address;
 `anomalon.com` remains the future home of the broader Omega Engine programme.
 
 ```powershell
