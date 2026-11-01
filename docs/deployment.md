@@ -58,12 +58,22 @@ The ledger's viewer/operator toggle remains a mathematical simulation.
 5. Set `OPENROUTER_API_KEY` to a **dedicated, provider-limited deployment key**.
    Configure its credit limit/reset in OpenRouter; the application never modifies
    keys or account settings. Keep personal development keys out of this deployment.
-6. Set `WORKBENCH_LIVE_ENABLED=true` and redeploy with the allowlist still empty.
-   After Google login, the account-identifier expander shows that user's own subject
-   ID. Verify the operator's identity out of band, then set `WORKBENCH_ALLOWED_SUBJECTS`
-   to a JSON list of approved subject IDs and redeploy. An empty list denies all operators.
-   Complete an actual Google sign-in and verify the identity/allowlist before sharing
-   live access. Google account configuration is not replaced by our loopback fixture.
+6. Set `WORKBENCH_AUTH_ENABLED=true`, leave `WORKBENCH_LIVE_ENABLED=false`, and redeploy.
+   This enables Google login/logout and identity inspection while every live model
+   submission remains denied. The verified account-identifier expander shows only
+   that user's own subject ID. Check sign-in, issuer/expiry validation and logout
+   through the exact public callback; never copy tokens or client secrets into evidence.
+7. Verify the dedicated OpenRouter key's provider-side credit limit and reset period.
+   Only after both Google login and that cap are verified should live launch be
+   considered. Set `WORKBENCH_ALLOWED_SUBJECTS` to a JSON list of approved subject IDs
+   after checking operator identities; an empty list denies all operators. Enabling
+   login alone never creates a private workspace or grants model authority. Keep
+   `WORKBENCH_LIVE_ENABLED=false` until live launch is authorized.
+
+The authentication switch defaults to the live switch when absent, preserving
+existing live deployments. Set both explicitly in new deployments. A live-enabled,
+auth-disabled configuration is rejected at startup. Real Google account validation
+remains separate from the loopback OIDC fixture.
 
 Logout clears the current Streamlit session and its browser identity cookie. Existing
 tabs can retain their previously authenticated session until token expiry; it is not

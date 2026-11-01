@@ -42,6 +42,7 @@ class Principal(Record):
 
 class HostedPolicy(Record):
     live_enabled: bool = False
+    auth_enabled: bool = False
     issuer: str = ""
     subjects: tuple[str, ...] = ()
     model: str = "openai/gpt-4.1-mini"
@@ -55,8 +56,11 @@ class HostedPolicy(Record):
     @classmethod
     def from_env(cls) -> HostedPolicy:
         enabled = os.getenv("WORKBENCH_LIVE_ENABLED", "false")
-        if enabled not in ("true", "false"):
+        auth = os.getenv("WORKBENCH_AUTH_ENABLED", enabled)
+        if enabled not in ("true", "false") or auth not in ("true", "false"):
             raise ValueError("invalid_live_switch")
+        if enabled == "true" and auth != "true":
+            raise ValueError("live_requires_auth")
         subjects = json.loads(os.getenv("WORKBENCH_ALLOWED_SUBJECTS", "[]"))
         if not isinstance(subjects, list) or any(
             not isinstance(s, str) or not s.strip() for s in subjects
@@ -64,6 +68,7 @@ class HostedPolicy(Record):
             raise ValueError("subject_list_required")
         policy = cls(
             live_enabled=enabled == "true",
+            auth_enabled=auth == "true",
             issuer=os.getenv("WORKBENCH_AUTH_ISSUER", ""),
             subjects=tuple(subjects),
             model=os.getenv("WORKBENCH_HOSTED_MODEL", "openai/gpt-4.1-mini"),
@@ -77,18 +82,31 @@ class HostedPolicy(Record):
                 )
             },
         )
-        if policy.live_enabled and (not secure_url(policy.issuer) or not policy.model.strip()):
+        if (policy.auth_enabled and not secure_url(policy.issuer)) or (
+            policy.live_enabled and not policy.model.strip()
+        ):
             raise ValueError("hosted_auth_and_model_required")
         return policy
 
-    def authenticate(self, logged_in: bool, claims: Mapping[str, object]) -> Principal:
-        """Only call with claims verified by Streamlit OIDC, never uploaded JSON/headers."""
+    def login_subject(self, logged_in: bool, claims: Mapping[str, object]) -> str:
+        """Inspect Streamlit-verified identity without granting experiment authority."""
         subject, expiry = claims.get("sub"), claims.get("exp")
         if (
-            not self.live_enabled or not logged_in or claims.get("iss") != self.issuer
-            or not isinstance(subject, str) or subject not in self.subjects
+            not self.auth_enabled or not logged_in or claims.get("iss") != self.issuer
+            or not isinstance(subject, str) or not subject.strip()
             or type(expiry) is not int or expiry <= time.time()
         ):
+            raise ValueError("login_not_verified")
+        return subject
+
+    def authenticate(self, logged_in: bool, claims: Mapping[str, object]) -> Principal:
+        """Only call with claims verified by Streamlit OIDC, never uploaded JSON/headers."""
+        try:
+            subject = self.login_subject(logged_in, claims)
+        except ValueError:
+            raise ValueError("live_access_denied") from None
+        expiry = claims.get("exp")
+        if not self.live_enabled or subject not in self.subjects or type(expiry) is not int:
             raise ValueError("live_access_denied")
         return Principal(owner=digest({"issuer": self.issuer, "subject": subject}), expires=expiry)
 

@@ -58,7 +58,7 @@ def main() -> None:
     root.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryFile(dir=root):
         pass  # Fail at startup if the mounted data directory is not writable.
-    if policy.live_enabled:
+    if policy.auth_enabled:
         document = auth_document()
         # Never build credentials into an image or write them into the mounted run archive.
         descriptor, filename = tempfile.mkstemp(prefix="owed-auth-", suffix=".toml")

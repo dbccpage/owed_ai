@@ -16,6 +16,8 @@ services:
         value: hosted
       - key: WORKBENCH_LIVE_ENABLED
         value: "false"
+      - key: WORKBENCH_AUTH_ENABLED
+        value: "false"
       - key: WORKBENCH_DATA_DIR
         value: /var/data/owed
       - key: WORKBENCH_PUBLIC_URL
