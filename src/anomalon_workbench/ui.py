@@ -293,7 +293,7 @@ def overview() -> None:
     )
     if hosted_mode():
         st.write("**Anomalon:** Owed is a working research exhibit on the path to Omega Engine V1.0RC. The broader Pre-Genesis → Genesis → quantum mechanics → Omega Engine story belongs to the Anomalon home; this workbench demonstrates three scoped ideas.")
-        st.link_button("Explore Owed on GitHub", "https://github.com/dbccpage/owed-ai")
+        st.link_button("Explore Owed on GitHub", "https://github.com/dbccpage/owed_ai")
     proof = Path("evidence/lean-verification.json")
     with st.expander("Formal supplement and research lineage"):
         st.write(

@@ -1,6 +1,6 @@
 # Owed — The Accountable Agent Workbench
 
-v0.0.1.0 · from Anomalon / Omega Engine · [dbccpage/owed-ai](https://github.com/dbccpage/owed-ai)
+v0.0.1.0 · from Anomalon / Omega Engine · [dbccpage/owed_ai](https://github.com/dbccpage/owed_ai)
 
 ## Migration challenge (release candidate)
 
@@ -52,8 +52,8 @@ A small Python workbench distilling Anomalon/Omega Engine research into three in
 Requires Python **3.12** and [uv](https://docs.astral.sh/uv/). All authored application code is Python. Streamlit and other dependencies contain their own browser/native components.
 
 ```powershell
-git clone https://github.com/dbccpage/owed-ai.git
-cd owed-ai
+git clone https://github.com/dbccpage/owed_ai.git
+cd owed_ai
 uv sync --locked
 Copy-Item .env.example .env  # Only when you do not already have .env
 uv run streamlit run app.py --server.address 127.0.0.1
