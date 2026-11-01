@@ -3,13 +3,13 @@
   "python": "3.12.12",
   "accounts": 3,
   "seconds": {
-    "repaired": 0.016629199963063,
-    "unresolved": 0.006491499952971935,
-    "conflicting": 0.007265100022777915
+    "repaired": 0.01459240005351603,
+    "unresolved": 0.006215299945324659,
+    "conflicting": 0.005626400001347065
   },
   "formal_artifact": {
     "status": "verified_during_build",
-    "artifact_sha256": "84868b38d0af8ab6d414cbdacc1cfc05d036d64be15f259e8dc3974246b0f51f",
+    "artifact_sha256": "ca4670ff751895e95648ec11d1f514f6ff3e98274836d73dee78efe9c37d41d5",
     "boundary": "Model results only; Python and committed SQLite rows require separate runtime checks."
   },
   "scope": "Three local core runs; not browser usability or Render cold-start measurements"

@@ -21,6 +21,7 @@ from .migration import (
     Scenario,
     Scope,
     evaluate,
+    response_matches_action,
     select_action,
     valid_plan,
     verify_witness,
@@ -150,6 +151,8 @@ def run(
     if prior is not None:
         if prior.scenario != scenario or prior.original != original:
             raise ValueError("prior_scope_mismatch")
+        if not replay(export(prior)):
+            raise ValueError("invalid_prior_receipt")
         initial_observations = prior.initial_observations
     initial = evaluate(scenario, original, initial_observations)
     if initial.witness and not verify_witness(scenario, initial_observations, initial.witness):
@@ -176,6 +179,8 @@ def run(
                     status="unavailable",
                     issue="Evidence adapter unavailable; no truth conclusion",
                 )
+            if not response_matches_action(action, observation):
+                raise ValueError("evidence_response_contract")
             observations = (*observations, observation)
             steps.append(Step(action=action, observation=observation))
             if (
@@ -275,11 +280,8 @@ def replay(raw: str) -> bool:
     for step in r.steps:
         if step.action != select_action(r.scenario, previous):
             return False
-        if step.observation.scope == r.scenario.scope and step.observation.status == "observed":
-            if step.action.kind == "source" and any(
-                p.source != step.action.source for p in step.observation.links
-            ):
-                return False
+        if not response_matches_action(step.action, step.observation):
+            return False
         previous += (step.observation,)
     for plan, execution in ((r.original, r.preview), (r.repaired, r.execution)):
         if plan is None or execution is None:

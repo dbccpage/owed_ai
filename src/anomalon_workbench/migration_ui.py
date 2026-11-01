@@ -72,16 +72,25 @@ def page() -> None:
                     del st.session_state[key]
             st.rerun()
     if start_requested:
+        st.session_state.pop("migration_replay", None)
         # Only preview and missing-distinction evaluation happen at this stage.
         st.session_state["migration_receipt"] = run(
             scenario, candidate, SyntheticAuthority(scenario, authority, mode), acquire=False
         )
     stored = st.session_state.get("migration_receipt")
     receipt = Receipt.model_validate_json(canonical(stored)) if stored is not None else None
+    replay_result = st.session_state.get("migration_replay")
+    if (
+        receipt is None or not isinstance(replay_result, dict)
+        or replay_result.get("receipt_digest") != digest(receipt)
+        or type(replay_result.get("matched")) is not bool
+    ):
+        st.session_state.pop("migration_replay", None)
     if receipt is None:
         engineering()
         return
     if receipt.scenario != scenario:
+        st.session_state.pop("migration_replay", None)
         st.warning(
             "Snapshot or crosswalk version changed. The receipt below remains history for its original scope; its admission is inapplicable here."
         )
@@ -236,15 +245,18 @@ def page() -> None:
         )
     st.subheader("5. Inspect or challenge the evidence")
     if st.button("Change snapshot and crosswalk version"):
+        st.session_state.pop("migration_replay", None)
         st.session_state["migration_epoch"] = epoch + 1
         st.rerun()
     st.download_button(
         "Export replayable receipt", export(receipt), "owed-migration.json", "application/json"
     )
     if st.button("Replay this receipt offline"):
-        st.session_state["migration_replay"] = replay(export(receipt))
+        st.session_state["migration_replay"] = {
+            "receipt_digest": digest(receipt), "matched": replay(export(receipt))
+        }
     if "migration_replay" in st.session_state:
-        st.write("Offline semantic replay matched:", st.session_state["migration_replay"])
+        st.write("Offline semantic replay matched:", st.session_state["migration_replay"]["matched"])
     with st.expander("Plans, observations, obligations, admission and receipt"):
         st.caption(
             "Hashes detect content changes relative to the supplied digest. They do not authenticate a self-consistently rewritten bundle. Replay is never execution authority."
