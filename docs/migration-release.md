@@ -13,8 +13,9 @@ Normal Chrome checks through the public hostname passed the preview, independent
 checked ambiguity witness, accepted correspondence, committed repair and all six
 execution properties. Browser replay, receipt download and independent CLI replay,
 valid/unsupported receipt imports, proof-artifact status and changed-snapshot
-invalidation also passed. The evidence record distinguishes these observations
-from local fault-mode tests and outstanding hosted checks. No live model call,
+invalidation also passed. Hosted missing, stale and contradictory evidence checks,
+stale-source refresh, case generation and reset also passed. The evidence record
+distinguishes these observations from the larger local generated-case audit. No live model call,
 Google login or spending-cap validation is implied.
 
 ## Build and local preview

@@ -17,7 +17,9 @@ PR #4 is merged, and the migration challenge was deployed from `86c2d90`.
 **Live model experiments remain disabled.** On November 1, 2026, normal Chrome
 validation through this hostname passed preview, witness verification, accepted
 evidence, committed repair, export, browser/CLI replay, receipt import checks and
-snapshot invalidation. See the [deployment evidence](evidence/migration-deployment.json)
+snapshot invalidation. Hosted missing/stale/conflicting evidence checks, stale
+refresh, case generation and session reset also pass. See the
+[deployment evidence](evidence/migration-deployment.json)
 for exact scope and remaining checks, and the [review record](evidence/migration-pr-review.json)
 for the 274-test, typing, lint, container and Lean validation results.
 

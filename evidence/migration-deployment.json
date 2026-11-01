@@ -49,7 +49,18 @@
     "changed_snapshot_preserves_history": true,
     "changed_snapshot_invalidates_admission": true,
     "changed_snapshot_ownership": "underdetermined",
-    "changed_snapshot_dependency_status": "stale"
+    "changed_snapshot_dependency_status": "stale",
+    "generated_seed_1_and_restored_seed_0": true,
+    "session_reset_clears_prior_receipt_and_scope_change": true,
+    "missing_evidence_status": "unavailable",
+    "missing_evidence_ownership": "underdetermined",
+    "missing_evidence_repair_admitted": false,
+    "stale_evidence_excluded": true,
+    "stale_evidence_ownership": "underdetermined",
+    "refresh_current_authority_enables_committed_supported_repair": true,
+    "contradictory_evidence_ownership": "inconsistent",
+    "contradictory_evidence_compatible_mappings": 0,
+    "contradictory_evidence_repair_admitted": false
   },
   "downloaded_public_synthetic_receipt": {
     "path": "examples/migration/hosted-repaired.json",
@@ -57,7 +68,7 @@
     "cli_command": "python -m anomalon_workbench.migration_demo --replay examples/migration/hosted-repaired.json",
     "cli_result": {"offline_replay_matched": true, "execution_authorized": false}
   },
-  "screenshots": ["migration-hosted-landing.png", "migration-hosted-repair.png", "migration-hosted-proof.png"],
-  "remaining_hosted_checks": ["Render final deployment badge", "missing evidence", "stale evidence and refresh", "contradictory evidence", "another seed and session reset"],
-  "limits": "This records observed public synthetic behavior. Local fault-mode and generated-case results remain separate. No live model requests, real Google login, provider spending-cap validation, durable run storage, production security certification, Render cold-start benchmark, fresh Lean compilation on Render, or human comprehension study is claimed."
+  "screenshots": ["migration-hosted-landing.png", "migration-hosted-repair.png", "migration-hosted-proof.png", "migration-hosted-missing.png", "migration-hosted-stale.png", "migration-hosted-conflict.png"],
+  "remaining_hosted_checks": ["Render final deployment badge"],
+  "limits": "This records observed public synthetic behavior, including all four evidence modes. The larger local generated-case audit remains separate. No live model requests, real Google login, provider spending-cap validation, durable run storage, production security certification, Render cold-start benchmark, fresh Lean compilation on Render, or human comprehension study is claimed."
 }
