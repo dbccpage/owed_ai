@@ -15,8 +15,9 @@ def test_generated_repair_and_independent_observer(seed):
     assert receipt.initial.ownership == Verdict.UNDERDETERMINED
     assert verify_witness(scenario, (), receipt.initial.witness)
     assert receipt.final.ownership == Verdict.REFUTED
-    expected = {p.destination: a.cents for p in truth.links for a in scenario.accounts
-                if a.id == p.source}
+    expected = {
+        p.destination: a.cents for p in truth.links for a in scenario.accounts if a.id == p.source
+    }
     assert dict(receipt.execution.rows) == expected
     assert receipt.execution.ownership_preserved
     assert replay(export(receipt))
@@ -29,8 +30,10 @@ def test_missing_stale_conflicting_and_correct():
         assert r.final.ownership == Verdict.UNDERDETERMINED
         assert r.execution is None
         assert replay(export(r))
-    conflicting = (Observation(scope=s.scope, links=truth.links),
-                   Observation(scope=s.scope, links=candidate.links))
+    conflicting = (
+        Observation(scope=s.scope, links=truth.links),
+        Observation(scope=s.scope, links=candidate.links),
+    )
     result = evaluate(s, candidate, conflicting)
     assert result.ownership == Verdict.INCONSISTENT
     assert len(result.conflicts) == 2
@@ -65,3 +68,132 @@ def test_corrupted_witness_and_receipt():
     assert not replay(export(r).replace('"seed":0', '"seed":1'))
     with pytest.raises(ValueError):
         replay(" " * 100001)
+
+
+@pytest.mark.parametrize("seed", range(100))
+def test_independent_case_families(seed):
+    """Test-owned authority: no production fixture/generator constructs grading truth."""
+    import random
+
+    from anomalon_workbench.migration import Account, Link, Plan, Scenario, Scope, select_action
+
+    rng = random.Random(seed + 8181)
+    count = 2 + seed % 5
+    sources = rng.sample(range(100000, 999999), count)
+    destinations = rng.sample(range(1000000, 9999999), count)
+    expected_pairs = dict(
+        zip((f"owner-{i}" for i in sources), (f"target-{i}" for i in destinations))
+    )
+    amounts = {s: (500 if seed % 3 == 0 else rng.randint(-10000, 10000)) for s in expected_pairs}
+    source_order = list(expected_pairs)
+    destination_order = list(expected_pairs.values())
+    rng.shuffle(source_order)
+    rng.shuffle(destination_order)
+    scenario = Scenario(
+        seed=seed,
+        scope=Scope(snapshot="v1", roster="v1", crosswalk="v1"),
+        accounts=tuple(Account(id=s, cents=amounts[s]) for s in source_order),
+        destinations=tuple(destination_order),
+    )
+    truth = Plan(
+        version=1, links=tuple(Link(source=s, destination=d) for s, d in expected_pairs.items())
+    )
+    wrong_links = list(truth.links)
+    x, y = wrong_links[:2]
+    wrong_links[:2] = [
+        Link(source=x.source, destination=y.destination),
+        Link(source=y.source, destination=x.destination),
+    ]
+    wrong = Plan(version=1, links=tuple(wrong_links))
+    evidence = (Observation(scope=scenario.scope, links=truth.links),)
+    assert evaluate(scenario, truth, evidence).ownership == Verdict.SUPPORTED
+    assert evaluate(scenario, wrong, evidence).ownership == Verdict.REFUTED
+    assert select_action(scenario, ()).kind != "repeat_total"
+    partial = (Observation(scope=scenario.scope, links=truth.links[:1]),)
+    assert evaluate(scenario, truth, partial).ownership in (
+        Verdict.SUPPORTED,
+        Verdict.UNDERDETERMINED,
+    )
+    r = run(scenario, wrong, SyntheticAuthority(scenario, truth))
+    assert dict(r.execution.rows) == {d: amounts[s] for s, d in expected_pairs.items()}
+    if seed % 3 == 0:
+        assert r.preview.rows == r.execution.rows  # exact identity error; no monetary-harm claim
+
+
+def test_faults_metadata_and_offline_replay_boundaries(monkeypatch):
+    import json
+
+    from anomalon_workbench.domain import canonical, digest
+    from anomalon_workbench.migration import Link
+
+    s, candidate, truth = fixture()
+    bad = Observation(scope=s.scope, links=(Link(source="unknown", destination=s.destinations[0]),))
+    ev = evaluate(s, candidate, (bad,))
+    assert ev.evidence_status == ("invalid",) and ev.ownership == Verdict.UNDERDETERMINED
+    conflicting = run(s, candidate, SyntheticAuthority(s, truth, "contradictory"))
+    assert conflicting.final.ownership == Verdict.INCONSISTENT
+    assert conflicting.execution is None and replay(export(conflicting))
+
+    class Down:
+        def obtain(self, scope, action):
+            raise TimeoutError("external secret text must never be recorded")
+
+    missing = run(s, candidate, Down())
+    assert missing.final.ownership == Verdict.UNDERDETERMINED
+    assert "external secret" not in export(missing)
+    good = run(s, candidate, SyntheticAuthority(s, truth))
+    monkeypatch.setattr(
+        "anomalon_workbench.migration_demo.execute", lambda *a, **k: pytest.fail("offline executed")
+    )
+    monkeypatch.setattr(
+        SyntheticAuthority, "obtain", lambda *a, **k: pytest.fail("offline queried")
+    )
+    assert replay(export(good))
+    bundle = json.loads(export(good))
+    bundle["receipt"]["execution"]["committed"] = False
+    bundle["sha256"] = digest(bundle["receipt"])
+    assert not replay(canonical(bundle))
+
+
+def test_scope_admission_input_bounds_and_build_proof(tmp_path, monkeypatch):
+    from pydantic import ValidationError
+
+    from anomalon_workbench.migration import Account, Plan, Scenario, Scope
+    from anomalon_workbench.migration_proof import proof_status
+
+    s, candidate, truth = fixture()
+    evidence = (Observation(scope=s.scope, links=truth.links),)
+    approval = admit(s, truth, evidence)
+    changed = s.model_copy(update={"scope": s.scope.model_copy(update={"snapshot": "s2"})})
+    assert evaluate(changed, truth, evidence).evidence_status == ("stale",)
+    with pytest.raises(ValueError):
+        execute(tmp_path / "changed.sqlite3", changed, truth, evidence, approval)
+    with pytest.raises(ValueError):
+        execute(tmp_path / "proposed.sqlite3", s, truth, evidence)
+    for amount in (True, 1.5, 1_000_000_001):
+        with pytest.raises(ValidationError):
+            Account(id="x", cents=amount)
+    with pytest.raises(ValidationError):
+        Scope(snapshot="s", roster="r", crosswalk="c", unit="dollar")
+    with pytest.raises(ValidationError):
+        Scenario(seed=0, scope=s.scope, accounts=s.accounts * 3, destinations=s.destinations * 3)
+    assert evaluate(s, Plan(version=1, links=truth.links[:1]), evidence).ownership == Verdict.NOT_EVALUATED
+    monkeypatch.chdir(tmp_path)
+    assert proof_status()["status"] == "not_verified_for_this_build"
+
+
+def test_cli_and_staged_evidence_reuse(monkeypatch, tmp_path, capsys):
+    from anomalon_workbench.migration_demo import main
+
+    s, candidate, truth = fixture()
+    authority = SyntheticAuthority(s, truth)
+    preview = run(s, candidate, authority, acquire=False)
+    assert not preview.steps and not preview.execution and replay(export(preview))
+    repaired = run(s, candidate, authority, prior=preview, one_action=True)
+    assert repaired.preview == preview.preview and repaired.execution.ownership_preserved
+    output = tmp_path / "cli.json"
+    monkeypatch.setattr("sys.argv", ["owed-migration", "--output", str(output)])
+    main()
+    monkeypatch.setattr("sys.argv", ["owed-migration", "--replay", str(output)])
+    main()
+    assert '"offline_replay_matched": true' in capsys.readouterr().out

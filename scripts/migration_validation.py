@@ -7,6 +7,7 @@ from pathlib import Path
 
 from anomalon_workbench.migration import Observation
 from anomalon_workbench.migration_demo import SyntheticAuthority, export, fixture, replay, run
+from anomalon_workbench.migration_proof import proof_status
 
 
 def main() -> None:
@@ -24,11 +25,11 @@ def main() -> None:
         bundle = export(receipt)
         if not replay(bundle):
             raise RuntimeError("replay_failed")
-        (destination / (mode + ".json")).write_text(bundle + "\n", encoding="utf-8")
+        (destination / (mode + ".json")).write_text(bundle + "\n", encoding="utf-8", newline="\n")
     report = {"environment": platform.platform(), "python": platform.python_version(),
-              "accounts": 3, "seconds": timings, "formal_status": "incomplete",
+              "accounts": 3, "seconds": timings, "formal_artifact": proof_status(),
               "scope": "Three local core runs; not browser usability or Render cold-start measurements"}
-    Path("evidence/migration-core.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    Path("evidence/migration-core.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps(report, indent=2))
 
 

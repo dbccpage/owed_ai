@@ -8,7 +8,9 @@ RUN uv sync --locked --no-dev --no-editable
 COPY app.py ./
 COPY examples/live ./examples/live
 COPY evidence/lean-verification.json ./evidence/lean-verification.json
+COPY evidence/migration-lean.json ./evidence/migration-lean.json
 COPY lean/Ledger.lean lean/lean-toolchain lean/lakefile.toml ./lean/
+COPY lean/Migration.lean ./lean/Migration.lean
 RUN useradd --uid 10001 --create-home owed && mkdir -p /var/data/owed
 # The Python entrypoint prepares only the mounted data root, then drops to uid 10001.
 ENV WORKBENCH_CONTAINER=true WORKBENCH_MODE=hosted WORKBENCH_LIVE_ENABLED=false WORKBENCH_DATA_DIR=/var/data/owed

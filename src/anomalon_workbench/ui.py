@@ -343,7 +343,7 @@ def main() -> None:
     with st.sidebar:
         st.title("◈ Owed")
         page = st.radio(
-            "Workbench", ["Overview", "Evidence", "Composition", "Revision", "Run inspector"]
+            "Workbench", ["Migration challenge", "Overview", "Evidence", "Composition", "Revision", "Run inspector"]
         )
         st.divider()
         if hosted and policy is not None:
@@ -381,7 +381,11 @@ def main() -> None:
             "No model request is made until you start a live experiment."
             if hosted else "Credentials stay in your environment or ignored .env. No request is made until you start a run."
         )
-    if page == "Overview":
+    if page == "Migration challenge":
+        from .migration_ui import page as migration_page
+
+        migration_page()
+    elif page == "Overview":
         overview()
     elif page == "Evidence":
         ledger_page(store, provider, model)

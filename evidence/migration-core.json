@@ -3,10 +3,14 @@
   "python": "3.12.12",
   "accounts": 3,
   "seconds": {
-    "repaired": 0.01147520006634295,
-    "unresolved": 0.003648800076916814,
-    "conflicting": 0.003375000087544322
+    "repaired": 0.025801300071179867,
+    "unresolved": 0.008735000155866146,
+    "conflicting": 0.011406299890950322
   },
-  "formal_status": "incomplete",
+  "formal_artifact": {
+    "status": "verified_during_build",
+    "artifact_sha256": "84868b38d0af8ab6d414cbdacc1cfc05d036d64be15f259e8dc3974246b0f51f",
+    "boundary": "Model results only; Python and committed SQLite rows require separate runtime checks."
+  },
   "scope": "Three local core runs; not browser usability or Render cold-start measurements"
 }

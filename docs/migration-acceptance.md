@@ -74,3 +74,39 @@ not just a block; the engineer can reproduce actual rows and offline evaluation;
 the skeptic can inspect the finite scope, evidence port, exact admission binding,
 and explicit absence of a formal/Python execution equivalence claim. Visitor
 comprehension and default-page review require the upcoming UI increment.
+
+## Increment 2 evidence — November 1, 2026
+
+The default public UI now implements staged preview → witness → selected evidence
+→ repaired transaction → replay. Existing mathematical labs remain secondary.
+273 tests pass locally (16.05 seconds), Ruff passes, and strict mypy passes for
+21 modules. This supersedes the increment-1 counts without changing their history.
+
+| ID | Current executable evidence | Status / remaining gate |
+|---|---|---|
+| M01 | `test_atomic_execution_and_exact_admission`; generated rows observed from separate SQLite connection | Local pass; container rerun pending |
+| M02 | 100 generated witness checks; corrupted witness rejection | Pass within 2–6 account scope |
+| M03 | `test_independent_case_families`; staged acquisition/reuse test | Pass locally; no optimal whole-strategy claim |
+| M04 | Missing/stale/conflicting UI tests; unknown-endpoint evidence exclusion; timeout adapter test | Pass locally |
+| M05 | Exact candidate and changed-snapshot denial tests | Pass for simulated operator only |
+| M06 | Imported receipt size/digest checks, recomputed evaluations/actions/rows/flags, no-query/no-execute replay test | Local pass; deeper adversarial import audit still pending |
+| M07 | 100 fixture seeds + 100 test-owned authority seeds; unequal/equal/negative balances, varied IDs/order, partial mappings, correct/incorrect candidates | Pass within declared bounds |
+| M08 | `python scripts/check_migration_lean.py`; `evidence/migration-lean.json` | All 3 model theorems pass under Lean 4.19.0; conservation uses propext/Quot.sound, other two no axioms |
+| M09 | `test_public_guided_migration_session_and_replay`; fault-mode UI tests | Session/isolation/journey pass in AppTest; actual desktop/mobile and comprehension review pending |
+| M10 | `owed-migration`, 3 example receipts, `migration_validation.py`, walkthrough | Local artifacts present; release/container/hosted checks pending |
+
+Timing is measured by `migration_validation.py` on Windows 11 / Python 3.12.12,
+three accounts. See `evidence/migration-core.json` for raw seconds. These are core
+timings, not time-to-first-browser-result or cold-start latency. The 15-second and
+60–90-second comprehension targets remain unmeasured.
+
+The first Lean attempt had a failed rewrite in the inverse-lookup proof; the checker
+reported `sorryAx` and failed. It was replaced by congruence applied to the actual
+left-inverse equation. The successful audit contains no placeholders/custom axioms.
+`lean/Migration.lean` does not prove Python/SQL equivalence. Build evidence verifies
+the exact Lean source hashes; each run separately checks committed database rows.
+
+Before release, inspect the real responsive journey, verify package/container
+inclusion, retain browser observations, refresh example receipts after source changes,
+and run the full acceptance audit. The production service has not been changed by
+these increments. Current release candidate is not declared complete.

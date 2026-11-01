@@ -2,6 +2,41 @@
 
 v0.0.1.0 · from Anomalon / Omega Engine · [dbccpage/owed-ai](https://github.com/dbccpage/owed-ai)
 
+## Migration challenge (release candidate)
+
+**The total was right. The balances went to the wrong accounts.**
+
+Run a synthetic customer-account migration, inspect why its passing total and row
+checks leave ownership unresolved, obtain the missing correspondence, and inspect
+an actually committed SQLite repair. The default local page follows this journey;
+the original research labs remain available in the sidebar.
+
+The current public deployment is [Owed on Render](https://owed-workbench.onrender.com/).
+It serves the earlier three-lab release at `7d81005`; the migration challenge is on
+the review branch `feat/migration-challenge` and has not been deployed. Live model
+experiments remain disabled. **owed.anomalon.com** is the proposed product address,
+pending DNS, HTTPS and application verification.
+
+```powershell
+uv sync --locked
+uv run streamlit run app.py --server.address 127.0.0.1
+uv run owed-migration --seed 0 --output migration.json
+uv run owed-migration --replay migration.json
+uv run python scripts/check_migration_lean.py
+```
+
+The public challenge needs no model provider or login. It supports 2–6 accounts,
+signed integer USD cents and bijective identity correspondence into a fresh
+destination. Preview and repair execute in separate temporary databases. Export
+receipts for history; session reset and service restarts do not provide durability.
+The public operator role is a simulation scoped to synthetic data.
+
+See the [acceptance report](docs/migration-acceptance.md) and
+[migration walkthrough](docs/migration-walkthrough.md). Three model results are
+checked in Lean 4.19.0; runtime database conformance is checked separately. Hashes
+bind receipt content, not the truth of the synthetic authority or authorship of a
+self-consistently rewritten bundle.
+
 **What did the agent establish—and what does it still owe?**
 
 A small Python workbench distilling Anomalon/Omega Engine research into three inspectable experiments. Live models propose. Exact checkers decide what the represented evidence supports. Human operators retain admission authority.
