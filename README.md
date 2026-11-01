@@ -1,6 +1,43 @@
 # Owed — The Accountable Agent Workbench
 
-v0.0.1.0 · from Anomalon / Omega Engine · [dbccpage/owed-ai](https://github.com/dbccpage/owed-ai)
+v0.0.1.0 · from Anomalon / Omega Engine · [dbccpage/owed_ai](https://github.com/dbccpage/owed_ai)
+
+## Migration challenge (release candidate)
+
+**The total was right. The balances went to the wrong accounts.**
+
+Run a synthetic customer-account migration, inspect why its passing total and row
+checks leave ownership unresolved, obtain the missing correspondence, and inspect
+an actually committed SQLite repair. The default local page follows this journey;
+the original research labs remain available in the sidebar.
+
+The current public deployment is **[owed.anomalon.com](https://owed.anomalon.com/)**
+([Render fallback](https://owed-workbench.onrender.com/)).
+It serves the earlier three-lab release at `7d81005`; the migration challenge is on
+the review branch `feat/migration-challenge` and has not been deployed. Live model
+experiments remain disabled. DNS and certificate-validated HTTPS health/app-shell
+checks passed on November 1, 2026; see [domain evidence](evidence/domain-validation.json).
+The domain connection does not publish the migration release candidate.
+
+```powershell
+uv sync --locked
+uv run streamlit run app.py --server.address 127.0.0.1
+uv run owed-migration --seed 0 --output migration.json
+uv run owed-migration --replay migration.json
+uv run python scripts/check_migration_lean.py
+```
+
+The public challenge needs no model provider or login. It supports 2–6 accounts,
+signed integer USD cents and bijective identity correspondence into a fresh
+destination. Preview and repair execute in separate temporary databases. Export
+receipts for history; session reset and service restarts do not provide durability.
+The public operator role is a simulation scoped to synthetic data.
+
+See the [acceptance report](docs/migration-acceptance.md) and
+[migration walkthrough](docs/migration-walkthrough.md). Three model results are
+checked in Lean 4.19.0; runtime database conformance is checked separately. Hashes
+bind receipt content, not the truth of the synthetic authority or authorship of a
+self-consistently rewritten bundle.
 
 **What did the agent establish—and what does it still owe?**
 
@@ -17,8 +54,8 @@ A small Python workbench distilling Anomalon/Omega Engine research into three in
 Requires Python **3.12** and [uv](https://docs.astral.sh/uv/). All authored application code is Python. Streamlit and other dependencies contain their own browser/native components.
 
 ```powershell
-git clone https://github.com/dbccpage/owed-ai.git
-cd owed-ai
+git clone https://github.com/dbccpage/owed_ai.git
+cd owed_ai
 uv sync --locked
 Copy-Item .env.example .env  # Only when you do not already have .env
 uv run streamlit run app.py --server.address 127.0.0.1
@@ -50,7 +87,7 @@ That model was available during the recorded validation; availability can change
 For a public demo with Google-authenticated live experiments, see the
 [Render deployment guide](docs/deployment.md). The Blueprint starts with live access
 disabled. Hosted operators receive isolated stores and share transactional request
-and spending controls. `workbench.anomalon.com` is the planned product address;
+and spending controls. [owed.anomalon.com](https://owed.anomalon.com/) is the public product address;
 `anomalon.com` remains the future home of the broader Omega Engine programme.
 
 ```powershell

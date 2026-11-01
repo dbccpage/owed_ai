@@ -15,7 +15,9 @@ src/**/__pycache__/
 !examples/live/**
 !evidence/
 !evidence/lean-verification.json
+!evidence/migration-lean.json
 !lean/
 !lean/Ledger.lean
+!lean/Migration.lean
 !lean/lean-toolchain
 !lean/lakefile.toml

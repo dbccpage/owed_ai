@@ -13,6 +13,7 @@ dependencies = ["pydantic>=2.10,<3", "httpx>=0.28,<1", "python-dotenv>=1,<2", "s
 
 [project.scripts]
 anomalon = "anomalon_workbench.cli:main"
+owed-migration = "anomalon_workbench.migration_demo:main"
 
 [dependency-groups]
 dev = ["pytest>=8,<10", "hypothesis>=6,<7", "ruff>=0.11,<1", "mypy>=1.15,<2"]
@@ -21,7 +22,7 @@ dev = ["pytest>=8,<10", "hypothesis>=6,<7", "ruff>=0.11,<1", "mypy>=1.15,<2"]
 packages = ["src/anomalon_workbench"]
 
 [tool.hatch.build.targets.sdist]
-include = ["src", "tests", "scripts", "docs", "fixtures", "examples", "evidence", ".github", "app.py", "README.md", "LICENSE", "Dockerfile", ".dockerignore", "render.yaml", "pyproject.toml", "uv.lock", ".env.example", ".gitignore", ".gitattributes", ".python-version", "proof_knowledge_obligations_mvp.md", "lean/Ledger.lean", "lean/lakefile.toml", "lean/lean-toolchain"]
+include = ["src", "tests", "scripts", "docs", "fixtures", "examples", "evidence", ".github", "app.py", "README.md", "LICENSE", "Dockerfile", ".dockerignore", "render.yaml", "pyproject.toml", "uv.lock", ".env.example", ".gitignore", ".gitattributes", ".python-version", "proof_knowledge_obligations_mvp.md", "lean/Ledger.lean", "lean/Migration.lean", "lean/lakefile.toml", "lean/lean-toolchain"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

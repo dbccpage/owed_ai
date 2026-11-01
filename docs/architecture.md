@@ -1,5 +1,29 @@
 # One engine, three bounded experiments
 
+## Migration public journey
+
+The default page now presents a separate bounded application service using the
+same immutable-record and canonical-receipt conventions. `migration.py` evaluates
+only passed observations, enumerating at most 720 bijections; its direct witness
+checker reconstructs certificate conditions without invoking the constructor.
+`migration_demo.py` obtains observations exclusively through `EvidencePort`.
+`SyntheticAuthority` holds scenario correspondence outside that evaluator.
+The seed reproduces fixtures; it is not an authority credential or evidence.
+
+`migration_execution.py` renders typed plans through parameterized SQL into a fresh
+database, rolls back interrupted transactions, closes connections, and reads committed
+rows through a separate observer. Exact simulated admission binds scenario, plan,
+policy and accepted evidence versions. Preview is explicitly unadmitted and isolated.
+Temporary databases are removed after execution; only session receipts survive until
+reset/restart. Public receipt imports are size bounded and never query or execute.
+
+The migration supplement proves conservation for permutations of integer lists,
+a concrete ownership counterexample, and conditional inverse-crosswalk preservation.
+`migration_proof.py` checks the recorded Lean source hashes at runtime. This binds
+model proof artifacts to shipped sources, not Python/SQL to Lean semantics.
+Runtime row checks provide separate computational evidence. Neither proof status,
+receipt replay nor an agent proposal grants production authority.
+
 The UI and CLI construct the same `RunSpec`. SQLite admits one active run; a fresh Python worker atomically claims it. The worker calls application services, which use a provider port and exact domain checkers. It writes progress and a content-addressed receipt. The UI only reads that state and requests cancellation or human admission.
 
 Hosted mode adds an outer admission boundary: Streamlit verifies an OIDC identity,

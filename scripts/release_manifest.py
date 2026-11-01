@@ -37,7 +37,7 @@ def main():
             if p.is_file() and "__pycache__" not in p.parts and p.name != "release-manifest.json"
         )
     paths.extend(
-        ROOT / "lean" / name for name in ("Ledger.lean", "lean-toolchain", "lakefile.toml")
+        ROOT / "lean" / name for name in ("Ledger.lean", "Migration.lean", "lean-toolchain", "lakefile.toml")
     )
     secrets = [
         v.encode()
@@ -59,7 +59,7 @@ def main():
         "scope": "File integrity and configured-secret scan; not a signature or authorship certificate",
     }
     (ROOT / "evidence/release-manifest.json").write_text(
-        json.dumps(report, indent=2) + "\n", encoding="utf-8"
+        json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n"
     )
     print(f"Release manifest: {len(files)} files; no configured secret values found.")
 

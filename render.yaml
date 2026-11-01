@@ -19,7 +19,7 @@ services:
       - key: WORKBENCH_DATA_DIR
         value: /var/data/owed
       - key: WORKBENCH_PUBLIC_URL
-        value: https://workbench.anomalon.com
+        value: https://owed.anomalon.com
       - key: WORKBENCH_AUTH_ISSUER
         value: https://accounts.google.com
       - key: WORKBENCH_AUTH_METADATA_URL

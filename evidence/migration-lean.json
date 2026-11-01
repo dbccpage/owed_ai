@@ -1,0 +1,24 @@
+{
+  "status": "verified_during_build",
+  "version": "Lean (version 4.19.0, x86_64-w64-windows-gnu, commit 6caaee842e94, Release)",
+  "command": [
+    "lean",
+    "Migration.lean"
+  ],
+  "exit_status": 0,
+  "theorems": {
+    "conservation": [
+      "Quot.sound",
+      "propext"
+    ],
+    "insufficient_total": [],
+    "ownership": []
+  },
+  "source_sha256": {
+    "lean/Migration.lean": "9950299856b437a1881112028c9e58b2d8d8e224f043ec2dcf2b0c10675197de",
+    "lean/lean-toolchain": "55e97be96000b5e9e290c9e74482e5e317861499a5540353ce845471bded8cea"
+  },
+  "assumptions": "Finite permutation for conservation; two-sided inverse authoritative crosswalk for ownership. Synthetic trust is external to these theorems.",
+  "boundary": "Model results only; Python and committed SQLite rows require separate runtime checks.",
+  "output": "OwedMigration.conservation (xs ys : List Int) (h : xs.Perm ys) : xs.sum = ys.sum\nOwedMigration.insufficient_total :\n  [balance false, balance true].length = [wrong false, wrong true].length \u00e2\u02c6\u00a7\n    [balance false, balance true].sum = [wrong false, wrong true].sum \u00e2\u02c6\u00a7 wrong false \u00e2\u2030\u00a0 balance false\nOwedMigration.ownership {Source Destination : Type} (balances : Source \u00e2\u2020\u2019 Int) (crosswalk : Source \u00e2\u2020\u2019 Destination)\n  (inverse : Destination \u00e2\u2020\u2019 Source) (leftInverse : \u00e2\u02c6\u20ac (s : Source), inverse (crosswalk s) = s)\n  (_rightInverse : \u00e2\u02c6\u20ac (d : Destination), crosswalk (inverse d) = d) (s : Source) :\n  (fun d => balances (inverse d)) (crosswalk s) = balances s\n'OwedMigration.conservation' depends on axioms: [propext, Quot.sound]\n'OwedMigration.insufficient_total' does not depend on any axioms\n'OwedMigration.ownership' does not depend on any axioms\n"
+}

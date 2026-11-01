@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-01",
+  "environment": "Local Windows 11, Python 3.12.12, Streamlit hosted mode, loopback 8504, in-app browser",
+  "live_model_experiments": false,
+  "viewports": [{"width": 1280, "height": 900}, {"width": 390, "height": 844}],
+  "mobile_document_width": 390,
+  "observed": {
+    "primary_action_visible_without_scroll_on_mobile": true,
+    "real_preview_total_and_count_passed": true,
+    "independent_witness_verified": true,
+    "original_candidate_refuted_after_evidence": true,
+    "repaired_plan_supported": true,
+    "committed_rows_verified": true,
+    "offline_replay_matched": true,
+    "downloaded_receipt_cli_replay_matched": true,
+    "snapshot_change_marks_dependencies_stale": true,
+    "missing_evidence_unresolved": true,
+    "contradictory_evidence_inconsistent": true,
+    "keyboard_mode_and_action_controls": true,
+    "another_case_shows_seed_1": true,
+    "session_reset_restores_seed_0": true,
+    "proof_status_verified_during_build": true
+  },
+  "single_sample_automation_timings_ms": {
+    "new_desktop_tab_to_primary_action_visible": 2709,
+    "warm_mobile_click_to_checked_witness": 494,
+    "warm_mobile_evidence_to_committed_repair": 570
+  },
+  "measurement_scope": "Wall time around awaited browser operations, including automation overhead. Warm local service; not Render cold start and not measured human comprehension.",
+  "artifacts": ["migration-desktop-landing.png", "migration-desktop-repair.png", "migration-mobile-landing.png", "migration-mobile-repair.png", "migration-mobile-missing.png", "migration-mobile-conflict.png"],
+  "limitations": "No claim of full accessibility certification, physical mobile-device testing, hosted migration validation, or recruiter comprehension measurement. Stale-crosswalk refresh additionally passes Streamlit AppTest."
+}

@@ -293,7 +293,7 @@ def overview() -> None:
     )
     if hosted_mode():
         st.write("**Anomalon:** Owed is a working research exhibit on the path to Omega Engine V1.0RC. The broader Pre-Genesis → Genesis → quantum mechanics → Omega Engine story belongs to the Anomalon home; this workbench demonstrates three scoped ideas.")
-        st.link_button("Explore Owed on GitHub", "https://github.com/dbccpage/owed-ai")
+        st.link_button("Explore Owed on GitHub", "https://github.com/dbccpage/owed_ai")
     proof = Path("evidence/lean-verification.json")
     with st.expander("Formal supplement and research lineage"):
         st.write(
@@ -343,7 +343,7 @@ def main() -> None:
     with st.sidebar:
         st.title("◈ Owed")
         page = st.radio(
-            "Workbench", ["Overview", "Evidence", "Composition", "Revision", "Run inspector"]
+            "Workbench", ["Migration challenge", "Overview", "Evidence", "Composition", "Revision", "Run inspector"]
         )
         st.divider()
         if hosted and policy is not None:
@@ -381,7 +381,11 @@ def main() -> None:
             "No model request is made until you start a live experiment."
             if hosted else "Credentials stay in your environment or ignored .env. No request is made until you start a run."
         )
-    if page == "Overview":
+    if page == "Migration challenge":
+        from .migration_ui import page as migration_page
+
+        migration_page()
+    elif page == "Overview":
         overview()
     elif page == "Evidence":
         ledger_page(store, provider, model)
