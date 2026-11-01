@@ -55,7 +55,12 @@ See [Render rollback behavior](https://render.com/docs/rollbacks).
 
 ## Later domain setup: owed.anomalon.com
 
-This name matches Owed and is a proposed hostname, not a verified public URL.
+The owner completed this connection on November 1, 2026. The CNAME resolves to
+`owed-workbench.onrender.com`; certificate-validated HTTPS returned 200 for the app
+shell and `/_stcore/health`. [Validation evidence](../evidence/domain-validation.json)
+records the scope: browser interaction through this hostname was not rechecked by
+the HTTP probe, and this does not publish the migration candidate. The checklist
+below remains useful for reproducing or repairing the domain setup.
 No registration or paid-resource change is needed merely to propose a subdomain.
 
 1. In the actual Render service Settings → Custom Domains, add `owed.anomalon.com`.

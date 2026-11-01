@@ -192,3 +192,12 @@ live-operator verification and provider-side spending cap remain later release
 operations. The existing public demo remains live-model-disabled. Human
 comprehension targets are unmeasured; browser operability is verified, not human
 learning outcomes or full accessibility certification.
+
+### Subsequent domain connection — November 1, 2026
+
+The owner completed Render/GoDaddy setup for `owed.anomalon.com`. Independent
+public CNAME resolution and certificate-validated HTTPS health/app-shell probes
+passed; see `evidence/domain-validation.json`. This supersedes the proposed-domain
+status above. It does not alter the audited migration code, publish PR #4, or
+complete Google/live-operator verification. No live-experiment configuration was
+changed by this documentation operation.

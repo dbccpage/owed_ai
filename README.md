@@ -11,11 +11,13 @@ checks leave ownership unresolved, obtain the missing correspondence, and inspec
 an actually committed SQLite repair. The default local page follows this journey;
 the original research labs remain available in the sidebar.
 
-The current public deployment is [Owed on Render](https://owed-workbench.onrender.com/).
+The current public deployment is **[owed.anomalon.com](https://owed.anomalon.com/)**
+([Render fallback](https://owed-workbench.onrender.com/)).
 It serves the earlier three-lab release at `7d81005`; the migration challenge is on
 the review branch `feat/migration-challenge` and has not been deployed. Live model
-experiments remain disabled. **owed.anomalon.com** is the proposed product address,
-pending DNS, HTTPS and application verification.
+experiments remain disabled. DNS and certificate-validated HTTPS health/app-shell
+checks passed on November 1, 2026; see [domain evidence](evidence/domain-validation.json).
+The domain connection does not publish the migration release candidate.
 
 ```powershell
 uv sync --locked
@@ -85,7 +87,7 @@ That model was available during the recorded validation; availability can change
 For a public demo with Google-authenticated live experiments, see the
 [Render deployment guide](docs/deployment.md). The Blueprint starts with live access
 disabled. Hosted operators receive isolated stores and share transactional request
-and spending controls. `owed.anomalon.com` is the planned product address;
+and spending controls. [owed.anomalon.com](https://owed.anomalon.com/) is the public product address;
 `anomalon.com` remains the future home of the broader Omega Engine programme.
 
 ```powershell

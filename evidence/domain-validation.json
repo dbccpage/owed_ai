@@ -1,0 +1,13 @@
+{
+  "checked_at_utc": "2026-11-01T20:53:39Z",
+  "public_url": "https://owed.anomalon.com/",
+  "cname_target": "owed-workbench.onrender.com",
+  "dns_probe": "Resolve-DnsName owed.anomalon.com -Type CNAME",
+  "https_probe": "Invoke-WebRequest with default certificate validation; no verification bypass",
+  "health": {"path": "/_stcore/health", "status": 200, "body": "ok"},
+  "app_shell": {"path": "/", "status": 200, "streamlit_shell_present": true},
+  "owner_report": "Render reports domain verified and certificate issued",
+  "live_experiment_settings_changed": false,
+  "migration_candidate_deployed_by_this_change": false,
+  "scope": "Public DNS, certificate-valid HTTPS, health and application shell. Does not establish interactive browser behavior, current deployed commit, Google login, or provider spending-cap configuration."
+}
