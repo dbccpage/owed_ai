@@ -1,5 +1,26 @@
 # Migration release and custom domain
 
+## Current presentation rollout — November 1, 2026
+
+PR #9's reviewed head `569ec14` passed CI, including 331 tests, strict typing,
+lint, fresh ledger/migration Lean audits and the real container journey. The owner
+merged it as `5ac7c321d448788cb4495c6d214eef83499246dd`; the trees match exactly.
+That commit was selected explicitly in normal Chrome and deployed as
+`dep-dbk0jsu7bikc738p7p1g`. Render reports **Deploy succeeded / Live**.
+
+At [owed.anomalon.com](https://owed.anomalon.com/), normal Chrome checks passed
+the dollar comparison, original/repaired outcomes, six database checks, export,
+browser and CLI replay, scenario-change invalidation, missing/conflicting-record
+refusal, and outdated-record exclusion followed by a successful refresh. The app's
+displayed full Git commit matches Render; the downloaded receipt matches the local
+application fingerprint. Both domains pass certificate-validated shell/health checks.
+See [deployment evidence](../evidence/migration-story-deployment.json) and
+[review evidence](../evidence/migration-story-review.json). Live model execution
+remains disabled. An existing sign-in was reported unverified or expired; real
+Google login is still pending. No credentials or hosting resources were changed.
+
+## Initial migration rollout
+
 The release changes the default journey and adds migration core modules,
 CLI, independent row/witness checks, three Lean model theorems and source-bound
 proof evidence. Existing labs and live-provider policy remain available. Live model

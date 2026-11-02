@@ -262,3 +262,12 @@ Local browser checks cover valid repair/replay, missing and conflicting records,
 outdated-record exclusion/refresh, and 1280×900 / 390×844 layouts. See
 [the presentation evidence](../evidence/migration-story.json). These checks establish
 the displayed behavior, not measured visitor comprehension or hosted deployment.
+
+Hosted follow-up: merged PR #9, `5ac7c32`, was deployed and validated through
+`owed.anomalon.com` in normal Chrome. The comparison, all six execution checks,
+export, browser/CLI replay, scenario-change invalidation and all four evidence
+branches pass; outdated records require a successful current-source refresh.
+The runtime full Git commit and downloaded receipt fingerprint match their expected
+source/build independently. See [deployment evidence](../evidence/migration-story-deployment.json).
+Live experiments remain disabled. Real Google authentication and measured human
+comprehension remain unverified.

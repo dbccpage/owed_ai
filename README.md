@@ -21,15 +21,19 @@ experience. No measured recruiter-comprehension improvement is claimed.
 
 The current public deployment is **[owed.anomalon.com](https://owed.anomalon.com/)**
 ([Render fallback](https://owed-workbench.onrender.com/)).
-PR #4 is merged, and the migration challenge was deployed from `86c2d90`.
-**Live model experiments remain disabled.** On November 1, 2026, normal Chrome
-validation through this hostname passed preview, witness verification, accepted
-evidence, committed repair, export, browser/CLI replay, receipt import checks and
-snapshot invalidation. Hosted missing/stale/conflicting evidence checks, stale
-refresh, case generation and session reset also pass. See the
-[deployment evidence](evidence/migration-deployment.json)
-for exact scope and deferred live-launch gates, and the [review record](evidence/migration-pr-review.json)
-for the 274-test, typing, lint, container and Lean validation results.
+PR #9 is merged, and the current presentation was deployed from
+[`5ac7c32`](https://github.com/dbccpage/owed_ai/commit/5ac7c321d448788cb4495c6d214eef83499246dd).
+**Live model experiments remain disabled.** On November 1, 2026, validation in
+normal Chrome passed the dollar comparison, accepted-evidence repair, all six
+execution checks, export, browser/CLI replay, scenario-change invalidation,
+missing/conflicting-record refusals and outdated-record refresh. Engineering details
+now display the actual deployed Git commit separately from the receipt build fingerprint.
+See the [deployment evidence](evidence/migration-story-deployment.json) and
+[exact-head review](evidence/migration-story-review.json), including successful CI
+with 331 tests, lint, strict typing, fresh Lean audits and the container journey.
+Real Google login validation remains pending; no live model requests were made.
+The [initial migration release record](evidence/migration-deployment.json) retains
+the earlier PR #4 deployment and its broader historical checks.
 
 ```powershell
 uv sync --locked

@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-01",
+  "public_url": "https://owed.anomalon.com/",
+  "fallback_url": "https://owed-workbench.onrender.com/",
+  "deployed_source_commit": "5ac7c321d448788cb4495c6d214eef83499246dd",
+  "reviewed_pr_head": "569ec14e737dba647267d1c58b8f938056caae3e",
+  "pull_request": "https://github.com/dbccpage/owed_ai/pull/9",
+  "ci_url": "https://github.com/dbccpage/owed_ai/actions/runs/41384717869",
+  "render_service": "srv-dbj5eih42hec73c30q6g",
+  "render_deployment": "dep-dbk0jsu7bikc738p7p1g",
+  "render_deployment_url": "https://dashboard.render.com/web/srv-dbj5eih42hec73c30q6g/deploys/dep-dbk0jsu7bikc738p7p1g",
+  "deployment_trigger": "Manual Deploy a specific commit, exact merged PR #9 SHA, in the owner's normal Chrome",
+  "render_final_status": "Deploy succeeded | Live",
+  "render_live_log_at_utc": "2026-11-02T03:57:30Z",
+  "render_configuration_observed": {
+    "compute": "Free Docker service",
+    "repository": "dbccpage/owed_ai",
+    "branch": "main",
+    "configuration_changes_performed": false
+  },
+  "https_evidence": "migration-story-http.json",
+  "browser": "Owner's existing normal Chrome on Windows; existing unrelated tabs preserved",
+  "observed": {
+    "interactive_demo_no_account_required": true,
+    "main_page_plain_language_scenario_choices": true,
+    "corrected_balances_unknown_before_evidence": true,
+    "passing_total_limit_explained": true,
+    "default_dollar_comparison": "N-0-0: $100 -> $700; N-0-1: $200 -> $100; N-0-2: $700 -> $200; both total $1,000",
+    "original_rejected_repair_verified_separately": true,
+    "accepted_identity_records_and_database_support_explained": true,
+    "all_six_execution_checks": true,
+    "browser_offline_replay_matched": true,
+    "scenario_change_clears_previous_result_and_replay": true,
+    "missing_records_unresolved_no_repair": true,
+    "conflicting_records_blocked_resolution_instruction": true,
+    "outdated_records_excluded_no_repair": true,
+    "current_authority_refresh_enables_checked_repair": true,
+    "deployed_git_commit_visible_and_matches_render": true,
+    "formal_supplement_status": "Verified during build",
+    "formal_python_sql_boundary_visible": true,
+    "operator_controls_collapsed_by_default": true,
+    "runtime_live_disabled_status_checked": true
+  },
+  "execution_properties": {
+    "committed": true,
+    "total_preserved": true,
+    "row_count_preserved": true,
+    "identity_coverage": true,
+    "execution_conforms": true,
+    "ownership_preserved": true
+  },
+  "downloaded_receipt": {
+    "path": "examples/migration/hosted-story-repaired.json",
+    "bytes": 3842,
+    "sha256": "a2f577a1539b8a69e194dd1769fb59a118d2cef6e183aa669827e0b18bdfe201",
+    "receipt_digest": "7fc7a8329b2b3e4a2a2a971c8dd74bae3728d4f5fd5aa0729ca5f178deeb716c",
+    "application_build": "468c34e3ae79d5aea808c574e3e73fd5d61ae7e3fda103fccf9166ae515dfc84",
+    "matches_regenerated_local_build": true,
+    "independent_cli_offline_replay_matched": true,
+    "replay_grants_execution_authority": false
+  },
+  "live_model_experiments": false,
+  "model_requests": 0,
+  "credentials_changed": false,
+  "real_google_login_verified": false,
+  "existing_login_observation": "Existing browser sign-in session reported unverified or expired; not treated as successful authentication or authority. No account identifiers exported.",
+  "screenshots": [
+    "migration-story-hosted-comparison.png",
+    "migration-story-hosted-repair.png",
+    "migration-story-hosted-replay.png",
+    "migration-story-hosted-build.png",
+    "migration-story-hosted-conflict.png"
+  ],
+  "limitations": [
+    "Hosted desktop journey only; PR #9 has separate local mobile viewport evidence.",
+    "No new real Google login, live-provider experiment, provider-cap verification or dollar-cap guarantee.",
+    "No measured visitor-comprehension claim.",
+    "Proof status binds the recorded supplement to its sources; it is not end-to-end verification of Python or SQL.",
+    "Platform-reported Git SHA and matching receipt fingerprint are separate observations, not a signed source attestation."
+  ],
+  "validation_recorded_at_utc": "2026-11-02T04:13:24.957105+00:00"
+}
