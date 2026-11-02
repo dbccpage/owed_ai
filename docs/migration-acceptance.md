@@ -247,3 +247,18 @@ and fresh Lean 4.19.0 checks pass all four ledger and three migration results.
 The workflow now invokes both actual Lean audits before Python/container checks.
 See `evidence/verification-corrections.json`; prior hosted observations above do
 not certify deployment of these corrections. Live experiments remain disabled.
+
+### Presentation follow-up — November 1, 2026
+
+The main page now compares proposed and corrected balances in dollars, makes the
+limits of the passing total explicit, and separates rejection of the original
+proposal from verification of the repair. Missing/outdated/conflicting records are
+main-page choices. Without an admitted repair, corrected balances remain **Not
+established**. Changing the evidence scenario clears the prior receipt and badge.
+Login, action implementation details and raw certificates expand on demand.
+
+The full local suite passes **331 tests**, with Ruff and strict mypy over 21 modules.
+Local browser checks cover valid repair/replay, missing and conflicting records,
+outdated-record exclusion/refresh, and 1280×900 / 390×844 layouts. See
+[the presentation evidence](../evidence/migration-story.json). These checks establish
+the displayed behavior, not measured visitor comprehension or hosted deployment.

@@ -43,7 +43,9 @@ def start_button(
     model: str,
 ) -> None:
     if store is None:
-        st.info("Public demo: explore the exact checks and recorded runs. Live experiments require an authorized login.")
+        st.info(
+            "Public demo: explore the exact checks and recorded runs. Live experiments require an authorized login."
+        )
         return
     st.caption("Live generation · up to 12 requests · 5 minutes · 2,048 output tokens/request")
     if st.button("Run with live model", type="primary", key="run-" + lab):
@@ -203,7 +205,9 @@ def inspector(store: Store) -> None:
     try:
         check_store_access(store)
     except ValueError:
-        st.warning("Your live session expired or access was revoked. Log in again to inspect private runs.")
+        st.warning(
+            "Your live session expired or access was revoked. Log in again to inspect private runs."
+        )
         return
     rows = store.list_runs()
     if not rows:
@@ -292,7 +296,9 @@ def overview() -> None:
         "The ledger actor is a simulation. Hosted live experiments require a separate authorized login."
     )
     if hosted_mode():
-        st.write("**Anomalon:** Owed is a working research exhibit on the path to Omega Engine V1.0RC. The broader Pre-Genesis → Genesis → quantum mechanics → Omega Engine story belongs to the Anomalon home; this workbench demonstrates three scoped ideas.")
+        st.write(
+            "**Anomalon:** Owed is a working research exhibit on the path to Omega Engine V1.0RC. The broader Pre-Genesis → Genesis → quantum mechanics → Omega Engine story belongs to the Anomalon home; this workbench demonstrates three scoped ideas."
+        )
         st.link_button("Explore Owed on GitHub", "https://github.com/dbccpage/owed_ai")
     proof = Path("evidence/lean-verification.json")
     with st.expander("Formal supplement and research lineage"):
@@ -343,36 +349,52 @@ def main() -> None:
     with st.sidebar:
         st.title("◈ Owed")
         page = st.radio(
-            "Workbench", ["Migration challenge", "Overview", "Evidence", "Composition", "Revision", "Run inspector"]
+            "Workbench",
+            [
+                "Migration challenge",
+                "Overview",
+                "Evidence",
+                "Composition",
+                "Revision",
+                "Run inspector",
+            ],
         )
         st.divider()
         if hosted and policy is not None:
             provider, model = "openrouter", policy.model
-            st.caption("Public demo · recorded evidence is available without an account.")
-            if not policy.live_enabled:
-                st.caption("Live experiments are currently disabled.")
-            if policy.auth_enabled:
-                if dict(st.user).get("is_logged_in") is True:
-                    if st.button("Log out"):
-                        st.logout()
-                    try:
-                        subject = policy.login_subject(True, dict(st.user))
-                    except ValueError:
-                        st.warning("This login could not be verified or has expired.")
-                    else:
-                        if not policy.live_enabled:
-                            st.success("Sign-in verified. Live experiments remain disabled.")
-                        elif store is None:
-                            st.warning("This login is not authorized for live experiments.")
-                        with st.expander("Account identifier for access requests"):
-                            st.caption("Share this subject identifier with the workbench operator. It does not grant access by itself.")
-                            st.code(subject)
-                    if store is not None:
-                        st.success("Authorized live workspace")
-                        st.caption("Model: " + model)
-                        st.json(SpendLedger(data_root() / "control").usage(current_principal().owner))
-                elif st.button("Log in with Google"):
-                    st.login()
+            st.caption("Interactive demo—no account required.")
+            with st.expander("Operator access and live experiments"):
+                if not policy.live_enabled:
+                    st.caption("Live experiments are currently disabled.")
+                if policy.auth_enabled:
+                    if dict(st.user).get("is_logged_in") is True:
+                        if st.button("Log out"):
+                            st.logout()
+                        try:
+                            subject = policy.login_subject(True, dict(st.user))
+                        except ValueError:
+                            st.warning("This login could not be verified or has expired.")
+                        else:
+                            if not policy.live_enabled:
+                                st.success("Sign-in verified. Live experiments remain disabled.")
+                            elif store is None:
+                                st.warning("This login is not authorized for live experiments.")
+                            with st.expander("Account identifier for access requests"):
+                                st.caption(
+                                    "Share this subject identifier with the workbench operator. It does not grant access by itself."
+                                )
+                                st.code(subject)
+                        if store is not None:
+                            st.success("Authorized live workspace")
+                            st.caption("Model: " + model)
+                            st.json(
+                                SpendLedger(data_root() / "control").usage(
+                                    current_principal().owner
+                                )
+                            )
+                    elif st.button("Log in with Google"):
+                        st.login()
+                st.caption("No model request is made until you start a live experiment.")
         else:
             names = ["openrouter", "anthropic", "compatible", "local"]
             configured = os.getenv("WORKBENCH_PROVIDER", "openrouter")
@@ -381,13 +403,14 @@ def main() -> None:
             )
             model = st.text_input("Explicit model ID", value=os.getenv("WORKBENCH_MODEL", ""))
             st.selectbox(
-                "Output mode", ["json_schema", "json_prompt"], key="output_mode",
+                "Output mode",
+                ["json_schema", "json_prompt"],
+                key="output_mode",
                 help="Native JSON schema requires model support. Both modes use host validation.",
             )
-        st.caption(
-            "No model request is made until you start a live experiment."
-            if hosted else "Credentials stay in your environment or ignored .env. No request is made until you start a run."
-        )
+            st.caption(
+                "Credentials stay in your environment or ignored .env. No request is made until you start a run."
+            )
     if page == "Migration challenge":
         from .migration_ui import page as migration_page
 
@@ -421,7 +444,11 @@ def main() -> None:
                         "Integrity and semantic replay matched:",
                         digest(bundle["receipt"]) == bundle["sha256"] and replay(bundle["receipt"]),
                     )
-        uploaded = None if hosted else st.file_uploader("Verify an exported bundle without a model", type="json")
+        uploaded = (
+            None
+            if hosted
+            else st.file_uploader("Verify an exported bundle without a model", type="json")
+        )
         if uploaded and st.button("Replay uploaded bundle"):
             try:
                 bundle = json.loads(uploaded.getvalue())

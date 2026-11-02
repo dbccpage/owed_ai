@@ -1,5 +1,9 @@
 # Validation evidence · v0.0.1.0
 
+The [presentation follow-up](migration-story.json) records the local dollar-value
+comparison, scenario checks, 331 passing tests and desktop/mobile viewport review.
+Its screenshots are distinct from the historical hosted release evidence below.
+
 The deployed migration challenge is documented in the
 [requirements-to-tests report](../docs/migration-acceptance.md),
 [browser observations](migration-browser.json), [core timings](migration-core.json),

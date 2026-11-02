@@ -1,5 +1,7 @@
 """Guided synthetic migration presentation; all verification lives in services."""
 
+import os
+import re
 from typing import cast
 
 import streamlit as st
@@ -10,13 +12,58 @@ from .migration_demo import Mode, Receipt, SyntheticAuthority, export, fixture, 
 from .migration_proof import proof_status
 
 
+def dollars(cents: int) -> str:
+    """Format integer cents without rounding or floating-point conversion."""
+    whole, part = divmod(abs(cents), 100)
+    return f"{'-' if cents < 0 else ''}${whole:,}" + (f".{part:02d}" if part else "")
+
+
+def comparison(receipt: Receipt) -> list[dict[str, str]]:
+    corrected = dict(receipt.execution.rows) if receipt.execution else {}
+    return [
+        {
+            "Account": destination,
+            "Proposed balance": dollars(cents),
+            "Corrected balance": dollars(corrected[destination])
+            if corrected
+            else "Not established",
+        }
+        for destination, cents in sorted(receipt.preview.rows)
+    ]
+
+
+def source_commit() -> str | None:
+    """Render's runtime metadata, never a guess from a receipt fingerprint."""
+    value = os.getenv("RENDER_GIT_COMMIT", "")
+    return value if re.fullmatch(r"[0-9a-f]{40}", value) else None
+
+
+def clear_evidence_result() -> None:
+    st.session_state.pop("migration_receipt", None)
+    st.session_state.pop("migration_replay", None)
+
+
 def page() -> None:
     st.title("The total was right. The balances went to the wrong accounts.")
     st.write(
         "Migrate customer balances without changing their owners. Watch Owed find the missing evidence, repair the mapping, and check the actual database rows."
     )
-    st.caption(
-        "Synthetic customer accounts · computed locally now · no login or model API required"
+    st.caption("Interactive demo—no account required.")
+    labels = {
+        "valid": "Valid identity records · justify a repair",
+        "missing": "Missing identity records · stop without enough evidence",
+        "stale": "Outdated identity records · require a refresh",
+        "contradictory": "Conflicting identity records · stop on a contradiction",
+    }
+    mode = cast(
+        Mode,
+        st.selectbox(
+            "Choose an evidence scenario",
+            list(labels),
+            format_func=lambda value: labels[value],
+            key="migration_mode",
+            on_change=clear_evidence_result,
+        ),
     )
     start_requested = st.button("Run the migration challenge", type="primary")
     seed = int(st.session_state.get("migration_seed", 0))
@@ -36,30 +83,20 @@ def page() -> None:
         scenario = Scenario(
             seed=seed, scope=scope, accounts=accounts, destinations=scenario.destinations
         )
-    st.subheader("Task: keep each balance with its owner")
-    left, right = st.columns(2)
-    with left:
-        st.write("**Source snapshot** · " + scenario.scope.snapshot)
-        st.table(
-            [{"Source account": a.id, "Balance (USD cents)": a.cents} for a in scenario.accounts]
-        )
-    with right:
-        st.write("**Destination roster** · " + scenario.scope.roster)
-        st.table([{"Destination account": d} for d in scenario.destinations])
     st.write(
-        "The source and destination use different identifiers. The authoritative identity crosswalk has not been observed yet."
-    )
-    st.caption(
-        f"Reproducible seed: {seed}. Negative balances are allowed; one currency, complete snapshots, bijections, 2–6 accounts only."
+        "The migration must keep each balance with its owner. The old and new systems use "
+        "different account IDs. A matching total cannot tell us which new account belongs to whom."
     )
     if len({a.cents for a in scenario.accounts}) < len(scenario.accounts):
         st.info(
             "Some balances are equal. An incorrect identity mapping can leave numeric rows unchanged; this alone does not demonstrate monetary harm."
         )
-    with st.expander("Try another case or withhold evidence"):
-        mode = cast(
-            Mode,
-            st.selectbox("Evidence availability", ["valid", "missing", "stale", "contradictory"]),
+    with st.expander("Source accounts and additional cases"):
+        st.table([{"Source account": a.id, "Balance": dollars(a.cents)} for a in scenario.accounts])
+        st.caption(
+            f"Seed {seed} · snapshot {scenario.scope.snapshot} · roster {scenario.scope.roster}. "
+            "Synthetic USD accounts; negative balances allowed, complete snapshots, "
+            "one-to-one mappings, 2–6 accounts."
         )
         if st.button("Generate another reproducible case"):
             st.session_state["migration_seed"] = (seed + 1) % (2**32)
@@ -81,7 +118,8 @@ def page() -> None:
     receipt = Receipt.model_validate_json(canonical(stored)) if stored is not None else None
     replay_result = st.session_state.get("migration_replay")
     if (
-        receipt is None or not isinstance(replay_result, dict)
+        receipt is None
+        or not isinstance(replay_result, dict)
         or replay_result.get("receipt_digest") != digest(receipt)
         or type(replay_result.get("matched")) is not bool
     ):
@@ -101,58 +139,83 @@ def page() -> None:
             "Export historical receipt", export(receipt), "owed-history.json", "application/json"
         )
         return
-    st.subheader("1. The supplied checks pass in a real SQLite preview")
+    st.subheader("1. The total passes. Ownership needs evidence.")
     a, b = st.columns(2)
-    a.metric("Total preserved", str(receipt.preview.total_preserved))
-    b.metric("Row count preserved", str(receipt.preview.row_count_preserved))
-    st.table([{"Destination": d, "Preview balance (cents)": c} for d, c in receipt.preview.rows])
-    st.caption(
-        "Deterministic fixture candidate, intentionally insufficient. This is not a retained LLM mistake or an industry benchmark."
-    )
-    st.subheader("2. Ownership is initially underdetermined")
+    a.metric("Total preserved", dollars(sum(c for _, c in receipt.preview.rows)))
+    b.metric("Accounts preserved", str(len(receipt.preview.rows)))
+    st.info("A correct total does not establish correct ownership.")
+    st.table(comparison(receipt))
+    if receipt.execution:
+        corrected = dict(receipt.execution.rows)
+        changed = sum(c != corrected[d] for d, c in receipt.preview.rows)
+        total = dollars(sum(c for _, c in receipt.preview.rows))
+        if changed == len(receipt.preview.rows):
+            st.write(f"**Every balance was assigned incorrectly. Both versions total {total}.**")
+        elif changed:
+            st.write(
+                f"**{changed} of {len(receipt.preview.rows)} balances changed. Both versions total {total}.**"
+            )
+        else:
+            st.write(
+                f"**The identity mapping changed, but the displayed balances did not. Both versions total {total}.**"
+            )
+    else:
+        st.write(
+            "Corrected balances are not established yet. Owed needs identity records linking the old accounts to the new ones."
+        )
     witness = receipt.initial.witness
     if witness:
-        amount = next(a.cents for a in scenario.accounts if a.id == witness.source)
-        first = next(p.destination for p in witness.first.links if p.source == witness.source)
-        second = next(p.destination for p in witness.second.links if p.source == witness.source)
-        st.write(
-            f"Both mappings preserve every row and the same total. They send source {witness.source}'s {amount} cents to different accounts: {first} or {second}."
-        )
-        st.write(
-            "Independent witness check:",
-            verify_witness(scenario, receipt.initial_observations, witness),
-        )
-        st.table(
-            [
-                {
-                    "Source": p.source,
-                    "Mapping A": p.destination,
-                    "Mapping B": next(
-                        q.destination for q in witness.second.links if q.source == p.source
-                    ),
-                    "Affected": p.destination
-                    != next(q.destination for q in witness.second.links if q.source == p.source),
-                }
-                for p in witness.first.links
-            ]
-        )
-    st.subheader("3. Obtain evidence that can resolve the distinction")
+        with st.expander("Why the original checks cannot establish ownership"):
+            st.caption(
+                "Deterministic fixture candidate, intentionally insufficient. This is not a retained LLM mistake or an industry benchmark."
+            )
+            amount = next(a.cents for a in scenario.accounts if a.id == witness.source)
+            first = next(p.destination for p in witness.first.links if p.source == witness.source)
+            second = next(p.destination for p in witness.second.links if p.source == witness.source)
+            st.write(
+                f"Both mappings preserve every row and the same total. They send source {witness.source}'s {dollars(amount)} to different accounts: {first} or {second}."
+            )
+            st.write(
+                "Independent witness check:",
+                verify_witness(scenario, receipt.initial_observations, witness),
+            )
+            st.table(
+                [
+                    {
+                        "Source": p.source,
+                        "Mapping A": p.destination,
+                        "Mapping B": next(
+                            q.destination for q in witness.second.links if q.source == p.source
+                        ),
+                        "Affected": p.destination
+                        != next(
+                            q.destination for q in witness.second.links if q.source == p.source
+                        ),
+                    }
+                    for p in witness.first.links
+                ]
+            )
+    st.subheader("2. Check identity records before proceeding")
     st.write(
-        "Repeating the total query cannot distinguish these mappings. The next action is chosen from a finite menu using declared costs and deterministic tie-breaking."
+        "Identity records can establish who owns each new account. Missing, outdated or conflicting records cannot justify a repair."
     )
     action = select_action(scenario, receipt.observations)
     if action and len(receipt.steps) < 8:
         st.write(
-            "Selected action:",
-            action.kind,
-            "· cost",
-            action.cost,
-            "· source",
-            action.source or "all",
+            "Next: request identity records from the synthetic authority and check whether they justify a repair."
         )
-        st.caption(
-            "Lowest-cost informative action in the evaluated menu; not a globally optimal adaptive strategy."
-        )
+        with st.expander("How the evidence request was selected"):
+            st.write(
+                "Selected action:",
+                action.kind,
+                "· cost",
+                action.cost,
+                "· source",
+                action.source or "all",
+            )
+            st.caption(
+                "Lowest-cost informative action in a finite menu with deterministic tie-breaking; not a globally optimal adaptive strategy. Repeating the total query cannot distinguish the mappings."
+            )
         if st.button("Obtain selected evidence and apply justified repair"):
             st.session_state["migration_receipt"] = run(
                 scenario,
@@ -179,71 +242,68 @@ def page() -> None:
     if receipt.steps:
         status = receipt.final.evidence_status[-1]
         observation = receipt.steps[-1].observation
-        st.write("Evidence response:", status, "· source:", observation.authority)
         if status == "unavailable":
             st.warning(
                 "The source did not supply a correspondence. Ownership remains unresolved; no repair can be admitted."
             )
         elif status == "stale":
             st.warning(
-                "The crosswalk belongs to another scope and was excluded. Refresh it for this snapshot."
+                "The identity records belong to an older version and were excluded. Refresh them for this snapshot before proceeding."
             )
         elif status == "accepted":
-            st.caption(
-                "Accepted in this synthetic scenario: "
-                + observation.scope.snapshot
-                + " / "
-                + observation.scope.crosswalk
-            )
+            with st.expander("Accepted identity records"):
+                st.caption(
+                    "Accepted in this synthetic scenario: "
+                    + observation.scope.snapshot
+                    + " / "
+                    + observation.scope.crosswalk
+                )
+                st.table(
+                    [
+                        {"Source account": p.source, "Authoritative destination": p.destination}
+                        for p in observation.links
+                    ]
+                )
+    if receipt.execution:
+        st.write("**Original proposal: rejected.**")
+        st.write("**Repaired proposal: verified against current evidence.**")
+    elif receipt.final.conflicts:
+        st.write("**Original proposal: blocked. No repair admitted.**")
+    elif receipt.final.mismatch:
+        st.write(
+            "**Original proposal: rejected. More identity records are needed to justify a repair.**"
+        )
+    else:
+        st.write("**Original proposal: not authorized. Ownership remains unresolved.**")
+    if receipt.final.conflicts:
+        st.error("Resolve the conflicting identity records before proceeding.")
+    if receipt.execution:
+        st.subheader("3. The repair is justified and the database matches")
+        st.success(
+            "Ownership is supported by the accepted identity records and checked against the resulting database."
+        )
+        with st.expander("All six execution checks and the admission boundary"):
             st.table(
                 [
-                    {"Source account": p.source, "Authoritative destination": p.destination}
-                    for p in observation.links
+                    {
+                        "Property": {
+                            "committed": "Transaction committed",
+                            "total_preserved": "Total preserved",
+                            "row_count_preserved": "Row count preserved",
+                            "identity_coverage": "All destination identities covered",
+                            "execution_conforms": "Database matches the admitted plan",
+                            "ownership_preserved": "Per-account balances preserved",
+                        }.get(key, key),
+                        "Result": str(value),
+                    }
+                    for key, value in receipt.execution.model_dump().items()
+                    if key != "rows"
                 ]
             )
-    st.write("Original candidate ownership:", receipt.final.ownership.value)
-    st.write("Remaining obligation:", receipt.final.obligation.explanation)
-    if receipt.final.mismatch:
-        st.warning(
-            f"Candidate refuted: source {receipt.final.mismatch.source} belongs at {receipt.final.mismatch.destination} according to current accepted evidence."
-        )
-    if receipt.final.conflicts:
-        st.error("Accepted correspondence records conflict. No repair is admitted.")
-        st.write("Conflicting observation digests:", list(receipt.final.conflicts))
-    if receipt.execution:
-        st.subheader("4. Repaired, committed, and independently checked")
-        if receipt.repaired:
-            st.write(
-                "Repaired plan ownership:",
-                evaluate(scenario, receipt.repaired, receipt.observations).ownership.value,
+            st.caption(
+                "Simulated operator admission binds the exact candidate, scenario, policy and evidence. This public action affects only a fresh temporary synthetic database."
             )
-        st.table(
-            [{"Destination": d, "Repaired balance (cents)": c} for d, c in receipt.execution.rows]
-        )
-        st.table(
-            [
-                {
-                    "Property": {
-                        "committed": "Transaction committed",
-                        "total_preserved": "Total preserved",
-                        "row_count_preserved": "Row count preserved",
-                        "identity_coverage": "All destination identities covered",
-                        "execution_conforms": "Database matches the admitted plan",
-                        "ownership_preserved": "Per-account balances preserved",
-                    }.get(key, key),
-                    "Result": str(value),
-                }
-                for key, value in receipt.execution.model_dump().items()
-                if key != "rows"
-            ]
-        )
-        st.success(
-            "Complete sandbox migration. Current evidence justifies the repaired correspondence and the committed rows match it."
-        )
-        st.caption(
-            "Simulated operator admission binds the exact candidate, scenario, policy and evidence. This public action affects only a fresh temporary synthetic database."
-        )
-    st.subheader("5. Inspect or challenge the evidence")
+    st.subheader("Inspect or replay this result")
     if st.button("Change snapshot and crosswalk version"):
         st.session_state.pop("migration_replay", None)
         st.session_state["migration_epoch"] = epoch + 1
@@ -253,10 +313,13 @@ def page() -> None:
     )
     if st.button("Replay this receipt offline"):
         st.session_state["migration_replay"] = {
-            "receipt_digest": digest(receipt), "matched": replay(export(receipt))
+            "receipt_digest": digest(receipt),
+            "matched": replay(export(receipt)),
         }
     if "migration_replay" in st.session_state:
-        st.write("Offline semantic replay matched:", st.session_state["migration_replay"]["matched"])
+        st.write(
+            "Offline semantic replay matched:", st.session_state["migration_replay"]["matched"]
+        )
     with st.expander("Plans, observations, obligations, admission and receipt"):
         st.caption(
             "Hashes detect content changes relative to the supplied digest. They do not authenticate a self-consistently rewritten bundle. Replay is never execution authority."
@@ -275,6 +338,16 @@ def page() -> None:
 
 def engineering() -> None:
     with st.expander("Engineering behind the demo"):
+        commit = source_commit()
+        if commit:
+            st.markdown(
+                f"Deployed Git commit: [{commit}](https://github.com/dbccpage/owed_ai/commit/{commit})"
+            )
+            st.caption(
+                "Reported by Render runtime metadata; separate from the receipt's build fingerprint."
+            )
+        else:
+            st.caption("Deployed Git commit: unavailable in this environment.")
         st.write(
             "Jeremy H. Carroll · Anomalon. Exact finite evidence checks, independent certificates, atomic SQLite execution and reproducible offline receipts."
         )
@@ -295,7 +368,7 @@ def engineering() -> None:
         )
         st.link_button(
             "Theorem source",
-            "https://github.com/dbccpage/owed_ai/blob/feat/migration-challenge/lean/Migration.lean",
+            f"https://github.com/dbccpage/owed_ai/blob/{commit or 'main'}/lean/Migration.lean",
         )
         st.caption(
             "Runs are session-local and temporary. Export receipts before leaving; the free deployment does not provide durable migration runs."
