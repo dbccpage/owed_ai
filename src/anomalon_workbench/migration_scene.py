@@ -57,7 +57,7 @@ def scene_html(
             )
             + "</article>"
         )
-    paths, text_links = [], []
+    paths, text_links, descriptions = [], [], []
     source_index = {s["id"]: i for i, s in enumerate(sources)}
     destination_index = {d["id"]: i for i, d in enumerate(destinations)}
     source_names = {s["id"]: s["name"] for s in sources}
@@ -69,6 +69,12 @@ def scene_html(
             destination_index[link["destination"]] * 96 + 44,
         )
         verified = link["kind"] == "verified"
+        descriptions.append(
+            ("Verified: " if verified else "Proposed: ")
+            + source_names[link["source"]]
+            + " to "
+            + link["destination"]
+        )
         paths.append(
             '<path class="an-conn__line'
             + (" an-conn__line--verified" if verified else "")
@@ -92,8 +98,8 @@ def scene_html(
         + f'<svg class="an-conn" style="height:{len(sources) * 96}px" '
         + f'viewBox="0 0 160 {len(sources) * 96}" preserveAspectRatio="none" '
         + 'role="img" aria-label="'
-        + escape(title, quote=True)
-        + ' connections">'
+        + escape(title + " connections: " + "; ".join(descriptions), quote=True)
+        + '">'
         + "".join(paths)
         + '</svg><div><div class="an-scene__head">New system · accounts</div>'
         + destination_cards

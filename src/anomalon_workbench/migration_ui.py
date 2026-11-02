@@ -19,7 +19,17 @@ from .migration import (
     select_action,
     verify_witness,
 )
-from .migration_demo import Mode, Receipt, SyntheticAuthority, export, fixture, replay, run
+from .migration_demo import (
+    Mode,
+    Receipt,
+    SyntheticAuthority,
+    export,
+    fixture,
+    investigation_timeline,
+    record_probe,
+    replay,
+    run,
+)
 from .migration_proof import proof_status
 from .migration_scene import alternatives_html, scene_html
 
@@ -79,8 +89,16 @@ def clear_evidence_result() -> None:
         "migration_eliminated",
         "migration_report",
         "migration_reflection",
+        "migration_error",
     ):
         st.session_state.pop(key, None)
+
+
+def restart_walkthrough(consistent_records: bool = False) -> None:
+    """Shared callback for main-scene recovery and navigation restart."""
+    clear_evidence_result()
+    if consistent_records:
+        st.session_state["migration_mode"] = "valid"
 
 
 def customer_names(scenario: Scenario) -> dict[str, str]:
@@ -123,6 +141,14 @@ def investigation(choice: str, source: str = "", *, refresh: bool = False) -> No
     before = receipt.final.compatible_count
     mode = cast(Mode, st.session_state.get("migration_mode", "valid"))
     if choice in CHOICES[:2]:
+        if len(receipt.investigations) >= 32:
+            st.session_state["migration_error"] = (
+                "32 informational probes reached. Export this investigation and restart."
+            )
+            return
+        receipt = record_probe(receipt, "repeat_total" if choice == CHOICES[0] else "repeat_count")
+        st.session_state["migration_receipt"] = receipt
+        st.session_state.pop("migration_replay", None)
         value = (
             dollars(sum(c for _, c in receipt.preview.rows))
             if choice == CHOICES[0]
@@ -141,14 +167,26 @@ def investigation(choice: str, source: str = "", *, refresh: bool = False) -> No
         action = requested or selected
         if action is None:
             return
-        updated = run(
-            scenario,
-            candidate,
-            SyntheticAuthority(scenario, authority, "valid" if refresh else mode),
-            prior=receipt,
-            one_action=True,
-            requested_action=requested,
-        )
+        try:
+            updated = run(
+                scenario,
+                candidate,
+                SyntheticAuthority(scenario, authority, "valid" if refresh else mode),
+                prior=receipt,
+                one_action=True,
+                requested_action=requested,
+            )
+        except ValueError as exc:
+            if str(exc) != "evidence_response_contract":
+                raise
+            st.session_state["migration_error"] = (
+                "Invalid identity response: it was empty, incomplete for the request, or contained "
+                "unrequested records. No new identity evidence was accepted. The previous receipt "
+                "is retained; retry with a source that satisfies the request."
+            )
+            st.session_state["migration_phase"] = 4
+            return
+        st.session_state.pop("migration_error", None)
         st.session_state["migration_receipt"] = updated
         st.session_state.pop("migration_replay", None)
         after = updated.final.compatible_count
@@ -169,13 +207,9 @@ def investigation(choice: str, source: str = "", *, refresh: bool = False) -> No
     st.session_state["migration_phase"] = 4
 
 
-def controls(panel: DeltaGenerator, receipt: Receipt | None, phase: int) -> None:
+def primary_controls(panel: DeltaGenerator, receipt: Receipt | None, phase: int) -> None:
+    """All primary transitions live here, independently of sidebar visibility."""
     with panel:
-        st.markdown(
-            f'<div class="an-side-step"><div class="an-side-step__label">Journey · {phase + 1} / 6</div><div class="an-side-step__title">{STEPS[phase]}</div></div>',
-            unsafe_allow_html=True,
-        )
-        st.progress((phase + 1) / 6)
         if phase == 0:
             if st.button("Inspect the proposal", type="primary", width="stretch"):
                 scenario, candidate, authority = current_scenario()
@@ -229,10 +263,25 @@ def controls(panel: DeltaGenerator, receipt: Receipt | None, phase: int) -> None
                     )
         elif receipt and receipt.final.conflicts:
             st.caption(
-                "Resolve the conflicting identity records before proceeding. Restart with a consistent source to try again."
+                "Conflicting identity records prevent a justified repair. Start a new run with consistent records."
+            )
+            st.button(
+                "Restart with consistent records",
+                type="primary",
+                width="stretch",
+                key="main_restart_consistent",
+                on_click=restart_walkthrough,
+                args=(True,),
             )
         elif receipt and len(receipt.steps) >= 8:
             st.caption("Eight evidence requests reached. Export this result, then restart.")
+            st.button(
+                "Restart the walkthrough",
+                type="primary",
+                width="stretch",
+                key="main_restart_limit",
+                on_click=restart_walkthrough,
+            )
         elif receipt:
             choice = st.selectbox(
                 "Choose what to investigate", CHOICES, index=4, key="migration_investigation"
@@ -253,6 +302,15 @@ def controls(panel: DeltaGenerator, receipt: Receipt | None, phase: int) -> None
                 if st.button("Refresh identity records", width="stretch"):
                     investigation(CHOICES[3], refresh=True)
                     st.rerun()
+
+
+def controls(panel: DeltaGenerator, receipt: Receipt | None, phase: int) -> None:
+    with panel:
+        st.markdown(
+            f'<div class="an-side-step"><div class="an-side-step__label">Journey · {phase + 1} / 6</div><div class="an-side-step__title">{STEPS[phase]}</div></div>',
+            unsafe_allow_html=True,
+        )
+        st.progress((phase + 1) / 6)
         with st.expander("Scenario settings"):
             labels = {
                 "valid": "Valid identity records",
@@ -277,9 +335,12 @@ def controls(panel: DeltaGenerator, receipt: Receipt | None, phase: int) -> None
                 st.session_state["migration_epoch"] = 0
                 clear_evidence_result()
                 st.rerun()
-        if st.button("Restart the walkthrough", width="stretch"):
-            clear_evidence_result()
-            st.rerun()
+        st.button(
+            "Restart the walkthrough",
+            width="stretch",
+            key="navigation_restart",
+            on_click=restart_walkthrough,
+        )
         if receipt:
             st.download_button(
                 "Export replayable receipt",
@@ -295,7 +356,18 @@ def controls(panel: DeltaGenerator, receipt: Receipt | None, phase: int) -> None
                 }
             result = st.session_state.get("migration_replay")
             if isinstance(result, dict) and result.get("receipt_digest") == digest(receipt):
-                st.caption("Offline semantic replay matched: " + str(result["matched"]))
+                st.caption(replay_message(result["matched"]))
+                st.caption(
+                    "Checks the recorded values and decisions; the original temporary database is no longer available."
+                )
+
+
+def replay_message(matched: bool) -> str:
+    return (
+        "Offline replay: recorded results are semantically consistent."
+        if matched
+        else "Offline replay: recorded results are not semantically consistent."
+    )
 
 
 def consequence_panel(receipt: Receipt, phase: int, names: dict[str, str]) -> str:
@@ -391,7 +463,7 @@ def page(panel: DeltaGenerator | None = None) -> None:
         "Can you keep everyone’s money with the right person? The new system uses different account IDs."
     )
     st.caption(
-        "Interactive demo—no account required. Use the journey controls in the left navigation."
+        "Interactive demo—no account required. Follow the next action below; settings and replay are in navigation."
     )
     journey = "".join(
         f'<li class="{"an-current" if i == phase else "an-done" if i < phase else ""}"'
@@ -403,6 +475,13 @@ def page(panel: DeltaGenerator | None = None) -> None:
         '<ol class="an-journey" aria-label="Walkthrough progress">' + journey + "</ol>",
         unsafe_allow_html=True,
     )
+    if receipt:
+        st.write(
+            "A proposed migration passed its financial checks. Owed must establish which customer owns each destination account before executing the repair."
+        )
+    primary_controls(st.container(border=True), receipt, phase)
+    if st.session_state.get("migration_error"):
+        st.error(str(st.session_state["migration_error"]))
     current = evaluate(scenario, receipt.original, receipt.observations) if receipt else None
     if receipt:
         established = f"Total {dollars(sum(c for _, c in receipt.preview.rows))} and {len(receipt.preview.rows)} accounts match"
@@ -424,7 +503,7 @@ def page(panel: DeltaGenerator | None = None) -> None:
                     }[latest] + f" · {receipt.final.compatible_count} assignments remain"
             if "migration_eliminated" in st.session_state:
                 owed += f" · {st.session_state['migration_eliminated']} eliminated by last check"
-        execution = "Verified in SQLite" if receipt.execution else "Blocked"
+        execution = "Verified against SQLite (original run)" if receipt.execution else "Blocked"
     else:
         established, owed, execution = (
             "Source accounts supplied",
@@ -525,11 +604,11 @@ def page(panel: DeltaGenerator | None = None) -> None:
         )
     if phase == 1:
         st.info(
-            "The total and account count match. Inspect the proposal, then make your prediction using the left navigation."
+            "The total and account count match. Inspect the proposal, then make your prediction with the action above."
         )
     if phase == 2:
         st.subheader("Are these checks enough to approve the migration?")
-        st.write("Make your prediction in the left navigation before testing the evidence.")
+        st.write("Choose an answer above before testing the evidence.")
     if phase >= 3 and current:
         feedback = st.session_state.get("migration_feedback")
         if feedback:
@@ -559,6 +638,35 @@ def page(panel: DeltaGenerator | None = None) -> None:
             if phase == 5:
                 st.write(
                     "What made proceeding justified—the matching total, or the evidence connecting each balance to its owner?"
+                )
+                st.subheader("What Owed established in this run")
+                st.table(
+                    [
+                        {
+                            "Owed established": "Conservation",
+                            "Evidence": "SQLite total and account-count checks",
+                        },
+                        {
+                            "Owed established": "Initial ownership uncertainty",
+                            "Evidence": f"{receipt.initial.compatible_count} compatible assignments; two checked alternatives"
+                            if receipt.initial.witness
+                            else receipt.initial.ownership.value,
+                        },
+                        {
+                            "Owed established": "Effect of repeated checks",
+                            "Evidence": f"{len(receipt.investigations)} recorded probes; none added identity evidence"
+                            if receipt.investigations
+                            else "No repeat probes requested in this run",
+                        },
+                        {
+                            "Owed established": "Ownership mapping",
+                            "Evidence": "Current accepted identity records and the declared one-to-one rule",
+                        },
+                        {
+                            "Owed established": "Correct original execution",
+                            "Evidence": "Committed transaction and row verification against SQLite",
+                        },
+                    ]
                 )
 
 
@@ -600,12 +708,17 @@ def technical_page() -> None:
             }
         result = st.session_state.get("migration_replay")
         if isinstance(result, dict) and result.get("receipt_digest") == digest(receipt):
-            st.write("Offline semantic replay matched:", result["matched"])
+            st.write(replay_message(result["matched"]))
+            st.caption(
+                "This checks the recorded results, not the occurrence of the original database event."
+            )
         with st.expander("Plans, observations, obligations, admission and receipt"):
             st.json(receipt.model_dump(mode="json"))
         with st.expander("Investigation history"):
-            for event in st.session_state.get("migration_events", []):
-                st.write(event)
+            st.table(investigation_timeline(receipt))
+            st.caption(
+                "Informational total/count probes are recorded separately and supply no identity evidence. Total probe values are integer USD cents."
+            )
         if st.button("Change snapshot and crosswalk version"):
             st.session_state["migration_epoch"] = (
                 int(st.session_state.get("migration_epoch", 0)) + 1
@@ -620,7 +733,7 @@ def technical_page() -> None:
         raw = st.text_area("Receipt JSON (100 KB maximum)", max_chars=100000)
         if st.button("Check imported receipt"):
             try:
-                st.write("Imported replay matched:", replay(raw))
+                st.write(replay_message(replay(raw)))
             except (ValueError, TypeError, KeyError, RecursionError):
                 st.error("Invalid, oversized or unsupported receipt. Nothing was executed.")
     engineering()

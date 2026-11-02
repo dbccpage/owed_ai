@@ -85,7 +85,13 @@ def test_repeated_checks_add_no_evidence_and_partial_record_eliminates_four(monk
     initial = app.session_state["migration_receipt"]
     for choice in ["Check the total again", "Count the accounts again"]:
         investigate(app, choice)
-        assert app.session_state["migration_receipt"] == initial
+        current = app.session_state["migration_receipt"]
+        assert current.observations == initial.observations and current.steps == initial.steps
+        assert (
+            current.final == initial.final
+            and current.investigations[-1].information_gained == "none"
+        )
+        assert replay(export(current))
         assert "none eliminated" in app.session_state["migration_report"]
         status = next(m.value for m in app.markdown if 'class="an-status' in m.value)
         assert "0 eliminated by last check" in status

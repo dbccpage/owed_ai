@@ -23,7 +23,7 @@ def test_same_scene_shows_the_actual_repair(app):
     investigate(app, "Ask Owed to choose")
     text = "\n".join(m.value for m in app.markdown)
     assert "Was $100" in text and "Was $200" in text and "Was $700" in text
-    assert "Verified in SQLite" in text
+    assert "Verified against SQLite (original run)" in text
     assert "an-conn__line--verified" in text
     assert "Repaired proposal" not in text  # A result is shown with its objects, not just a banner.
 

@@ -6,17 +6,19 @@ v0.0.1.0 · from Anomalon / Omega Engine · [dbccpage/owed_ai](https://github.co
 
 The [new walkthrough](docs/guided-migration-scene.md) turns the migration into six
 visitor-paced steps: meet the fictional customers, inspect the proposal, predict,
-test evidence, resolve uncertainty, and verify the actual database result. Controls
-and progress stay in the left navigation. The accounts and competing assignments
+test evidence, resolve uncertainty, and verify the actual database result. The next action appears in the main scene;
+progress, settings and replay stay in the navigation. The accounts and competing assignments
 share the main scene; destination owners remain concealed until supported.
 
 Visitors can repeat totals/counts, obtain one identity record, obtain the complete
 mapping, or ask Owed's existing finite selector to choose. Receipts distinguish
-visitor requests from engine selections and retain legacy replay. Explanation and
+visitor requests from engine selections, preserve uninformative probes separately
+from identity evidence, and retain valid legacy replay. Explanation and
 technical evidence have separate pages. Claude supplied the visual proposal and
 Anomalon tokens; their cross-site rollout follows review of this working scene.
 
-This is the proposed local/PR experience. The deployment record below describes
+The [PR #11 review response](docs/pr11-review-response.md) records the completeness,
+accessibility, replay and mobile corrections. This is the proposed local/PR experience. The deployment record below describes
 the preceding published presentation.
 
 ## Migration challenge — live public demo

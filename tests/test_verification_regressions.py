@@ -43,7 +43,7 @@ def test_replay_badge_belongs_to_exact_receipt(monkeypatch, transition):
 
     predict(app)
     click("Replay this receipt offline")
-    assert any("Offline semantic replay matched" in c.value for c in app.caption)
+    assert any("Offline replay: recorded results are semantically consistent." in c.value for c in app.caption)
     if transition == "another_case":
         click("Generate another reproducible case")
         click("Inspect the proposal")
@@ -52,7 +52,7 @@ def test_replay_badge_belongs_to_exact_receipt(monkeypatch, transition):
     else:
         click("Restart the walkthrough")
         click("Inspect the proposal")
-    assert not any("Offline semantic replay matched" in c.value for c in app.caption)
+    assert not any("Offline replay: recorded results are semantically consistent." in c.value for c in app.caption)
     assert "migration_replay" not in app.session_state
     click("Replay this receipt offline")
     assert app.session_state["migration_replay"] == {

@@ -55,7 +55,11 @@ class SyntheticAuthority:
 
             first = links[0]
             other = next(d for d in self.scenario.destinations if d != first.destination)
-            links = (first, Link(source=first.source, destination=other))
+            links = (
+                (Link(source=first.source, destination=links[1].destination), *links[1:])
+                if action.kind == "full_crosswalk"
+                else (first, Link(source=first.source, destination=other))
+            )
         return Observation(
             scope=observed_scope,
             links=() if self.mode == "missing" else links,
@@ -113,9 +117,20 @@ class Step(Record):
     rationale: str = "Lowest-cost informative action in the evaluated menu; total query cannot distinguish mappings"
 
 
+class InvestigationEvent(Record):
+    """Informational probes never enter the accepted identity-observation list."""
+
+    kind: Literal["repeat_total", "repeat_count"]
+    at_step: int = Field(ge=0, le=8)
+    result: int
+    compatible_before: int = Field(ge=0, le=720)
+    compatible_after: int = Field(ge=0, le=720)
+    information_gained: Literal["none"] = "none"
+
+
 class Receipt(Record):
-    schema_version: Literal["migration/1", "migration/2"] = "migration/2"
-    checker: Literal["migration/1", "migration/2"] = "migration/2"
+    schema_version: Literal["migration/1", "migration/2", "migration/3"] = "migration/3"
+    checker: Literal["migration/1", "migration/2", "migration/3"] = "migration/3"
     application_build: str
     run_id: str
     scenario: Scenario
@@ -130,6 +145,7 @@ class Receipt(Record):
     admission: Admission | None
     execution: Execution | None
     formal_artifact: dict[str, JsonValue]
+    investigations: tuple[InvestigationEvent, ...] = Field(default=(), max_length=32)
 
     @model_validator(mode="after")
     def binding(self) -> Receipt:
@@ -188,7 +204,7 @@ def run(
                     status="unavailable",
                     issue="Evidence adapter unavailable; no truth conclusion",
                 )
-            if not response_matches_action(action, observation):
+            if not response_matches_action(scenario, action, observation):
                 raise ValueError("evidence_response_contract")
             observations = (*observations, observation)
             steps.append(
@@ -245,6 +261,7 @@ def run(
             }
         ),
         formal_artifact=proof_status(),
+        investigations=prior.investigations if prior else (),
         scenario=scenario,
         original=original,
         preview=preview,
@@ -257,6 +274,66 @@ def run(
         admission=admission,
         execution=execution,
     )
+
+
+def record_probe(receipt: Receipt, kind: Literal["repeat_total", "repeat_count"]) -> Receipt:
+    """Append a replay-checked observation of existing totals/counts; no SQL or authority."""
+    if not replay(export(receipt)):
+        raise ValueError("invalid_probe_receipt")
+    count = receipt.final.compatible_count
+    event = InvestigationEvent(
+        kind=kind,
+        at_step=len(receipt.steps),
+        result=sum(c for _, c in receipt.preview.rows)
+        if kind == "repeat_total"
+        else len(receipt.preview.rows),
+        compatible_before=count,
+        compatible_after=count,
+    )
+    if len(receipt.investigations) >= 32:
+        raise ValueError("investigation_probe_limit")
+    return receipt.model_copy(
+        update={
+            "schema_version": "migration/3",
+            "checker": "migration/3",
+            "investigations": (*receipt.investigations, event),
+        }
+    )
+
+
+def investigation_timeline(receipt: Receipt) -> list[dict[str, str | int]]:
+    """Interleave identity requests and probes in their recorded causal order."""
+    rows: list[dict[str, str | int]] = []
+    observations = receipt.initial_observations
+    for index in range(len(receipt.steps) + 1):
+        for event in receipt.investigations:
+            if event.at_step == index:
+                rows.append(
+                    {
+                        "request": event.kind,
+                        "result": event.result,
+                        "compatible_before": event.compatible_before,
+                        "compatible_after": event.compatible_after,
+                        "information": "none; no identity evidence added",
+                    }
+                )
+        if index < len(receipt.steps):
+            step = receipt.steps[index]
+            before = evaluate(receipt.scenario, receipt.original, observations).compatible_count
+            observations += (step.observation,)
+            after = evaluate(receipt.scenario, receipt.original, observations).compatible_count
+            rows.append(
+                {
+                    "request": step.action.kind,
+                    "result": step.selected_by,
+                    "compatible_before": before,
+                    "compatible_after": after,
+                    "information": evaluate(
+                        receipt.scenario, receipt.original, observations
+                    ).evidence_status[-1],
+                }
+            )
+    return rows
 
 
 def export(receipt: Receipt) -> str:
@@ -282,6 +359,26 @@ def replay(raw: str) -> bool:
         r.schema_version == "migration/1" and any(s.selected_by != "engine" for s in r.steps)
     ):
         return False
+    if r.schema_version != "migration/3" and r.investigations:
+        return False
+    last_step = 0
+    for event in r.investigations:
+        if event.at_step < last_step or event.at_step > len(r.steps):
+            return False
+        last_step = event.at_step
+        seen = r.initial_observations + tuple(step.observation for step in r.steps[: event.at_step])
+        count = evaluate(r.scenario, r.original, seen).compatible_count
+        value = (
+            sum(a.cents for a in r.scenario.accounts)
+            if event.kind == "repeat_total"
+            else len(r.scenario.accounts)
+        )
+        if (
+            event.result != value
+            or event.compatible_before != count
+            or event.compatible_after != count
+        ):
+            return False
     if not valid_plan(r.scenario, r.original):
         return False
     expected_id = digest(
@@ -308,7 +405,7 @@ def replay(raw: str) -> bool:
                 return False
         elif step.action.kind == "repeat_total" or step.action not in evidence_actions(r.scenario):
             return False
-        if not response_matches_action(step.action, step.observation):
+        if not response_matches_action(r.scenario, step.action, step.observation):
             return False
         previous += (step.observation,)
     for plan, execution in ((r.original, r.preview), (r.repaired, r.execution)):
