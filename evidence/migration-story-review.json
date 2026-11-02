@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-01",
+  "pull_request": "https://github.com/dbccpage/owed_ai/pull/9",
+  "reviewed_head": "569ec14e737dba647267d1c58b8f938056caae3e",
+  "base_commit": "d65ad558c5b2442325cbbbdcb83266b638e09b2d",
+  "merge_commit": "5ac7c321d448788cb4495c6d214eef83499246dd",
+  "merged_by": "dbccpage",
+  "merged_at_utc": "2026-11-02T03:51:25Z",
+  "merge_tree_matches_reviewed_head": true,
+  "reviewed_head_is_ancestor_of_merge": true,
+  "blocking_findings": 0,
+  "review_scope": ["Exact integer dollar display and proposed/corrected row correspondence", "Unknown corrected balances until evidence-backed execution", "Scenario changes clear receipt and digest-bound replay feedback", "Original and repaired proposal outcomes remain distinct", "Operator disclosure does not change authorization or provider settings", "Runtime Git metadata is validated and never inferred from a receipt fingerprint"],
+  "ci": {
+    "url": "https://github.com/dbccpage/owed_ai/actions/runs/41384717869",
+    "head_commit": "569ec14e737dba647267d1c58b8f938056caae3e",
+    "conclusion": "success",
+    "ruff": "passed",
+    "strict_mypy": "passed",
+    "fresh_lean_ledger_and_migration_audits": "passed",
+    "python_suite": "passed",
+    "python_tests_passed": 331,
+    "python_tests_failed": 0,
+    "python_suite_seconds": 17.27,
+    "docker_build": "passed",
+    "container_journey": {"health": true, "public_ui": true, "migration_journey": true, "migration_proof_sources": true, "temporary_cleanup": true, "unprivileged_server": true, "persistent_volume": true}
+  },
+  "limitations": "Review and CI evidence; does not by itself establish successful hosted deployment, real Google login or visitor comprehension."
+}

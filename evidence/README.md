@@ -1,5 +1,11 @@
 # Validation evidence · v0.0.1.0
 
+The [PR #9 hosted rollout](migration-story-deployment.json) records normal-Chrome
+validation at `owed.anomalon.com`, the exact deployed commit, screenshots and an
+independently replayed browser download. [Review and CI](migration-story-review.json)
+and [certificate-validated HTTP probes](migration-story-http.json) are separate records.
+Live experiments remain disabled; real Google login is still unverified.
+
 The [presentation follow-up](migration-story.json) records the local dollar-value
 comparison, scenario checks, 331 passing tests and desktop/mobile viewport review.
 Its screenshots are distinct from the historical hosted release evidence below.

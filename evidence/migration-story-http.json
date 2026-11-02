@@ -1,0 +1,30 @@
+{
+  "checked_at_utc": "2026-11-02T03:59:06.734290+00:00",
+  "scope": "Certificate-validated HTTPS shell and health, not interactive behavior",
+  "results": [
+    {
+      "url": "https://owed.anomalon.com/",
+      "status": 200,
+      "verified_https": true,
+      "health_body": null
+    },
+    {
+      "url": "https://owed.anomalon.com/_stcore/health",
+      "status": 200,
+      "verified_https": true,
+      "health_body": "ok"
+    },
+    {
+      "url": "https://owed-workbench.onrender.com/",
+      "status": 200,
+      "verified_https": true,
+      "health_body": null
+    },
+    {
+      "url": "https://owed-workbench.onrender.com/_stcore/health",
+      "status": 200,
+      "verified_https": true,
+      "health_body": "ok"
+    }
+  ]
+}

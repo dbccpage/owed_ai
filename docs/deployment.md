@@ -4,13 +4,13 @@ Current public endpoint: [owed.anomalon.com](https://owed.anomalon.com/), with
 [the Render endpoint](https://owed-workbench.onrender.com/) retained as a fallback.
 The public-only service uses free compute and ephemeral state; live model execution
 is disabled. The paid persistent Blueprint below is a separate future configuration.
-The migration challenge is deployed from merged PR #4, commit `86c2d90`.
-See the [migration release record](migration-release.md) and
-[hosted validation evidence](../evidence/migration-deployment.json) for the actual
-browser journey, receipt replay and remaining checks. The owner completed the
+The migration presentation is deployed from merged PR #9, commit `5ac7c32`.
+See the [current hosted validation](../evidence/migration-story-deployment.json),
+[exact-head review and CI](../evidence/migration-story-review.json), and the
+[migration release history](migration-release.md). The owner completed the
 domain connection; CNAME and certificate-validated HTTPS health/app-shell checks
 passed on November 1, 2026. Live model experiments remain disabled; Google login
-and a dedicated provider-side spending cap remain future live-launch gates.
+remains a future live-launch gate; the dedicated provider cap is recorded separately below.
 
 The dedicated deployment key's provider-reported **$2/day** limit and daily reset
 were verified on November 1, 2026 without a model request; see
