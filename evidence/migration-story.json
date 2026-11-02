@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-01",
+  "base_commit": "d65ad558c5b2442325cbbbdcb83266b638e09b2d",
+  "scope": "Local presentation and behavioral validation; deployment is recorded separately.",
+  "environment": "Windows 11, Python 3.12.12, Streamlit hosted mode, loopback 8504, in-app browser",
+  "live_model_experiments": false,
+  "model_requests": 0,
+  "checks": {
+    "python_tests_passed": 331,
+    "python_tests_failed": 0,
+    "ruff": "passed",
+    "strict_mypy_modules": 21,
+    "default_dollar_comparison": "N-0-0: $100 -> $700; N-0-1: $200 -> $100; N-0-2: $700 -> $200; both total $1,000",
+    "unresolved_corrected_balances": "Not established",
+    "original_and_repaired_outcomes_separate": true,
+    "scenario_change_clears_receipt_and_replay": true,
+    "missing_records_block_repair": true,
+    "conflicting_records_require_resolution": true,
+    "outdated_records_excluded_then_refreshed": true,
+    "repaired_receipt_offline_replay": true,
+    "equal_balances_do_not_imply_financial_loss": true,
+    "exact_signed_integer_currency_formatting": true,
+    "operator_controls_collapsed": true,
+    "invalid_or_missing_runtime_commit_not_inferred": true
+  },
+  "browser_viewports": [{"width": 1280, "height": 900}, {"width": 390, "height": 844}],
+  "mobile_document_width": 390,
+  "mobile_scroll_width": 390,
+  "mobile_primary_action_visible_without_scroll": true,
+  "artifacts": ["migration-story-desktop.png", "migration-story-mobile.png", "migration-story-mobile-repair.png"],
+  "prior_hosted_artifact": {"path": "google-login-live-disabled.png", "source_commit": "d65ad558c5b2442325cbbbdcb83266b638e09b2d", "scope": "Prior runtime showed login button and live-disabled status; not a successful Google authentication."},
+  "limitations": ["No reader study or measured one-minute comprehension gain.", "Viewport emulation is not physical-device or accessibility certification.", "Runtime Git SHA is platform-reported metadata, not an authenticated source attestation.", "No new live-model or real Google authentication test.", "Lean sources unchanged; fresh Lean and container checks run in CI and are reported separately when observed."]
+}

@@ -148,3 +148,13 @@ Primary references: [Streamlit OIDC](https://docs.streamlit.io/develop/concepts/
 [Render disks](https://render.com/docs/disks),
 [Render Blueprint fields](https://render.com/docs/blueprint-spec),
 [OpenRouter key credit limits](https://openrouter.ai/docs/api/api-reference/api-keys/create-keys).
+
+## Inspect the deployed source
+
+The migration page's **Engineering behind the demo** section displays the full
+deployed Git commit from Render's documented `RENDER_GIT_COMMIT` runtime metadata
+and links it to GitHub. Missing or malformed metadata is displayed as unavailable;
+the receipt's build fingerprint is never substituted for a Git SHA. See
+[Render's default environment variables](https://render.com/docs/environment-variables).
+Google login and live status remain available in the collapsed **Operator access
+and live experiments** sidebar section. Presentation changes do not enable execution.

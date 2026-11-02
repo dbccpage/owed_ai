@@ -11,6 +11,14 @@ checks leave ownership unresolved, obtain the missing correspondence, and inspec
 an actually committed SQLite repair. The default public and local page follows this journey;
 the original research labs remain available in the sidebar.
 
+**Interactive demo—no account required.** A single dollar-value table compares the
+proposal with the checked repair. Missing, outdated and conflicting identity records
+are visible scenario choices. Original and repaired proposals have separate outcomes;
+raw certificates and operator login expand on demand. The
+[one-minute walkthrough](docs/migration-walkthrough.md) and
+[presentation validation](evidence/migration-story.json) describe the updated local
+experience. No measured recruiter-comprehension improvement is claimed.
+
 The current public deployment is **[owed.anomalon.com](https://owed.anomalon.com/)**
 ([Render fallback](https://owed-workbench.onrender.com/)).
 PR #4 is merged, and the migration challenge was deployed from `86c2d90`.
