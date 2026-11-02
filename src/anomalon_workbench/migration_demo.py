@@ -21,6 +21,7 @@ from .migration import (
     Scenario,
     Scope,
     evaluate,
+    evidence_actions,
     response_matches_action,
     select_action,
     valid_plan,
@@ -106,14 +107,15 @@ def fixture(seed: int = 0, count: int = 3) -> tuple[Scenario, Plan, Plan]:
 
 
 class Step(Record):
+    selected_by: Literal["engine", "visitor"] = "engine"
     action: EvidenceAction
     observation: Observation
     rationale: str = "Lowest-cost informative action in the evaluated menu; total query cannot distinguish mappings"
 
 
 class Receipt(Record):
-    schema_version: Literal["migration/1"] = "migration/1"
-    checker: Literal["migration/1"] = "migration/1"
+    schema_version: Literal["migration/1", "migration/2"] = "migration/2"
+    checker: Literal["migration/1", "migration/2"] = "migration/2"
     application_build: str
     run_id: str
     scenario: Scenario
@@ -147,7 +149,14 @@ def run(
     prior: Receipt | None = None,
     acquire: bool = True,
     one_action: bool = False,
+    requested_action: EvidenceAction | None = None,
 ) -> Receipt:
+    if requested_action is not None and (
+        not acquire
+        or requested_action.kind == "repeat_total"
+        or requested_action not in evidence_actions(scenario)
+    ):
+        raise ValueError("invalid_visitor_evidence_request")
     if prior is not None:
         if prior.scenario != scenario or prior.original != original:
             raise ValueError("prior_scope_mismatch")
@@ -167,7 +176,7 @@ def run(
             else execute(Path(directory) / "preview.sqlite3", scenario, original, preview=True)
         )
         for _ in range(min(6, 8 - len(steps)) if acquire else 0):
-            action = select_action(scenario, observations)
+            action = requested_action or select_action(scenario, observations)
             if action is None:
                 break
             try:
@@ -182,9 +191,21 @@ def run(
             if not response_matches_action(action, observation):
                 raise ValueError("evidence_response_contract")
             observations = (*observations, observation)
-            steps.append(Step(action=action, observation=observation))
+            steps.append(
+                Step(
+                    action=action,
+                    observation=observation,
+                    selected_by="visitor" if requested_action else "engine",
+                    rationale=(
+                        "Visitor selected this request from the declared evidence menu"
+                        if requested_action
+                        else Step.model_fields["rationale"].default
+                    ),
+                )
+            )
             if (
                 one_action
+                or requested_action is not None
                 or observation.scope != scenario.scope
                 or observation.status == "unavailable"
             ):
@@ -257,6 +278,10 @@ def replay(raw: str) -> bool:
     if set(bundle) != {"sha256", "receipt"} or digest(bundle["receipt"]) != bundle["sha256"]:
         return False
     r = Receipt.model_validate_json(canonical(bundle["receipt"]))
+    if r.checker != r.schema_version or (
+        r.schema_version == "migration/1" and any(s.selected_by != "engine" for s in r.steps)
+    ):
+        return False
     if not valid_plan(r.scenario, r.original):
         return False
     expected_id = digest(
@@ -278,7 +303,10 @@ def replay(raw: str) -> bool:
         return False
     previous = r.initial_observations
     for step in r.steps:
-        if step.action != select_action(r.scenario, previous):
+        if step.selected_by == "engine":
+            if step.action != select_action(r.scenario, previous):
+                return False
+        elif step.action.kind == "repeat_total" or step.action not in evidence_actions(r.scenario):
             return False
         if not response_matches_action(step.action, step.observation):
             return False

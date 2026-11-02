@@ -18,6 +18,7 @@ from .cognition import review_receipt
 from .domain import GraphInput, LedgerInput, RunSpec, canonical, digest, json_object
 from .examples import graph_example, initial_prompt, ledger_example
 from .hosting import HostedPolicy, Principal, data_root, hosted_mode, private_store, submit_hosted
+from .migration_scene import stylesheet
 from .providers import ProviderConfig, load_environment
 from .service import parse_record, replay
 from .spending import SpendLedger
@@ -330,6 +331,7 @@ def main() -> None:
     st.set_page_config(
         page_title="Owed · Accountable Agent Workbench", page_icon="◈", layout="wide"
     )
+    st.markdown("<style>" + stylesheet() + "</style>", unsafe_allow_html=True)
     try:
         hosted = hosted_mode()
         policy = HostedPolicy.from_env() if hosted else None
@@ -347,11 +349,18 @@ def main() -> None:
     if store is not None:
         store.recover()
     with st.sidebar:
-        st.title("◈ Owed")
-        page = st.radio(
+        st.markdown(
+            '<div class="an-brand"><span class="an-brand__mark">A</span><span class="an-brand__name">Owed<span class="an-brand__sub">Anomalon · Evidence lab</span></span></div>',
+            unsafe_allow_html=True,
+        )
+        journey_controls = st.container()
+        page_navigation = st.expander("Explanation, evidence and research labs")
+        page = page_navigation.radio(
             "Workbench",
             [
                 "Migration challenge",
+                "Explanation",
+                "Technical evidence",
                 "Overview",
                 "Evidence",
                 "Composition",
@@ -414,7 +423,15 @@ def main() -> None:
     if page == "Migration challenge":
         from .migration_ui import page as migration_page
 
-        migration_page()
+        migration_page(journey_controls)
+    elif page == "Explanation":
+        from .migration_ui import explanation_page
+
+        explanation_page()
+    elif page == "Technical evidence":
+        from .migration_ui import technical_page
+
+        technical_page()
     elif page == "Overview":
         overview()
     elif page == "Evidence":

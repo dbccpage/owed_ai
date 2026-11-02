@@ -231,6 +231,15 @@ def response_matches_action(action: EvidenceAction, observation: Observation) ->
     )
 
 
+def evidence_actions(scenario: Scenario) -> list[EvidenceAction]:
+    """The declared finite menu; no authority or hidden mapping is consulted."""
+    return [
+        EvidenceAction(kind="repeat_total", cost=0),
+        EvidenceAction(kind="full_crosswalk", cost=max(1, len(scenario.accounts) - 1)),
+        *(EvidenceAction(kind="source", source=a.id, cost=2) for a in scenario.accounts),
+    ]
+
+
 def select_action(
     scenario: Scenario, observations: tuple[Observation, ...]
 ) -> EvidenceAction | None:
@@ -241,11 +250,7 @@ def select_action(
     states = compatible(scenario, observations)
     if len(states) < 2:
         return None
-    actions = [
-        EvidenceAction(kind="repeat_total", cost=0),
-        EvidenceAction(kind="full_crosswalk", cost=max(1, len(scenario.accounts) - 1)),
-    ]
-    actions += [EvidenceAction(kind="source", source=a.id, cost=2) for a in scenario.accounts]
+    actions = evidence_actions(scenario)
 
     def informative(action: EvidenceAction) -> bool:
         if action.kind == "repeat_total":

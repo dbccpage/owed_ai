@@ -46,10 +46,15 @@ before = set(Path('/tmp').glob('owed-migration-*'))
 assert proof_status()['status'] == 'verified_during_build'
 app = AppTest.from_file('/app/app.py', default_timeout=20).run()
 assert not app.exception
-next(b for b in app.button if b.label == 'Run the migration challenge').click().run()
+next(b for b in app.button if b.label == 'Inspect the proposal').click().run()
 assert not app.exception
 assert app.session_state['migration_receipt'].initial.ownership == 'underdetermined'
-next(b for b in app.button if b.label == 'Obtain selected evidence and apply justified repair').click().run()
+next(b for b in app.button if b.label == 'Make your prediction').click().run()
+app.radio(key='migration_prediction').set_value('Not enough information').run()
+next(b for b in app.button if b.label == 'Test my prediction').click().run()
+assert app.session_state['migration_receipt'].steps == ()
+assert any('Possible assignment A' in m.value for m in app.markdown)
+next(b for b in app.button if b.label == 'Run this investigation').click().run()
 assert not app.exception
 receipt = app.session_state['migration_receipt']
 assert receipt.execution.ownership_preserved and receipt.execution.identity_coverage
