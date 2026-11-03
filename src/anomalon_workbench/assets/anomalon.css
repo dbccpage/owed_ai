@@ -15,7 +15,16 @@
 [data-testid=stSidebar] [data-testid=stRadio] label:hover{background:var(--an-navy-2)}
 [data-testid=stSidebar] [data-testid=stRadio] label:has(input:checked){background:var(--an-teal-soft);box-shadow:inset 3px 0 var(--an-teal)}
 [data-testid=stSidebar] [data-baseweb=select] *{color:var(--an-ink)}
-[data-testid=stSidebar] [data-testid=stCaptionContainer] *{color:var(--an-navy-mute)}
+/* Streamlit dims captions with opacity:.6; keep them at full opacity and use ink-2 (7.4:1 on white) */
+[data-testid=stCaptionContainer]{opacity:1}
+[data-testid=stCaptionContainer],[data-testid=stCaptionContainer] *{color:var(--an-ink-2)}
+[data-testid=stSidebar] [data-testid=stCaptionContainer] *{color:var(--an-ink-2)}
+/* Streamlit sets fonts on Markdown and heading containers directly, so inheritance never reaches them */
+[data-testid=stMarkdownContainer] :not(code):not(pre):not(pre *):not([data-testid=stIconMaterial]),
+[data-testid=stHeading] :not([data-testid=stIconMaterial]),[data-testid=stCaptionContainer] :not(code),
+[data-testid=stSidebar] :is(p,span,label,a,div):not([data-testid=stIconMaterial]):not(code),
+h1,h2,h3,h4,h5,h6,.stButton>button,[data-testid=stWidgetLabel] *{font-family:var(--an-font)!important}
+h1,h2,h3,h4,h5,h6,[data-testid=stHeading] :is(h1,h2,h3,h4,h5,h6){font-weight:600!important}
 
 .stButton>button,[data-testid=stDownloadButton]>button{font-weight:600;border-radius:var(--an-radius-sm);min-height:44px;transition:background-color .15s,border-color .15s}
 .stButton>button[kind=primary]{background:var(--an-teal);border-color:var(--an-teal-strong);color:white}

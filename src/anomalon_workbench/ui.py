@@ -356,7 +356,7 @@ def main() -> None:
             '<circle cx="11" cy="12.6" r="1.7" fill="var(--an-teal)"/></svg>'
             '<span class="an-brand__name">Owed<span class="an-brand__sub">Anomalon · Evidence lab</span></span></a>'
             '<div class="an-brand__links"><a href="https://www.anomalon.com/">All tools</a>'
-            '<a href="https://www.anomalon.com/about">About</a><a href="https://www.anomalon.com/contact">Contact</a></div>',
+            '<a href="https://www.anomalon.com/">About</a><a href="mailto:ooutwire@pm.me">Contact</a></div>',
             unsafe_allow_html=True,
         )
         journey_controls = st.container()
