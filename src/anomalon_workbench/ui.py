@@ -266,6 +266,14 @@ def inspector(store: Store) -> None:
         st.json(events)
 
 
+def one_screen() -> None:
+    """The one-screen front page: what Owed knows, what it doesn't, and what finding out costs."""
+    import streamlit.components.v1 as components
+
+    page = (Path(__file__).parent / "assets" / "onepane.html").read_text(encoding="utf-8")
+    components.html(page, height=980, scrolling=True)
+
+
 def overview() -> None:
     st.title("Owed")
     st.caption("The Accountable Agent Workbench · v0.0.1.0 · from Anomalon / Omega Engine")
@@ -364,6 +372,7 @@ def main() -> None:
         page = page_navigation.radio(
             "Workbench",
             [
+                "One screen",
                 "Migration challenge",
                 "Explanation",
                 "Technical evidence",
@@ -426,7 +435,9 @@ def main() -> None:
             st.caption(
                 "Credentials stay in your environment or ignored .env. No request is made until you start a run."
             )
-    if page == "Migration challenge":
+    if page == "One screen":
+        one_screen()
+    elif page == "Migration challenge":
         from .migration_ui import page as migration_page
 
         migration_page(journey_controls)

@@ -16,7 +16,8 @@ def app_start(monkeypatch):
     monkeypatch.setenv("WORKBENCH_MODE", "hosted")
     monkeypatch.setenv("WORKBENCH_LIVE_ENABLED", "false")
     monkeypatch.setenv("WORKBENCH_AUTH_ENABLED", "false")
-    return AppTest.from_file(str(Path(__file__).parents[1] / "app.py"), default_timeout=20).run()
+    app = AppTest.from_file(str(Path(__file__).parents[1] / "app.py"), default_timeout=20).run()
+    return app.sidebar.radio[0].set_value("Migration challenge").run()
 
 
 def click(app, label):

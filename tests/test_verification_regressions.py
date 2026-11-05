@@ -34,6 +34,7 @@ def test_replay_badge_belongs_to_exact_receipt(monkeypatch, transition):
     monkeypatch.setenv("WORKBENCH_LIVE_ENABLED", "false")
     monkeypatch.setenv("WORKBENCH_AUTH_ENABLED", "false")
     app = AppTest.from_file(str(Path(__file__).parents[1] / "app.py"), default_timeout=20).run()
+    app.sidebar.radio[0].set_value("Migration challenge").run()
 
     def click(label):
         next(b for b in app.button if b.label == label).click().run()
