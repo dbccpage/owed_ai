@@ -75,7 +75,7 @@ def main() -> None:
         "--server.headless=true", "--browser.gatherUsageStats=false",
         "--server.enableCORS=true", "--server.enableXsrfProtection=true",
         "--server.enableStaticServing=false", "--server.maxUploadSize=1",
-        "--client.showErrorDetails=false",
+        "--client.showErrorDetails=false", "--theme.base=light",
     ]
     cli.main()
 
