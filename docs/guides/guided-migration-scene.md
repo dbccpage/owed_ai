@@ -45,11 +45,11 @@ These tokens are prepared for reuse across Anomalon properties. They have not ye
 
 A passing interaction test is not a measured comprehension study. The final acceptance question remains for the user and a new visitor: can they explain what was missing, how ambiguity was demonstrated, why repeated totals were insufficient, and what evidence justified proceeding?
 
-Review images: [ambiguity on desktop](../evidence/guided-migration-ambiguity.jpg),
-[verified result](../evidence/guided-migration-verified.jpg), and
-[phone layout](../evidence/guided-migration-mobile.jpg).
+Review images: [ambiguity on desktop](../../evidence/guided-migration-ambiguity.jpg),
+[verified result](../../evidence/guided-migration-verified.jpg), and
+[phone layout](../../evidence/guided-migration-mobile.jpg).
 
-The [review-response record](pr11-review-response.md) covers the corrections and new screenshots.
+The [review-response record](../history/pr11-review-response.md) covers the corrections and new screenshots.
 
 ## Next review
 

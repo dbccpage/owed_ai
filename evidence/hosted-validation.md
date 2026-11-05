@@ -38,7 +38,7 @@ the local preview was restarted with live access disabled.
 observations using synthetic identities. Existing curated baseline replays remain
 separate from private hosted runs. A real Google callback, deployment-key credit
 limit, Render provisioning, and `workbench.anomalon.com` DNS/TLS are launch gates
-described in [the deployment guide](../docs/deployment.md).
+described in [the deployment guide](../docs/operations/deployment.md).
 
 Application reservation limits are not guaranteed provider billing limits. Unknown
 charges remain reserved, and an overrun stops future calls but cannot reverse an

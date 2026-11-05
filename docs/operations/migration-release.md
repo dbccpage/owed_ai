@@ -14,8 +14,8 @@ browser and CLI replay, scenario-change invalidation, missing/conflicting-record
 refusal, and outdated-record exclusion followed by a successful refresh. The app's
 displayed full Git commit matches Render; the downloaded receipt matches the local
 application fingerprint. Both domains pass certificate-validated shell/health checks.
-See [deployment evidence](../evidence/migration-story-deployment.json) and
-[review evidence](../evidence/migration-story-review.json). Live model execution
+See [deployment evidence](../../evidence/migration-story-deployment.json) and
+[review evidence](../../evidence/migration-story-review.json). Live model execution
 remains disabled. An existing sign-in was reported unverified or expired; real
 Google login is still pending. No credentials or hosting resources were changed.
 
@@ -27,8 +27,8 @@ proof evidence. Existing labs and live-provider policy remain available. Live mo
 experiments stay **disabled**. PR #4 was reviewed and merged as
 `86c2d90ee99fe4fb71330a524c390783260b596b`, then manually deployed to
 [owed.anomalon.com](https://owed.anomalon.com/). The reviewed and merged source
-trees match. See [PR review](../evidence/migration-pr-review.json) and
-[deployment evidence](../evidence/migration-deployment.json).
+trees match. See [PR review](../../evidence/migration-pr-review.json) and
+[deployment evidence](../../evidence/migration-deployment.json).
 
 Normal Chrome checks through the public hostname passed the preview, independently
 checked ambiguity witness, accepted correspondence, committed repair and all six
@@ -91,10 +91,10 @@ See [Render rollback behavior](https://render.com/docs/rollbacks).
 
 The owner completed this connection on November 1, 2026. The CNAME resolves to
 `owed-workbench.onrender.com`; certificate-validated HTTPS returned 200 for the app
-shell and `/_stcore/health`. [Validation evidence](../evidence/domain-validation.json)
+shell and `/_stcore/health`. [Validation evidence](../../evidence/domain-validation.json)
 records the scope of the earlier HTTP-only probe. Subsequent interactive checks
 and the migration rollout are recorded separately in
-[deployment evidence](../evidence/migration-deployment.json). The checklist below
+[deployment evidence](../../evidence/migration-deployment.json). The checklist below
 remains useful for reproducing or repairing the domain setup.
 No registration or paid-resource change is needed merely to propose a subdomain.
 

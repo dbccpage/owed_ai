@@ -5,8 +5,8 @@ Current public endpoint: [owed.anomalon.com](https://owed.anomalon.com/), with
 The public-only service uses free compute and ephemeral state; live model execution
 is disabled. The paid persistent Blueprint below is a separate future configuration.
 The migration presentation is deployed from merged PR #9, commit `5ac7c32`.
-See the [current hosted validation](../evidence/migration-story-deployment.json),
-[exact-head review and CI](../evidence/migration-story-review.json), and the
+See the [current hosted validation](../../evidence/migration-story-deployment.json),
+[exact-head review and CI](../../evidence/migration-story-review.json), and the
 [migration release history](migration-release.md). The owner completed the
 domain connection; CNAME and certificate-validated HTTPS health/app-shell checks
 passed on November 1, 2026. Live model experiments remain disabled; Google login
@@ -14,7 +14,7 @@ remains a future live-launch gate; the dedicated provider cap is recorded separa
 
 The dedicated deployment key's provider-reported **$2/day** limit and daily reset
 were verified on November 1, 2026 without a model request; see
-[cap evidence](../evidence/openrouter-deployment-cap.json). Real Google login and
+[cap evidence](../../evidence/openrouter-deployment-cap.json). Real Google login and
 deployment binding remain separate checks. This metadata check is not a billing
 exhaustion experiment. Live experiments remain disabled.
 

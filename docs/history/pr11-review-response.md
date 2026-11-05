@@ -29,8 +29,8 @@ the same draft PR without a deployment or a framework change.
   export/replay. Hosted CI supplies the actual Linux/Docker and fresh Lean results;
   local Python/browser checks alone do not establish those outcomes.
 
-New review images: [main action on phone](../evidence/pr11-review-main-mobile.jpg)
-and [verified desktop result](../evidence/pr11-review-verified-desktop.jpg).
+New review images: [main action on phone](../../evidence/pr11-review-main-mobile.jpg)
+and [verified desktop result](../../evidence/pr11-review-verified-desktop.jpg).
 The earlier review images remain unchanged.
 
 ## Limits and next review
