@@ -12,7 +12,7 @@ Escaped presentation only: no access to hidden ownership or selection logic.
 def stylesheet() -> str
 ```
 
-_No docstring yet._
+The shared Anomalon stylesheet (an exact copy of anomalon.com/ds/v1) followed by Owed's Streamlit layer.
 
 ### `scene_html`
 
