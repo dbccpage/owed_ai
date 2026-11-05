@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Owed</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one pane. Left = the change. Right = what is known, what is still possible, what each question costs. Light only, by choice. */
+:root {
+  --bg: #fbfbf9; --surface: #ffffff; --ink: #15202c; --ink-2: #4b5664; --ink-3: #66717d;
+  --line: #e2e4e1; --line-strong: #c9cdc8;
+  --accent: #12706c; --accent-soft: #e2f0ee;
+  --ok: #1f7a4a; --ok-soft: #e1f1e7; --warn: #8a5a00; --warn-soft: #f7ecd2; --bad: #b3261e; --bad-soft: #f8e1de;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.45 var(--sans); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 14px 12px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 12px; }
+h1 { margin: 0; font-size: 1.6rem; font-weight: 600; letter-spacing: -.01em; text-wrap: balance; }
+.lede { margin: 2px 0 0; color: var(--ink-2); }
+.query { font: 13px/1.4 var(--mono); color: var(--ink-2); background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; padding: 8px 12px; overflow-wrap: anywhere; }
+.query b { color: var(--ink-3); font-weight: 500; font-family: var(--sans); margin-right: 10px; }
+.pane { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 16px; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.label { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+button.change { all: unset; cursor: pointer; display: grid; grid-template-columns: 26px 1fr; gap: 2px 10px; align-items: start;
+  background: var(--surface); border: 1px solid var(--line-strong); border-radius: 6px; padding: 10px 12px; }
+button.change:hover { border-color: var(--accent); }
+button.change:focus-visible { outline: 3px solid rgba(18,112,108,.35); outline-offset: 1px; }
+button.change .n { grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent); font-weight: 600; font-size: 13px; }
+button.change .t { font-weight: 500; }
+button.change code { font: 12px/1.35 var(--mono); color: var(--ink-3); }
+button.change[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+button.change[aria-pressed="true"] .n { background: var(--accent); color: #fff; }
+button.change.done { opacity: .55; cursor: default; }
+button.change.done:hover { border-color: var(--line-strong); }
+.reset { all: unset; cursor: pointer; color: var(--accent); font-size: 14px; padding: 2px 0; align-self: flex-start; }
+.reset:focus-visible { outline: 3px solid rgba(18,112,108,.35); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+th, td { padding: 5px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font-size: 12px; font-weight: 600; color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
+td.num, th.num { text-align: right; font-family: var(--mono); }
+td.chk { width: 36px; text-align: center; color: var(--ok); font-weight: 600; }
+td .delta { display: inline-block; margin-right: 8px; font-size: 12px; padding: 1px 6px; border-radius: 4px; background: var(--ok-soft); color: var(--ok); }
+td .delta.neg { background: var(--warn-soft); color: var(--warn); }
+td.hit { background: var(--accent-soft); transition: background .6s; }
+td.withheld { background: var(--bad-soft); color: var(--bad); }
+th.id, td.id { width: 56px; font-family: var(--mono); color: var(--ink-2); }
+.src { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }
+.src .card { min-width: 0; }
+.src .tname { font: 500 12px var(--mono); color: var(--ink-3); padding: 7px 12px 0; }
+.src th, .src td { padding: 6px 10px; font: 12px/1.35 var(--mono); white-space: nowrap; }
+.src td.wrap { white-space: normal; }
+.src th { font: 600 11px var(--mono); text-transform: none; letter-spacing: 0; }
+.src td.chg { background: var(--accent-soft); color: var(--ink); }
+.src td.lost { background: var(--bad-soft); color: var(--bad); }
+.src s { color: var(--ink-3); }
+.src .arrow { color: var(--ink-3); margin: 0 4px; }
+.src .tag { display: block; font: 11px var(--sans); color: var(--bad); }
+.moves { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.moves div { padding: 7px 14px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.moves div + div { border-left: 1px solid var(--line); }
+.moves b { font-size: 13px; letter-spacing: .04em; }
+.moves span { font-size: 13px; color: var(--ink-2); }
+.moves .k b { color: var(--ink-2); } .moves .f b { color: var(--ok); } .moves .r b { color: var(--accent); }
+.cmp td { vertical-align: top; padding: 7px 14px; }
+.cmp td.who { width: 220px; font-weight: 500; }
+.cmp td.what { color: var(--ink-2); }
+.cmp td.q { width: 70px; text-align: right; font: 600 1.15rem/1.2 var(--mono); }
+.cmp tr.us td.who { color: var(--accent); }
+.cmp tr.us td.q { color: var(--accent); }
+.cmp .word { font-weight: 600; letter-spacing: .03em; margin-right: 8px; }
+.cmp .word.kept { color: var(--ink-2); } .cmp .word.fixed { color: var(--ok); }
+.cmp .word.refused { color: var(--bad); } .cmp .word.rebuilt { color: var(--accent); }
+.cmp th.q { text-align: right; }
+.foot { font-size: 12px; color: var(--ink-3); }
+@media (max-width: 820px) { .pane, .src, .moves { grid-template-columns: 1fr; } .moves div + div { border-left: 0; border-top: 1px solid var(--line); } .src .card { overflow-x: auto; } .cmp td.who { width: auto; } }
+@media (prefers-reduced-motion: reduce) { td.hit { transition: none; } }
+.src td.gone { color: var(--ink-3); text-decoration: line-through; background: var(--warn-soft); }
+.src td.new { background: var(--accent-soft); }
+.nfs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+.nfs div { padding: 8px 14px; display: flex; flex-direction: column; gap: 1px; }
+.nfs div + div { border-left: 1px solid var(--line); }
+.nfs b { font-size: 13px; letter-spacing: .02em; }
+.nfs span { font-size: 13px; color: var(--ink-2); }
+.nfs .bq b { color: var(--accent); }
+td.agg { font-size: 12px; color: var(--ink-3); }
+@media (max-width: 820px) { .nfs { grid-template-columns: 1fr; } .nfs div + div { border-left: 0; border-top: 1px solid var(--line); } }
+.big { font: 600 2.2rem/1 var(--mono); color: var(--accent); }
+.unk { display: flex; align-items: baseline; gap: 14px; padding: 10px 14px; }
+.unk p { margin: 0; color: var(--ink-2); }
+td.bad { background: var(--bad-soft); color: var(--bad); }
+td.good { background: var(--ok-soft); color: var(--ok); }
+.opts { color: var(--ink-3); }
+.price td.no { color: var(--ink-3); }
+.price td.yes { color: var(--ok); font-weight: 500; }
+.price tr.pick td { background: var(--accent-soft); }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; align-items: start; }
+@media (max-width: 820px) { .two { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The checks passed. Owed finds what it doesn't know, prices it, and buys the cheapest answer.</h1>
+    <p class="lede">Three fictional customers move to a new bank system. The total and the row count match. Who owns which new account is still open.</p>
+  </header>
+
+  <div class="card moves">
+    <div class="k"><b>KNOWN</b><span>$1,000 before and after. 3 rows before and after.</span></div>
+    <div class="f"><b>NOT KNOWN</b><span>Which new account belongs to which customer.</span></div>
+    <div class="r"><b>OWED</b><span>A current record that settles it. No record, no sign-off.</span></div>
+  </div>
+
+  <div class="pane">
+    <section class="col" aria-label="Ask a question">
+      <div class="label">Ask a question</div>
+      <button class="change" id="c1" data-step="1" aria-pressed="false"><span class="n">1</span><span class="t">Rerun the total and the row count</span><code>costs 0</code></button>
+      <button class="change" id="c2" data-step="2" aria-pressed="false"><span class="n">2</span><span class="t">Buy Priya's record</span><code>costs 2 · which new account is hers?</code></button>
+      <button class="change" id="c3" data-step="3" aria-pressed="false"><span class="n">3</span><span class="t">Buy Mateo's record, but it comes from an old snapshot</span><code>costs 2</code></button>
+      <button class="change" id="c4" data-step="4" aria-pressed="false"><span class="n">4</span><span class="t">Let Owed pick the cheapest useful question</span><code>Owed chooses from the price list</code></button>
+      <button class="reset" id="reset">Start over</button>
+    </section>
+
+    <section class="col" aria-label="Result">
+      <div class="label">The move</div>
+      <div class="card src"><table>
+        <thead><tr><th class="id">id</th><th>customer</th><th class="num">balance</th><th>proposed new id</th><th>still possible</th></tr></thead>
+        <tbody id="acct"></tbody></table></div>
+
+      <div class="two">
+        <div class="col">
+          <div class="label">What Owed doesn't know yet</div>
+          <div class="card unk"><span class="big" id="ways">6</span><p id="waysTxt">ways to hand out the 3 new accounts still fit everything Owed has seen.</p></div>
+        </div>
+        <div class="col">
+          <div class="label">Price list</div>
+          <div class="card src"><table class="price">
+            <thead><tr><th>question</th><th class="num">cost</th><th>useful now?</th></tr></thead>
+            <tbody id="price"></tbody></table></div>
+        </div>
+      </div>
+
+      <div class="label">What each one does</div>
+      <div class="card">
+        <table class="cmp">
+          <thead><tr><th>Check</th><th>What it does</th><th class="q">Spent</th></tr></thead>
+          <tbody>
+            <tr><td class="who">Totals and row count</td><td class="what" id="w-t">Passes: $1,000 and 3 rows on both sides. The move ships.</td><td class="q">0</td></tr>
+            <tr class="us"><td class="who">Owed</td><td class="what" id="w-us" aria-live="polite">Pick a question on the left.</td><td class="q" id="spent">0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <p class="foot">Fictional customers and synthetic records from Owed's built-in scenario (seed 0). Costs are the engine's declared units. The pick in change 4 is the engine's rule: the cheapest question that can still tell the possibilities apart, ties broken by name. The full walkthrough, with a real database repair, is "Migration challenge" in the sidebar menu.</p>
+</div>
+
+<script>
+(() => {
+  const A = [
+    { id: "S-0-0", name: "Priya Shah", cents: 70000, prop: "N-0-2", truth: "N-0-0" },
+    { id: "S-0-1", name: "Mateo Rivera", cents: 20000, prop: "N-0-1", truth: "N-0-2" },
+    { id: "S-0-2", name: "Ava Chen", cents: 10000, prop: "N-0-0", truth: "N-0-1" },
+  ];
+  const DEST = ["N-0-0", "N-0-1", "N-0-2"];
+  const perms = a => a.length <= 1 ? [a] : a.flatMap((x, i) => perms([...a.slice(0, i), ...a.slice(i + 1)]).map(p => [x, ...p]));
+  const ALL = perms(DEST); // assignment for A[0], A[1], A[2]
+  let s, timer;
+  const usd = c => "$" + (c / 100).toLocaleString("en-US");
+
+  const possible = () => ALL.filter(p => A.every((a, i) => !s.known[a.id] || p[i] === s.known[a.id]));
+  const options = i => [...new Set(possible().map(p => p[i]))].sort();
+  const actions = () => [
+    { key: "total", label: "Rerun total and count", cost: 0, informative: false },
+    { key: "crosswalk", label: "Full record of every account", cost: 2, informative: possible().length > 1 },
+    ...A.map((a, i) => ({ key: a.id, label: a.name.split(" ")[0] + "'s record", cost: 2, informative: options(i).length > 1 })),
+  ];
+  const pick = () => {
+    const useful = actions().filter(x => x.informative);
+    if (!useful.length) return null;
+    return useful.sort((x, y) => x.cost - y.cost || (x.key === "crosswalk" ? -1 : y.key === "crosswalk" ? 1 : x.key.localeCompare(y.key)))[0];
+  };
+
+  function reset() {
+    clearTimeout(timer);
+    s = { known: {}, spent: 0, mark: {}, picked: null };
+    render();
+    us("", "", "Pick a question on the left.");
+    document.getElementById("w-t").textContent = "Passes: $1,000 and 3 rows on both sides. The move ships.";
+    document.querySelectorAll("button.change").forEach(b => { b.classList.remove("done"); b.setAttribute("aria-pressed", "false"); });
+  }
+
+  function render() {
+    document.getElementById("acct").innerHTML = A.map((a, i) => {
+      const k = s.known[a.id], opts = options(i);
+      const propCls = k ? (k === a.prop ? "good" : "bad") : "";
+      const poss = opts.length === 1 ? `<b>${opts[0]}</b>` : `<span class="opts">${opts.join(" · ")}</span>`;
+      const pc = s.mark[a.id] ? "chg" : "";
+      return `<tr><td class="id">${a.id}</td><td>${a.name}</td><td class="num">${usd(a.cents)}</td><td class="${propCls}">${a.prop}${propCls === "bad" ? " ✗" : propCls === "good" ? " ✓" : ""}</td><td class="${pc}">${poss}</td></tr>`;
+    }).join("");
+    const n = possible().length;
+    document.getElementById("ways").textContent = n;
+    document.getElementById("waysTxt").textContent = n === 1
+      ? "way left. Every customer's new account is known."
+      : `ways to hand out the 3 new accounts still fit everything Owed has seen.`;
+    document.getElementById("price").innerHTML = actions().map(x =>
+      `<tr class="${s.picked === x.key ? "pick" : ""}"><td>${x.label}</td><td class="num">${x.cost}</td><td class="${s.picked === x.key || x.informative ? "yes" : "no"}">${s.picked === x.key ? "bought" : x.informative ? "yes" : "no"}</td></tr>`).join("");
+    document.getElementById("spent").textContent = s.spent;
+  }
+  function us(kind, word, text) { document.getElementById("w-us").innerHTML = (word ? `<span class="word ${kind}">${word}</span>` : "") + text; }
+
+  function learn(ids) { s.mark = {}; for (const id of ids) { s.known[id] = A.find(a => a.id === id).truth; s.mark[id] = true; } }
+  const wrongProp = () => A.filter(a => s.known[a.id] && s.known[a.id] !== a.prop);
+
+  function apply(step) {
+    const btn = document.getElementById("c" + step);
+    if (btn.classList.contains("done")) return;
+    clearTimeout(timer);
+    document.querySelectorAll("button.change").forEach(b => b.setAttribute("aria-pressed", "false"));
+    btn.setAttribute("aria-pressed", "true");
+    s.picked = null; s.mark = {};
+    const before = possible().length;
+
+    if (step === 1) {
+      us("kept", "NOTHING LEARNED", `All ${before} possible assignments give $1,000 and 3 rows, so this check can't tell them apart. Owed knew that from the price list and wouldn't have paid for it.`);
+    } else if (step === 2) {
+      if (options(0).length === 1) { us("kept", "WOULDN'T BUY", "Priya's new account is already known. Owed doesn't pay for an answer it has."); render(); btn.classList.add("done"); return; }
+      s.spent += 2; learn(["S-0-0"]);
+      us("refused", "PROPOSAL WRONG", `Priya's record says N-0-0. The proposal sends her $700 to N-0-2, and the totals never noticed. ${possible().length} ways left.`);
+      document.getElementById("w-t").textContent = "Still passes. It can't see that Priya's $700 went to the wrong account.";
+    } else if (step === 3) {
+      s.spent += 2;
+      us("refused", "REFUSED", `The record is from an old snapshot, so Owed doesn't count it. The 2 units are spent and nothing changed: still ${before} ways.`);
+      timer = setTimeout(() => {
+        us("rebuilt", "NOTED", `Owed marks Mateo's record as outdated and keeps the question open. Change 4 lets it choose what to buy instead.`);
+      }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1400);
+    } else if (step === 4) {
+      const p = pick();
+      if (!p) { us("kept", "NOTHING TO BUY", "Only one assignment is left, so no question on the price list can tell Owed anything new."); render(); btn.classList.add("done"); return; }
+      s.picked = p.key; s.spent += p.cost;
+      learn(p.key === "crosswalk" ? A.map(a => a.id) : [p.key]);
+      const after = possible().length, wrong = wrongProp();
+      us("fixed", "SETTLED", `Cheapest useful question: "${p.label}" for ${p.cost}. ${after === 1 ? "One way left. " : after + " ways left. "}` +
+        (wrong.length ? `The proposal is wrong for ${wrong.map(a => a.name.split(" ")[0]).join(", ")}. Owed rebuilds the move from the records: ${A.map(a => a.name.split(" ")[0] + " → " + a.truth).join(", ")}.` : ""));
+      document.getElementById("w-t").textContent = "Still passes. It passed every wrong version of this move too.";
+    }
+    render();
+    btn.classList.add("done");
+  }
+
+  document.querySelectorAll("button.change").forEach(b => b.addEventListener("click", () => apply(+b.dataset.step)));
+  document.getElementById("reset").addEventListener("click", reset);
+  reset();
+})();
+</script>
+</body>
+</html>

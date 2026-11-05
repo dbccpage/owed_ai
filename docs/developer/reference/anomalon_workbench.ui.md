@@ -70,6 +70,14 @@ def inspector(store: Store) -> None
 
 _No docstring yet._
 
+### `one_screen`
+
+```python
+def one_screen() -> None
+```
+
+The one-screen front page: what Owed knows, what it doesn't, and what finding out costs.
+
 ### `overview`
 
 ```python

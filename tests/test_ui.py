@@ -10,6 +10,7 @@ def test_ui_pages_without_network(tmp_path, monkeypatch):
     monkeypatch.setenv("WORKBENCH_DATA_DIR", str(tmp_path))
     app = AppTest.from_file(str(Path(__file__).parents[1] / "app.py"), default_timeout=15).run()
     assert not app.exception
+    assert app.sidebar.radio[0].value == "One screen"
     for page in ["Evidence", "Composition", "Revision", "Run inspector", "Overview"]:
         app.sidebar.radio[0].set_value(page).run()
         assert not app.exception, page
@@ -39,3 +40,11 @@ def test_replay_result_survives_rerender_without_submitting(tmp_path, monkeypatc
     assert any("Semantic replay matched:" in m.value and "True" in m.value for m in app.markdown)
     assert len(store.list_runs()) == 1
     assert store.read(str(store.get(run_id)["receipt_hash"])) == receipt
+
+
+def test_one_screen_page_ships_with_the_package():
+    page = Path(__file__).parents[1] / "src/anomalon_workbench/assets/onepane.html"
+    html = page.read_text(encoding="utf-8")
+    assert html.startswith("<!doctype html>")
+    assert "Owed finds what it doesn't know" in html
+    assert "prefers-color-scheme" not in html
