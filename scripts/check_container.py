@@ -45,6 +45,7 @@ from anomalon_workbench.migration_proof import proof_status
 before = set(Path('/tmp').glob('owed-migration-*'))
 assert proof_status()['status'] == 'verified_during_build'
 app = AppTest.from_file('/app/app.py', default_timeout=20).run()
+app = app.sidebar.radio[0].set_value('Migration challenge').run()
 assert not app.exception
 next(b for b in app.main.button if b.label == 'Inspect the proposal').click().run()
 assert not app.exception
