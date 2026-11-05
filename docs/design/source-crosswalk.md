@@ -15,4 +15,4 @@ The source estate was inspected locally under `C:/Users/a343o/source/repos/anoma
 
 Inspected entrypoints include the PFP README and context definition; Prompt Civilization foundations and evolution documentation; the EIS anti-skill README; governance README and LGGR classify contract; the Genesis crosswalk's explicit source/transport caveats; and the C011 finite cochain-repair description. C011 inspired exact witness discipline, not a claim that this workbench implements its optimization problem or dual certificate machinery.
 
-The local `proof_knowledge_obligations_mvp.md` supplies the ledger experiment and acceptance boundaries. Its original bytes are retained. This release expands its presentation to three connected labs and live providers, while keeping formal validity, finite evidence, and authority distinct.
+The original proposal, [proof-knowledge-obligations-mvp.md](proof-knowledge-obligations-mvp.md), supplies the ledger experiment and acceptance boundaries. Its original bytes are retained. This release expands its presentation to three connected labs and live providers, while keeping formal validity, finite evidence, and authority distinct.

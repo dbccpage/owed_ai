@@ -350,13 +350,13 @@ def main() -> None:
         store.recover()
     with st.sidebar:
         st.markdown(
-            '<a class="an-brand" href="https://www.anomalon.com/">'
+            '<a class="an-brand" href="https://anomalon.com/">'
             '<svg class="an-brand__mark" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="1" width="20" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/>'
             '<path d="M6 15.5 11 6l5 9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'
             '<circle cx="11" cy="12.6" r="1.7" fill="var(--an-teal)"/></svg>'
             '<span class="an-brand__name">Owed<span class="an-brand__sub">Anomalon · Evidence lab</span></span></a>'
-            '<div class="an-brand__links"><a href="https://www.anomalon.com/">All tools</a>'
-            '<a href="https://www.anomalon.com/">About</a><a href="mailto:ooutwire@pm.me">Contact</a></div>',
+            '<div class="an-brand__links"><a href="https://anomalon.com/">All tools</a>'
+            '<a href="https://anomalon.com/about/">About</a><a href="https://anomalon.com/contact/">Contact</a></div>',
             unsafe_allow_html=True,
         )
         journey_controls = st.container()

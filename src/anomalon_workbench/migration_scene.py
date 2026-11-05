@@ -5,7 +5,9 @@ from pathlib import Path
 
 
 def stylesheet() -> str:
-    return (Path(__file__).parent / "assets" / "anomalon.css").read_text(encoding="utf-8")
+    """The shared Anomalon stylesheet (an exact copy of anomalon.com/ds/v1) followed by Owed's Streamlit layer."""
+    assets = Path(__file__).parent / "assets"
+    return "\n".join((assets / name).read_text(encoding="utf-8") for name in ("anomalon.css", "owed.css"))
 
 
 def scene_html(
