@@ -26,5 +26,7 @@ module's public functions, with their docstrings.
 | [`anomalon_workbench.service`](anomalon_workbench.service.md) | 2 | One bounded application service shared by worker, CLI, UI and replay. |
 | [`anomalon_workbench.spending`](anomalon_workbench.spending.md) | 2 | Process-safe reservations shared across tenants; uncertain calls keep their charge. |
 | [`anomalon_workbench.storage`](anomalon_workbench.storage.md) | 1 | Transactional single-run admission, append-only decisions, content-addressed artifacts. |
+| [`anomalon_workbench.tuner`](anomalon_workbench.tuner.md) | 18 | A small learning loop with five verbs: propose, evaluate, authorize, record, learn. |
+| [`anomalon_workbench.tuner_demo`](anomalon_workbench.tuner_demo.md) | 5 | Finite demo for the tuner loop: pin the right keys in a tiny cache. |
 | [`anomalon_workbench.ui`](anomalon_workbench.ui.md) | 0 | Python-authored UI: narrative first, raw evidence one click away. |
 | [`anomalon_workbench.worker`](anomalon_workbench.worker.md) | 0 | A separate bounded worker; reruns cannot claim an already-running job. |

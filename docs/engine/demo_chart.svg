@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="330" font-family="sans-serif" font-size="12">
+<rect width="760" height="330" fill="white"/>
+<text x="60" y="26" font-size="14" font-weight="bold">Task error (miss rate)</text>
+<rect x="60" y="40" width="300" height="200" fill="none" stroke="#888"/>
+<line x1="60" y1="240.0" x2="360" y2="240.0" stroke="#ddd"/>
+<text x="52" y="244.0" text-anchor="end">0.0</text>
+<line x1="60" y1="140.0" x2="360" y2="140.0" stroke="#ddd"/>
+<text x="52" y="144.0" text-anchor="end">0.5</text>
+<line x1="60" y1="40.0" x2="360" y2="40.0" stroke="#ddd"/>
+<text x="52" y="44.0" text-anchor="end">1.0</text>
+<text x="60.0" y="256" text-anchor="middle">0</text>
+<text x="102.9" y="256" text-anchor="middle">1</text>
+<text x="145.7" y="256" text-anchor="middle">2</text>
+<text x="188.6" y="256" text-anchor="middle">3</text>
+<text x="231.4" y="256" text-anchor="middle">4</text>
+<text x="274.3" y="256" text-anchor="middle">5</text>
+<text x="317.1" y="256" text-anchor="middle">6</text>
+<text x="360.0" y="256" text-anchor="middle">7</text>
+<text x="210.0" y="274" text-anchor="middle">run</text>
+<polyline points="60.0,40.0 102.9,111.3 145.7,141.3 188.6,166.0 231.4,179.0 274.3,182.7 317.1,176.7 360.0,175.7" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<circle cx="60.0" cy="40.0" r="3" fill="#1f77b4"/>
+<circle cx="102.9" cy="111.3" r="3" fill="#1f77b4"/>
+<circle cx="145.7" cy="141.3" r="3" fill="#1f77b4"/>
+<circle cx="188.6" cy="166.0" r="3" fill="#1f77b4"/>
+<circle cx="231.4" cy="179.0" r="3" fill="#1f77b4"/>
+<circle cx="274.3" cy="182.7" r="3" fill="#1f77b4"/>
+<circle cx="317.1" cy="176.7" r="3" fill="#1f77b4"/>
+<circle cx="360.0" cy="175.7" r="3" fill="#1f77b4"/>
+<polyline points="60.0,40.0 102.9,111.3 145.7,141.3 188.6,166.0 231.4,179.0 274.3,182.7 317.1,176.7 360.0,175.7" fill="none" stroke="#d62728" stroke-width="2"/>
+<circle cx="60.0" cy="40.0" r="3" fill="#d62728"/>
+<circle cx="102.9" cy="111.3" r="3" fill="#d62728"/>
+<circle cx="145.7" cy="141.3" r="3" fill="#d62728"/>
+<circle cx="188.6" cy="166.0" r="3" fill="#d62728"/>
+<circle cx="231.4" cy="179.0" r="3" fill="#d62728"/>
+<circle cx="274.3" cy="182.7" r="3" fill="#d62728"/>
+<circle cx="317.1" cy="176.7" r="3" fill="#d62728"/>
+<circle cx="360.0" cy="175.7" r="3" fill="#d62728"/>
+<text x="440" y="26" font-size="14" font-weight="bold">Proposal error (refuted / evaluated)</text>
+<rect x="440" y="40" width="300" height="200" fill="none" stroke="#888"/>
+<line x1="440" y1="240.0" x2="740" y2="240.0" stroke="#ddd"/>
+<text x="432" y="244.0" text-anchor="end">0.0</text>
+<line x1="440" y1="140.0" x2="740" y2="140.0" stroke="#ddd"/>
+<text x="432" y="144.0" text-anchor="end">0.5</text>
+<line x1="440" y1="40.0" x2="740" y2="40.0" stroke="#ddd"/>
+<text x="432" y="44.0" text-anchor="end">1.0</text>
+<text x="440.0" y="256" text-anchor="middle">0</text>
+<text x="482.9" y="256" text-anchor="middle">1</text>
+<text x="525.7" y="256" text-anchor="middle">2</text>
+<text x="568.6" y="256" text-anchor="middle">3</text>
+<text x="611.4" y="256" text-anchor="middle">4</text>
+<text x="654.3" y="256" text-anchor="middle">5</text>
+<text x="697.1" y="256" text-anchor="middle">6</text>
+<text x="740.0" y="256" text-anchor="middle">7</text>
+<text x="590.0" y="274" text-anchor="middle">run</text>
+<polyline points="440.0,240.0 482.9,240.0 525.7,240.0 568.6,240.0 611.4,240.0 654.3,40.0 697.1,240.0 740.0,240.0" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<circle cx="440.0" cy="240.0" r="3" fill="#1f77b4"/>
+<circle cx="482.9" cy="240.0" r="3" fill="#1f77b4"/>
+<circle cx="525.7" cy="240.0" r="3" fill="#1f77b4"/>
+<circle cx="568.6" cy="240.0" r="3" fill="#1f77b4"/>
+<circle cx="611.4" cy="240.0" r="3" fill="#1f77b4"/>
+<circle cx="654.3" cy="40.0" r="3" fill="#1f77b4"/>
+<circle cx="697.1" cy="240.0" r="3" fill="#1f77b4"/>
+<circle cx="740.0" cy="240.0" r="3" fill="#1f77b4"/>
+<polyline points="440.0,240.0 482.9,240.0 525.7,240.0 568.6,240.0 611.4,240.0 654.3,40.0 697.1,40.0 740.0,40.0" fill="none" stroke="#d62728" stroke-width="2"/>
+<circle cx="440.0" cy="240.0" r="3" fill="#d62728"/>
+<circle cx="482.9" cy="240.0" r="3" fill="#d62728"/>
+<circle cx="525.7" cy="240.0" r="3" fill="#d62728"/>
+<circle cx="568.6" cy="240.0" r="3" fill="#d62728"/>
+<circle cx="611.4" cy="240.0" r="3" fill="#d62728"/>
+<circle cx="654.3" cy="40.0" r="3" fill="#d62728"/>
+<circle cx="697.1" cy="40.0" r="3" fill="#d62728"/>
+<circle cx="740.0" cy="40.0" r="3" fill="#d62728"/>
+<line x1="60" y1="298" x2="84" y2="298" stroke="#1f77b4" stroke-width="2"/>
+<text x="90" y="302">with memory: final miss rate 0.322, final pins [3, 7, 10, 11]</text>
+<line x1="60" y1="314" x2="84" y2="314" stroke="#d62728" stroke-width="2"/>
+<text x="90" y="318">no memory: final miss rate 0.322, final pins [3, 7, 10, 11]</text>
+</svg>
