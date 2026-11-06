@@ -96,3 +96,27 @@ def test_authentication_is_in_collapsed_operator_section(app):
     section = next(e for e in app.sidebar.expander if e.label == "Operator access and live experiments")
     assert not section.proto.expanded
     assert any("Live experiments are currently disabled" in c.value for c in section.caption)
+
+
+def test_one_screen_five_elements_and_more_control(app):
+    click(app, "Run the migration challenge")
+    click(app, "Obtain selected evidence and apply justified repair")
+    full_text = "\n".join(
+        [h.value for h in app.subheader] + [m.value for m in app.markdown]
+    )
+    required_labels = [
+        "1. The claim: the total is right",
+        "2. The check that fails: which balances, which accounts",
+        "3. What the machine does not know and what it would cost to find out",
+        "4. The question it asks",
+        "5. The corrected result with the rows that changed",
+    ]
+    positions = []
+    for label in required_labels:
+        assert label in full_text, f"Missing label: {label}"
+        positions.append(full_text.index(label))
+    assert positions == sorted(positions), "Five elements must appear in exact order 1..5"
+    assert "Source:" in full_text and "Rule:" in full_text
+    main_expanders = [e.label for e in app.main.expander]
+    assert main_expanders == ["More"], f"Expected only ['More'] expander on main screen, got {main_expanders}"
+

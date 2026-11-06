@@ -267,7 +267,7 @@ def inspector(store: Store) -> None:
 
 def overview() -> None:
     st.title("Owed")
-    st.caption("The Accountable Agent Workbench · v0.0.1.0 · from Anomalon / Omega Engine")
+    st.caption("The Accountable Agent Workbench · v0.0.1.0 · from Anomalon")
     st.header("What did the agent establish—and what does it still owe?")
     st.write(
         "Three small experiments turn a research programme into observable behavior. Models propose; exact checkers inspect evidence; operators retain admission authority."
@@ -279,7 +279,7 @@ def overview() -> None:
         ),
         (
             "02 · Composition",
-            "Locally satisfiable constraints can conflict globally. Inspect a concrete obstruction.",
+            "Locally satisfiable constraints can conflict globally. Inspect a concrete conflict.",
         ),
         (
             "03 · Revision",
@@ -290,20 +290,20 @@ def overview() -> None:
             st.subheader(title)
             st.write(body)
     st.write(
-        "**Five-minute tour:** evidence → obstruction → revision → receipt. Start with the checked examples, then run your chosen live model."
+        "**Five-minute tour:** evidence -> conflict -> revision -> receipt. Start with the checked examples, then run your chosen live model."
     )
     st.caption(
         "The ledger actor is a simulation. Hosted live experiments require a separate authorized login."
     )
     if hosted_mode():
         st.write(
-            "**Anomalon:** Owed is a working research exhibit on the path to Omega Engine V1.0RC. The broader Pre-Genesis → Genesis → quantum mechanics → Omega Engine story belongs to the Anomalon home; this workbench demonstrates three scoped ideas."
+            "**Anomalon:** Owed is a working research exhibit from Anomalon demonstrating three scoped verification checks."
         )
         st.link_button("Explore Owed on GitHub", "https://github.com/dbccpage/owed_ai")
     proof = Path("evidence/lean-verification.json")
     with st.expander("Formal supplement and research lineage"):
         st.write(
-            "Genesis: preserved distinctions and explicit assumptions. LGGR: local/global consistency. PFP: proposals checked by the host. EIS: failure screening. PCIV: immutable ancestry. Governance: separate admission."
+            "Preserved distinctions and explicit assumptions; local/global consistency; proposals checked by the host; failure screening; immutable ancestry; and separate operator admission."
         )
         if proof.exists():
             report = json.loads(proof.read_text(encoding="utf-8"))
@@ -325,11 +325,109 @@ def overview() -> None:
             st.write("Lean supplement: not checked in this installation.")
 
 
+_ANOMALON_CSS = """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+:root {
+  --an-bg: #fbfbf9;
+  --an-surface: #ffffff;
+  --an-ink: #15202c;
+  --an-muted: #4b5664;
+  --an-border: #d8dcd6;
+  --an-accent: #12706c;
+}
+html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"] {
+  background-color: #fbfbf9 !important;
+  color: #15202c !important;
+  font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif !important;
+}
+[data-testid="stSidebar"],
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"],
+[data-testid="stHeader"],
+[data-testid="stToolbar"],
+[data-testid="stDecoration"],
+#MainMenu,
+header,
+footer {
+  display: none !important;
+}
+.block-container {
+  padding-top: 0.6rem !important;
+  padding-bottom: 0.6rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  max-width: 1240px !important;
+}
+h1 {
+  font-size: 1.2rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.15rem !important;
+  padding-top: 0 !important;
+  color: #15202c !important;
+}
+h2, h3 {
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.15rem !important;
+  padding-top: 0 !important;
+  color: #15202c !important;
+}
+p, li, label, [data-testid="stMarkdownContainer"] p {
+  font-size: 0.82rem !important;
+  line-height: 1.35 !important;
+  margin-bottom: 0.2rem !important;
+  color: #15202c !important;
+}
+code, pre, [data-testid="stTable"] {
+  font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace !important;
+  font-size: 0.78rem !important;
+}
+[data-testid="stTable"] th, [data-testid="stTable"] td {
+  padding: 0.2rem 0.45rem !important;
+}
+[data-testid="stMetric"] {
+  background: #ffffff !important;
+  border: 1px solid #d8dcd6 !important;
+  border-radius: 6px !important;
+  padding: 0.35rem 0.6rem !important;
+  box-shadow: none !important;
+}
+[data-testid="stMetricValue"] {
+  font-size: 1rem !important;
+  font-family: "IBM Plex Mono", monospace !important;
+}
+.stButton > button {
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  font-size: 0.8rem !important;
+  padding: 0.25rem 0.75rem !important;
+  min-height: 2rem !important;
+}
+.stButton > button[kind="primary"] {
+  background-color: #12706c !important;
+  border-color: #12706c !important;
+  color: #ffffff !important;
+}
+[data-testid="stExpander"] {
+  background: #ffffff !important;
+  border: 1px solid #d8dcd6 !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+</style>
+"""
+
+
 def main() -> None:
     load_environment()
     st.set_page_config(
-        page_title="Owed · Accountable Agent Workbench", page_icon="◈", layout="wide"
+        page_title="Owed · Accountable Agent Workbench",
+        layout="wide",
+        initial_sidebar_state="collapsed",
     )
+    st.markdown(_ANOMALON_CSS, unsafe_allow_html=True)
     try:
         hosted = hosted_mode()
         policy = HostedPolicy.from_env() if hosted else None
@@ -347,7 +445,7 @@ def main() -> None:
     if store is not None:
         store.recover()
     with st.sidebar:
-        st.title("◈ Owed")
+        st.title("Owed")
         page = st.radio(
             "Workbench",
             [
