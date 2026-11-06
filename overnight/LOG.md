@@ -40,14 +40,15 @@
 
 ## Changed
 
-- Record baseline screenshots, console output, timing, and test suite output for Owed (`f60717c`) — proved by `overnight/baseline/front_1280x800.png`, `overnight/baseline/front_390x844.png`, and `overnight/baseline/test_suite_output.txt`.
-- Pin light-only Anomalon theme tokens in `.streamlit/config.toml`, `serve.py`, and `ui.py`, remove internal jargon and symbols, reshape the migration page into one screen at 1280 × 800 (`mainRectH = 679 px`) with the five ordered elements, `Source:`/`Rule:` lines, and a single `"More"` expander (`b775b91`) — proved by `tests/test_migration_story.py::test_one_screen_five_elements_and_more_control`.
-- Record after screenshots and overnight hand-off log for Owed (`c3955ba`) — proved by `overnight/after_front_1280x800.png` and `overnight/after_front_390x844.png`.
-- Show preview row diffs with `Source:` and `Rule:` under section 5 on initial load before clicking `"Run the migration challenge"`, check both initial and repaired states in `test_one_screen_five_elements_and_more_control`, and record Streamlit 390 px layout constraints in `overnight/LOG.md` — proved by `tests/test_migration_story.py::test_one_screen_five_elements_and_more_control`.
+- Record baseline screenshots, console output, timing, and test suite output for Owed (`f60717c`) — checked by `overnight/baseline/front_1280x800.png`, `overnight/baseline/front_390x844.png`, and `overnight/baseline/test_suite_output.txt`.
+- Pin light-only Anomalon theme tokens in `.streamlit/config.toml`, `serve.py`, and `ui.py`, remove internal jargon and symbols, reshape the migration page into one screen at 1280 × 800 (`mainRectH = 679 px`) with the five ordered elements, `Source:`/`Rule:` lines, and a single `"More"` expander (`ed63505`) — checked by `tests/test_migration_story.py::test_one_screen_five_elements_and_more_control`.
+- Record after screenshots and overnight hand-off log for Owed (`c3955ba`) — checked by `overnight/after_front_1280x800.png` and `overnight/after_front_390x844.png`.
+- Show preview row diffs with `Source:` and `Rule:` under section 5 on initial load before clicking `"Run the migration challenge"`, check both initial and repaired states in `test_one_screen_five_elements_and_more_control`, and record Streamlit 390 px layout constraints in `overnight/LOG.md` (`30d6d61`) — checked by `tests/test_migration_story.py::test_one_screen_five_elements_and_more_control`.
+- Fix `ruff` E741 lambda parameter name (`3495326`) and trigger `.github/workflows/validate.yml` on `overnight/**` branch pushes (`bee5574`) so `docker build -t owed:validation .` and `uv run python scripts/check_container.py` execute in GitHub Actions — checked by GitHub Actions run `42164872476` (`{"health": true, "public_ui": true, "migration_journey": true, "migration_proof_sources": true, "temporary_cleanup": true, "unprivileged_server": true, "persistent_volume": true}`).
 
 ## Not done
 
-- Executing `scripts/check_container.py` against a live Docker daemon: Docker is not installed on this Windows host, so the outer `docker run` wrapper could not be invoked. The inner `AppTest`, `proof_status()`, and offline `replay(export(receipt))` checks from `scripts/check_container.py` were executed directly against the local `.venv` in `WORKBENCH_MODE=hosted` and passed.
+- None — Lean supplement checks (`scripts/check_lean.py`, `scripts/check_migration_lean.py`), `ruff check`, `mypy src`, `pytest -q` (332 passed), `docker build -t owed:validation .`, and `scripts/check_container.py` all executed and passed in GitHub Actions (run `42164872476`).
 
 ## Decisions for the owner
 
