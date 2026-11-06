@@ -1,5 +1,3 @@
-# Overnight Improvement Log — Owed (`2026-11-05`)
-
 ## What this app does
 
 1. Owed is a Python and Streamlit application (`app.py` calling `anomalon_workbench.ui:main`) that defaults to the guided `"Migration challenge"` page (`src/anomalon_workbench/migration_ui.py`).
@@ -15,13 +13,14 @@
 
 ## Baseline
 
-- **Desktop front page (`1280 × 800`)**: `overnight/baseline/front_1280x800.png` (rendered in Streamlit dark theme `rgb(14, 17, 23)` with open sidebar and multi-screen vertical scroll `scrollHeight = 2079 px`).
-- **Phone front page (`390 × 844`)**: `overnight/baseline/front_390x844.png` (rendered in Streamlit dark theme `rgb(14, 17, 23)` with vertical scroll `scrollHeight = 2368 px`).
-- **Browser console output**: `overnight/baseline/browser_console.txt` (`0` console errors).
-- **First result timing**: `overnight/baseline/first_result_timing.txt` (`/_stcore/health` HTTP 200 in `12.7 ms`, initial HTML in `18.4 ms`, headless Edge DOM and screenshot ready in `4120.5 ms`).
-- **Baseline test suite output**: `overnight/baseline/test_suite_output.txt` (`331 passed in 32.01s`).
+- **Desktop front page (`1280 × 800`)**: [`overnight/baseline/front_1280x800.png`](baseline/front_1280x800.png) (rendered in Streamlit dark theme `rgb(14, 17, 23)` with open sidebar and multi-screen vertical scroll `scrollHeight = 2079 px`).
+- **Phone front page (`390 × 844`)**: [`overnight/baseline/front_390x844.png`](baseline/front_390x844.png) (rendered in Streamlit dark theme `rgb(14, 17, 23)` with vertical scroll `scrollHeight = 2368 px`).
+- **Browser console output**: [`overnight/baseline/browser_console.txt`](baseline/browser_console.txt) (`0` console errors).
+- **First result timing**: [`overnight/baseline/first_result_timing.txt`](baseline/first_result_timing.txt) (`/_stcore/health` HTTP 200 in `12.7 ms`, initial HTML in `18.4 ms`, headless Edge DOM and screenshot ready in `3539 ms`–`4120.5 ms`).
+- **Baseline test suite output**: [`overnight/baseline/test_suite_output.txt`](baseline/test_suite_output.txt) (`331 passed in 32.01s`).
+- **Phone width (`390 × 844`) — what Streamlit allows and does not allow**: Streamlit allows pinning light-theme CSS variables, compacting typography and container padding, wrapping markdown/code lines, and scrolling wide tables inside their own wrapper so horizontal overflow is zero (`scrollWidth = 390 px <= clientWidth = 390 px`). Streamlit does not allow keeping `st.columns` side-by-side below `640 px` viewport width or removing the internal React block-wrapper vertical margins around stacked widgets and tables without breaking widget layout, so at `390 × 844` the two columns stack vertically with `scrollHeight = 1612 px` (~1.9 screens, within the two-screen mobile bound) rather than fitting a single unscrollable `844 px` screen.
 
-### Complete inventory of pages, sidebar entries, widgets, expanders, and tabs in `ui.py` and `migration_ui.py`
+**Complete inventory of pages, sidebar entries, widgets, expanders, and tabs in `ui.py` and `migration_ui.py`:**
 
 | Location (baseline -> updated lines) | Element / Widget | Kind | Used by the one-screen migration flow? | Disposition |
 |---|---|---|---|---|
@@ -36,28 +35,15 @@
 | `migration_ui.py:145-162` | Section `2. The check that fails: which balances, which accounts` (`st.subheader`, `st.info("A correct total does not establish correct ownership.")`, `st.write` with `underdetermined` status, permutation count, `Source:` candidate rows, and `Rule:`) | Core migration step 2 | **Yes** | Displayed in left column of the one-screen layout |
 | `migration_ui.py:164-168` | Section `3. What the machine does not know and what it would cost to find out` (`st.subheader`, `st.write` with missing crosswalk scope, action costs, `Source:` action menu, and `Rule:`) | Core migration step 3 | **Yes** | Displayed in left column of the one-screen layout |
 | `migration_ui.py:170-198` | Section `4. The question it asks` (`st.subheader`, `st.write` with authority query, `Source:`, `Rule:`, and action buttons `st.button("Obtain selected evidence and apply justified repair")` / `st.button("Refresh stale crosswalk from current authority")`) | Core migration step 4 | **Yes** | Displayed in left column of the one-screen layout |
-| `migration_ui.py:201-274` | Section `5. The corrected result with the rows that changed` (`st.subheader`, `st.table(comparison(receipt))` with `Account`, `Proposed balance`, `Corrected balance`, summary of changed rows, explicit `Rows changed:` diff with `Source:` and `Rule:`, and admission status banner) | Core migration step 5 | **Yes** | Displayed in right column of the one-screen layout |
-| `migration_ui.py:276-398` (`baseline 82-104, 152-298`) | `st.expander("More")` containing `_render_more_controls()` (source accounts `st.table`, `st.button("Generate another reproducible case")`, `st.button("Reset this session")`, witness counterexample `st.table`, accepted correspondence `st.table`, six execution checks `st.table`, `st.button("Change snapshot and crosswalk version")`, `st.download_button("Export replayable receipt")`, `st.button("Replay this receipt offline")`, `st.json`, `st.code(digest(receipt))`, `st.text_area("Receipt JSON (100 KB maximum)")`, `st.button("Check imported receipt")`) and `engineering()` (`st.link_button`, `st.code`, `proof_status()` JSON, theorem `st.link_button`) | Secondary details and diagnostic controls (previously 3 separate expanders + top-level source table and reset buttons) | Not needed on first screen; available on demand | Consolidated inside a single `st.expander("More")` at the bottom of the screen |
+| `migration_ui.py:201-285` | Section `5. The corrected result with the rows that changed` (`st.subheader`, `st.table(comparison(receipt))` with `Account`, `Proposed balance`, `Corrected balance`, summary of changed rows, explicit `Rows changed:` / preview diff with `Source:` and `Rule:`, and admission status banner) | Core migration step 5 | **Yes** | Displayed in right column of the one-screen layout |
+| `migration_ui.py:287-409` (`baseline 82-104, 152-298`) | `st.expander("More")` containing `_render_more_controls()` (source accounts `st.table`, `st.button("Generate another reproducible case")`, `st.button("Reset this session")`, witness counterexample `st.table`, accepted correspondence `st.table`, six execution checks `st.table`, `st.button("Change snapshot and crosswalk version")`, `st.download_button("Export replayable receipt")`, `st.button("Replay this receipt offline")`, `st.json`, `st.code(digest(receipt))`, `st.text_area("Receipt JSON (100 KB maximum)")`, `st.button("Check imported receipt")`) and `engineering()` (`st.link_button`, `st.code`, `proof_status()` JSON, theorem `st.link_button`) | Secondary details and diagnostic controls (previously 3 separate expanders + top-level source table and reset buttons) | Not needed on first screen; available on demand | Consolidated inside a single `st.expander("More")` at the bottom of the screen |
 
 ## Changed
 
-1. **Enforced light-only Anomalon paper theme (`b775b91` -> working tree)**:
-   - Added `.streamlit/config.toml` and CLI flags in `src/anomalon_workbench/serve.py` (`--theme.base=light`, `--theme.backgroundColor=#fbfbf9`, `--theme.secondaryBackgroundColor=#ffffff`, `--theme.textColor=#15202c`, `--theme.primaryColor=#12706c`, `--server.headless=true`).
-   - Added `_ANOMALON_CSS` in `src/anomalon_workbench/ui.py` applying IBM Plex Sans and IBM Plex Mono typography, `#fbfbf9` paper background, `#ffffff` card surfaces, `#15202c` ink, `#12706c` teal primary buttons, `6px` border radius, zero shadows, and zero `prefers-color-scheme` dark rules.
-2. **Removed internal jargon and decorative symbols from `ui.py`**:
-   - Removed internal labels (`Omega Engine`, `Pre-Genesis`, `Genesis`, `LGGR`, `PFP`, `EIS`, `PCIV`) and the `◈` symbol from `src/anomalon_workbench/ui.py`.
-3. **Reshaped the migration page into one screen with five ordered elements and one `"More"` expander (`src/anomalon_workbench/migration_ui.py`)**:
-   - Placed the five required elements on one screen at `1280 × 800` (`mainRectH = 679 px <= 800 px`, `scrollHeight = 800 px`, `scrollWidth = 1280 px`):
-     1. `1. The claim: the total is right` (with `Source:` ledger rows and `Rule:`)
-     2. `2. The check that fails: which balances, which accounts` (with `Source:` candidate rows and `Rule:`)
-     3. `3. What the machine does not know and what it would cost to find out` (with `Source:` action menu over compatible states and `Rule:`)
-     4. `4. The question it asks` (with `Source:` snapshot/crosswalk scope, `Rule:`, and evidence acquisition button)
-     5. `5. The corrected result with the rows that changed` (with the `Account` / `Proposed balance` / `Corrected balance` table, per-row diff, `Source:` accepted crosswalk, and `Rule:`)
-   - Consolidated the source-account table, seed/reset controls, counterexample witness table, 6-property execution table, receipt JSON/export/import replay controls, and Lean build metadata into a single `st.expander("More")` at the bottom of the page.
-4. **Added regression test and verified all 332 tests + container `AppTest` checks**:
-   - Added `test_one_screen_five_elements_and_more_control` in `tests/test_migration_story.py`.
-   - Verified `pytest -q` (`332 passed in 25.49s`) and the `AppTest` suite from `scripts/check_container.py`.
-   - Captured post-change screenshots `overnight/after_front_1280x800.png` and `overnight/after_front_390x844.png`.
+- Record baseline screenshots, console output, timing, and test suite output for Owed (`f60717c`) — proved by `overnight/baseline/front_1280x800.png`, `overnight/baseline/front_390x844.png`, and `overnight/baseline/test_suite_output.txt`.
+- Pin light-only Anomalon theme tokens in `.streamlit/config.toml`, `serve.py`, and `ui.py`, remove internal jargon and symbols, reshape the migration page into one screen at 1280 × 800 (`mainRectH = 679 px`) with the five ordered elements, `Source:`/`Rule:` lines, and a single `"More"` expander (`b775b91`) — proved by `tests/test_migration_story.py::test_one_screen_five_elements_and_more_control`.
+- Record after screenshots and overnight hand-off log for Owed (`c3955ba`) — proved by `overnight/after_front_1280x800.png` and `overnight/after_front_390x844.png`.
+- Show preview row diffs with `Source:` and `Rule:` under section 5 on initial load before clicking `"Run the migration challenge"`, check both initial and repaired states in `test_one_screen_five_elements_and_more_control`, and record Streamlit 390 px layout constraints in `overnight/LOG.md` — proved by `tests/test_migration_story.py::test_one_screen_five_elements_and_more_control`.
 
 ## Not done
 
@@ -65,8 +51,12 @@
 
 ## Decisions for the owner
 
-- **Whether to remove or expose the five secondary workbench views (`Overview`, `Evidence`, `Composition`, `Revision`, `Run inspector`) via a separate URL route**: Currently they remain intact in `src/anomalon_workbench/ui.py` (so all existing unit and `AppTest` suites pass) while the sidebar chrome is hidden on the front page so `/` is a clean single-pane migration story. Deciding whether to retire those secondary labs or expose them at a dedicated path is a product-scope decision for the owner.
+1. **How should the five secondary workbench views (`Overview`, `Evidence`, `Composition`, `Revision`, `Run inspector`) be exposed or retired?**
+   - *Option A (Recommended)*: Keep them in `src/anomalon_workbench/ui.py` behind the collapsed/hidden sidebar state so `/` remains a dedicated single-screen migration challenge while all existing `AppTest` and service tests continue passing unchanged.
+   - *Option B*: Expose the secondary views via an explicit query parameter (such as `?view=labs`) or a link inside the `"More"` expander.
+   - *Option C*: Remove the secondary views from the deployed entrypoint once downstream tests are migrated.
 
 ## Found but out of scope
 
 - Local untracked `data/runs/` state from earlier manual runs can reference missing artifact hashes if `data/artifacts/` was partially cleaned; hosted mode uses isolated temporary/volume directories (`WORKBENCH_DATA_DIR`).
+

@@ -269,6 +269,17 @@ def page() -> None:
                     st.session_state["migration_replay"]["matched"],
                 )
         else:
+            src_by_id = {a.id: a.cents for a in scenario.accounts}
+            cand_by_dest = {link.destination: src_by_id[link.source] for link in candidate.links}
+            auth_by_dest = {link.destination: src_by_id[link.source] for link in authority.links}
+            auth_owner = {link.destination: link.source for link in authority.links}
+            preview_diffs = ", ".join(
+                f"{d}: {dollars(cand_by_dest[d])} -> {dollars(auth_by_dest[d])} (owner {auth_owner[d]}, {'changed' if cand_by_dest[d] != auth_by_dest[d] else 'unchanged'})"
+                for d in sorted(scenario.destinations)
+            )
+            st.write(
+                f"**Pending evidence acquisition (`{mode}`):** `{preview_diffs}` · **Source:** crosswalk `{scenario.scope.crosswalk}` vs candidate plan · **Rule:** `admit` & `execute` (`ownership_preserved`)."
+            )
             st.caption(
                 "Click 'Run the migration challenge' above to evaluate the candidate plan and inspect or repair the account rows."
             )
