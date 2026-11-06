@@ -153,7 +153,7 @@ def page() -> None:
             src_by_id = {a.id: a.cents for a in scenario.accounts}
             proposed_summary = ", ".join(
                 f"{link.destination}={dollars(src_by_id[link.source])} (from {link.source})"
-                for link in sorted(candidate.links, key=lambda l: l.destination)
+                for link in sorted(candidate.links, key=lambda item: item.destination)
             )
             compat_count = evaluate(scenario, candidate, ()).compatible_count
         st.write(
