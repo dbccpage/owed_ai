@@ -18,6 +18,18 @@ def app(monkeypatch):
     return app.sidebar.radio[0].set_value("Migration challenge").run()
 
 
+@pytest.fixture
+def one_screen_app(monkeypatch):
+    monkeypatch.setenv("WORKBENCH_MODE", "hosted")
+    monkeypatch.setenv("WORKBENCH_LIVE_ENABLED", "false")
+    monkeypatch.setenv("WORKBENCH_AUTH_ENABLED", "false")
+    return AppTest.from_file(str(Path(__file__).parents[1] / "app.py"), default_timeout=20).run()
+
+
+def balance_table(app):
+    return next(t.value for t in app.table if "Corrected balance" in t.value.columns)
+
+
 def test_same_scene_shows_the_actual_repair(app):
     assert any("Interactive demo—no account required" in c.value for c in app.caption)
     predict(app)
@@ -90,3 +102,68 @@ def test_authentication_is_in_collapsed_operator_section(app):
     )
     assert not section.proto.expanded
     assert any("Live experiments are currently disabled" in c.value for c in section.caption)
+
+
+def test_one_screen_table_explains_default_repair(one_screen_app):
+    assert any("Interactive demo—no account required" in c.value for c in one_screen_app.caption)
+    click(one_screen_app, "Run the migration challenge")
+    assert set(balance_table(one_screen_app)["Corrected balance"]) == {"Not established"}
+    assert any(
+        "A correct total does not establish correct ownership" in i.value
+        for i in one_screen_app.info
+    )
+    click(one_screen_app, "Obtain selected evidence and apply justified repair")
+    assert balance_table(one_screen_app).to_dict("records") == [
+        {"Account": "N-0-0", "Proposed balance": "$100", "Corrected balance": "$700"},
+        {"Account": "N-0-1", "Proposed balance": "$200", "Corrected balance": "$100"},
+        {"Account": "N-0-2", "Proposed balance": "$700", "Corrected balance": "$200"},
+    ]
+    text = "\n".join(m.value for m in one_screen_app.markdown)
+    assert "Every balance was assigned incorrectly. Both versions total $1,000." in text
+    assert "Original proposal: rejected." in text
+    assert "Repaired proposal: verified against current evidence." in text
+    assert any("checked against the resulting database" in s.value for s in one_screen_app.success)
+
+
+@pytest.mark.parametrize("mode", ["missing", "stale", "contradictory"])
+def test_one_screen_blocked_scenarios_do_not_claim_corrected_balances(one_screen_app, mode):
+    one_screen_app.selectbox(key="migration_mode").set_value(mode).run()
+    click(one_screen_app, "Run the migration challenge")
+    click(one_screen_app, "Obtain selected evidence and apply justified repair")
+    assert set(balance_table(one_screen_app)["Corrected balance"]) == {"Not established"}
+    assert not one_screen_app.session_state["migration_receipt"].execution
+    assert not any("Repaired proposal: verified" in m.value for m in one_screen_app.markdown)
+    if mode == "contradictory":
+        assert any(
+            "Resolve the conflicting identity records before proceeding" in e.value
+            for e in one_screen_app.error
+        )
+
+
+def test_one_screen_five_elements_and_more_control(one_screen_app):
+    required_labels = [
+        "1. The claim: the total is right",
+        "2. The check that fails: which balances, which accounts",
+        "3. What the machine does not know and what it would cost to find out",
+        "4. The question it asks",
+        "5. The corrected result with the rows that changed",
+    ]
+    for state in ("initial", "repaired"):
+        if state == "repaired":
+            click(one_screen_app, "Run the migration challenge")
+            click(one_screen_app, "Obtain selected evidence and apply justified repair")
+        full_text = "\n".join(
+            [h.value for h in one_screen_app.subheader] + [m.value for m in one_screen_app.markdown]
+        )
+        positions = []
+        for label in required_labels:
+            assert label in full_text, f"Missing label ({state}): {label}"
+            positions.append(full_text.index(label))
+        assert positions == sorted(positions), (
+            f"Five elements must appear in exact order 1..5 ({state})"
+        )
+        assert "Source:" in full_text and "Rule:" in full_text
+        main_expanders = [e.label for e in one_screen_app.main.expander]
+        assert main_expanders == ["More"], (
+            f"Expected only ['More'] expander on main screen ({state}), got {main_expanders}"
+        )

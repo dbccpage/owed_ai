@@ -75,7 +75,10 @@ def main() -> None:
         "--server.headless=true", "--browser.gatherUsageStats=false",
         "--server.enableCORS=true", "--server.enableXsrfProtection=true",
         "--server.enableStaticServing=false", "--server.maxUploadSize=1",
-        "--client.showErrorDetails=false", "--theme.base=light",
+        "--client.showErrorDetails=false", "--client.toolbarMode=minimal",
+        "--theme.base=light", "--theme.primaryColor=#12706c",
+        "--theme.backgroundColor=#fbfbf9", "--theme.secondaryBackgroundColor=#ffffff",
+        "--theme.textColor=#15202c",
     ]
     cli.main()
 

@@ -268,15 +268,14 @@ def inspector(store: Store) -> None:
 
 def one_screen() -> None:
     """The one-screen front page: what Owed knows, what it doesn't, and what finding out costs."""
-    import streamlit.components.v1 as components
+    from .migration_ui import _one_screen_page
 
-    page = (Path(__file__).parent / "assets" / "onepane.html").read_text(encoding="utf-8")
-    components.html(page, height=980, scrolling=True)
+    _one_screen_page()
 
 
 def overview() -> None:
     st.title("Owed")
-    st.caption("The Accountable Agent Workbench · v0.0.1.0 · from Anomalon / Omega Engine")
+    st.caption("The Accountable Agent Workbench · v0.0.1.0 · from Anomalon")
     st.header("What did the agent establish—and what does it still owe?")
     st.write(
         "Three small experiments turn a research programme into observable behavior. Models propose; exact checkers inspect evidence; operators retain admission authority."
@@ -288,7 +287,7 @@ def overview() -> None:
         ),
         (
             "02 · Composition",
-            "Locally satisfiable constraints can conflict globally. Inspect a concrete obstruction.",
+            "Locally satisfiable constraints can conflict globally. Inspect a concrete conflict.",
         ),
         (
             "03 · Revision",
@@ -299,20 +298,20 @@ def overview() -> None:
             st.subheader(title)
             st.write(body)
     st.write(
-        "**Five-minute tour:** evidence → obstruction → revision → receipt. Start with the checked examples, then run your chosen live model."
+        "**Five-minute tour:** evidence -> conflict -> revision -> receipt. Start with the checked examples, then run your chosen live model."
     )
     st.caption(
         "The ledger actor is a simulation. Hosted live experiments require a separate authorized login."
     )
     if hosted_mode():
         st.write(
-            "**Anomalon:** Owed is a working research exhibit on the path to Omega Engine V1.0RC. The broader Pre-Genesis → Genesis → quantum mechanics → Omega Engine story belongs to the Anomalon home; this workbench demonstrates three scoped ideas."
+            "**Anomalon:** Owed is a working research exhibit from Anomalon demonstrating three scoped verification checks."
         )
         st.link_button("Explore Owed on GitHub", "https://github.com/dbccpage/owed_ai")
     proof = Path("evidence/lean-verification.json")
     with st.expander("Formal supplement and research lineage"):
         st.write(
-            "Genesis: preserved distinctions and explicit assumptions. LGGR: local/global consistency. PFP: proposals checked by the host. EIS: failure screening. PCIV: immutable ancestry. Governance: separate admission."
+            "Preserved distinctions and explicit assumptions; local/global consistency; proposals checked by the host; failure screening; immutable ancestry; and separate operator admission."
         )
         if proof.exists():
             report = json.loads(proof.read_text(encoding="utf-8"))
@@ -337,7 +336,10 @@ def overview() -> None:
 def main() -> None:
     load_environment()
     st.set_page_config(
-        page_title="Owed · Accountable Agent Workbench", page_icon="◈", layout="wide"
+        page_title="Owed · Accountable Agent Workbench",
+        page_icon="◈",
+        layout="wide",
+        initial_sidebar_state="collapsed",
     )
     st.markdown("<style>" + stylesheet() + "</style>", unsafe_allow_html=True)
     try:
