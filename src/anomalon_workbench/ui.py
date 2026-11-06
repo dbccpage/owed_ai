@@ -18,6 +18,7 @@ from .cognition import review_receipt
 from .domain import GraphInput, LedgerInput, RunSpec, canonical, digest, json_object
 from .examples import graph_example, initial_prompt, ledger_example
 from .hosting import HostedPolicy, Principal, data_root, hosted_mode, private_store, submit_hosted
+from .migration_scene import stylesheet
 from .providers import ProviderConfig, load_environment
 from .service import parse_record, replay
 from .spending import SpendLedger
@@ -265,6 +266,13 @@ def inspector(store: Store) -> None:
         st.json(events)
 
 
+def one_screen() -> None:
+    """The one-screen front page: what Owed knows, what it doesn't, and what finding out costs."""
+    from .migration_ui import _one_screen_page
+
+    _one_screen_page()
+
+
 def overview() -> None:
     st.title("Owed")
     st.caption("The Accountable Agent Workbench · v0.0.1.0 · from Anomalon")
@@ -325,109 +333,15 @@ def overview() -> None:
             st.write("Lean supplement: not checked in this installation.")
 
 
-_ANOMALON_CSS = """
-<style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
-:root {
-  --an-bg: #fbfbf9;
-  --an-surface: #ffffff;
-  --an-ink: #15202c;
-  --an-muted: #4b5664;
-  --an-border: #d8dcd6;
-  --an-accent: #12706c;
-}
-html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"] {
-  background-color: #fbfbf9 !important;
-  color: #15202c !important;
-  font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif !important;
-}
-[data-testid="stSidebar"],
-[data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"],
-[data-testid="stHeader"],
-[data-testid="stToolbar"],
-[data-testid="stDecoration"],
-#MainMenu,
-header,
-footer {
-  display: none !important;
-}
-.block-container {
-  padding-top: 0.6rem !important;
-  padding-bottom: 0.6rem !important;
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-  max-width: 1240px !important;
-}
-h1 {
-  font-size: 1.2rem !important;
-  font-weight: 600 !important;
-  margin-bottom: 0.15rem !important;
-  padding-top: 0 !important;
-  color: #15202c !important;
-}
-h2, h3 {
-  font-size: 0.92rem !important;
-  font-weight: 600 !important;
-  margin-top: 0.25rem !important;
-  margin-bottom: 0.15rem !important;
-  padding-top: 0 !important;
-  color: #15202c !important;
-}
-p, li, label, [data-testid="stMarkdownContainer"] p {
-  font-size: 0.82rem !important;
-  line-height: 1.35 !important;
-  margin-bottom: 0.2rem !important;
-  color: #15202c !important;
-}
-code, pre, [data-testid="stTable"] {
-  font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace !important;
-  font-size: 0.78rem !important;
-}
-[data-testid="stTable"] th, [data-testid="stTable"] td {
-  padding: 0.2rem 0.45rem !important;
-}
-[data-testid="stMetric"] {
-  background: #ffffff !important;
-  border: 1px solid #d8dcd6 !important;
-  border-radius: 6px !important;
-  padding: 0.35rem 0.6rem !important;
-  box-shadow: none !important;
-}
-[data-testid="stMetricValue"] {
-  font-size: 1rem !important;
-  font-family: "IBM Plex Mono", monospace !important;
-}
-.stButton > button {
-  border-radius: 6px !important;
-  box-shadow: none !important;
-  font-size: 0.8rem !important;
-  padding: 0.25rem 0.75rem !important;
-  min-height: 2rem !important;
-}
-.stButton > button[kind="primary"] {
-  background-color: #12706c !important;
-  border-color: #12706c !important;
-  color: #ffffff !important;
-}
-[data-testid="stExpander"] {
-  background: #ffffff !important;
-  border: 1px solid #d8dcd6 !important;
-  border-radius: 6px !important;
-  box-shadow: none !important;
-}
-</style>
-"""
-
-
 def main() -> None:
     load_environment()
     st.set_page_config(
         page_title="Owed · Accountable Agent Workbench",
+        page_icon="◈",
         layout="wide",
         initial_sidebar_state="collapsed",
     )
-    st.markdown(_ANOMALON_CSS, unsafe_allow_html=True)
+    st.markdown("<style>" + stylesheet() + "</style>", unsafe_allow_html=True)
     try:
         hosted = hosted_mode()
         policy = HostedPolicy.from_env() if hosted else None
@@ -445,11 +359,25 @@ def main() -> None:
     if store is not None:
         store.recover()
     with st.sidebar:
-        st.title("Owed")
-        page = st.radio(
+        st.markdown(
+            '<a class="an-brand" href="https://anomalon.com/">'
+            '<svg class="an-brand__mark" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="1" width="20" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/>'
+            '<path d="M6 15.5 11 6l5 9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'
+            '<circle cx="11" cy="12.6" r="1.7" fill="var(--an-teal)"/></svg>'
+            '<span class="an-brand__name">Owed<span class="an-brand__sub">Anomalon · Evidence lab</span></span></a>'
+            '<div class="an-brand__links"><a href="https://anomalon.com/">All tools</a>'
+            '<a href="https://anomalon.com/about/">About</a><a href="https://anomalon.com/contact/">Contact</a></div>',
+            unsafe_allow_html=True,
+        )
+        journey_controls = st.container()
+        page_navigation = st.expander("Explanation, evidence and research labs")
+        page = page_navigation.radio(
             "Workbench",
             [
+                "One screen",
                 "Migration challenge",
+                "Explanation",
+                "Technical evidence",
                 "Overview",
                 "Evidence",
                 "Composition",
@@ -509,10 +437,20 @@ def main() -> None:
             st.caption(
                 "Credentials stay in your environment or ignored .env. No request is made until you start a run."
             )
-    if page == "Migration challenge":
+    if page == "One screen":
+        one_screen()
+    elif page == "Migration challenge":
         from .migration_ui import page as migration_page
 
-        migration_page()
+        migration_page(journey_controls)
+    elif page == "Explanation":
+        from .migration_ui import explanation_page
+
+        explanation_page()
+    elif page == "Technical evidence":
+        from .migration_ui import technical_page
+
+        technical_page()
     elif page == "Overview":
         overview()
     elif page == "Evidence":

@@ -27,7 +27,6 @@ def main():
             "Dockerfile",
             ".dockerignore",
             "render.yaml",
-            "proof_knowledge_obligations_mvp.md",
         )
     ]
     for directory in ("src", "tests", "scripts", "docs", "fixtures", "examples", "evidence", ".github"):

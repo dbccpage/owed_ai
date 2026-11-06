@@ -2,6 +2,27 @@
 
 v0.0.1.0 · from Anomalon / Omega Engine · [dbccpage/owed_ai](https://github.com/dbccpage/owed_ai)
 
+**Documentation:** [docs/](docs/README.md): learn by level, guides, developer reference, design, operations, roadmap.
+
+## Guided migration scene — review build
+
+The [new walkthrough](docs/guides/guided-migration-scene.md) turns the migration into six
+visitor-paced steps: meet the fictional customers, inspect the proposal, predict,
+test evidence, resolve uncertainty, and verify the actual database result. The next action appears in the main scene;
+progress, settings and replay stay in the navigation. The accounts and competing assignments
+share the main scene; destination owners remain concealed until supported.
+
+Visitors can repeat totals/counts, obtain one identity record, obtain the complete
+mapping, or ask Owed's existing finite selector to choose. Receipts distinguish
+visitor requests from engine selections, preserve uninformative probes separately
+from identity evidence, and retain valid legacy replay. Explanation and
+technical evidence have separate pages. Claude supplied the visual proposal and
+Anomalon tokens; their cross-site rollout follows review of this working scene.
+
+The [PR #11 review response](docs/history/pr11-review-response.md) records the completeness,
+accessibility, replay and mobile corrections. This is the proposed local/PR experience. The deployment record below describes
+the preceding published presentation.
+
 ## Migration challenge — live public demo
 
 **The total was right. The balances went to the wrong accounts.**
@@ -15,7 +36,7 @@ the original research labs remain available in the sidebar.
 proposal with the checked repair. Missing, outdated and conflicting identity records
 are visible scenario choices. Original and repaired proposals have separate outcomes;
 raw certificates and operator login expand on demand. The
-[one-minute walkthrough](docs/migration-walkthrough.md) and
+[one-minute walkthrough](docs/guides/migration-walkthrough.md) and
 [presentation validation](evidence/migration-story.json) describe the updated local
 experience. No measured recruiter-comprehension improvement is claimed.
 
@@ -49,8 +70,8 @@ destination. Preview and repair execute in separate temporary databases. Export
 receipts for history; session reset and service restarts do not provide durability.
 The public operator role is a simulation scoped to synthetic data.
 
-See the [acceptance report](docs/migration-acceptance.md) and
-[migration walkthrough](docs/migration-walkthrough.md). Three model results are
+See the [acceptance report](docs/design/migration-acceptance.md) and
+[migration walkthrough](docs/guides/migration-walkthrough.md). Three model results are
 checked in Lean 4.19.0; runtime database conformance is checked separately. Hashes
 bind receipt content, not the truth of the synthetic authority or authorship of a
 self-consistently rewritten bundle.
@@ -101,7 +122,7 @@ That model was available during the recorded validation; availability can change
 ## Reproduce a result
 
 For a public demo with Google-authenticated live experiments, see the
-[Render deployment guide](docs/deployment.md). The Blueprint starts with live access
+[Render deployment guide](docs/operations/deployment.md). The Blueprint starts with live access
 disabled. Hosted operators receive isolated stores and share transactional request
 and spending controls. [owed.anomalon.com](https://owed.anomalon.com/) is the public product address;
 `anomalon.com` remains the future home of the broader Omega Engine programme.
@@ -158,8 +179,8 @@ Lean is optional for operating the application. The supplement pins Lean 4.19.0 
 
 On restricted Windows runners, pytest may need a writable `--basetemp`; Streamlit tests also need permission to create a local asyncio socket pair. These are environment requirements, not reasons to skip assertions.
 
-See [validation evidence](evidence/README.md), the [five-minute tour](docs/walkthrough.md), [architecture](docs/architecture.md), and [research crosswalk](docs/source-crosswalk.md). The original [experiment proposal](proof_knowledge_obligations_mvp.md) is preserved.
+See [validation evidence](evidence/README.md), the [five-minute tour](docs/guides/five-minute-tour.md), [architecture](docs/design/architecture.md), and [research crosswalk](docs/design/source-crosswalk.md). The original [experiment proposal](docs/design/proof-knowledge-obligations-mvp.md) is preserved.
 
 This is a research MVP with local operation and an optional single-instance hosted mode. Its finite results do not establish general epistemic completeness, audited production security, universal LGGR claims, or autonomous scientific discovery. No GitHub remote or deployment is required for local use.
 
-The first [Cognitive Optimization slice](docs/cognitive-optimization.md) pairs a short question/result/next-check presentation with a deterministic audit of structured proposal/evidence mismatches. It leaves original receipts unchanged and treats human-comprehension benefits as hypotheses to test.
+The first [Cognitive Optimization slice](docs/design/cognitive-optimization.md) pairs a short question/result/next-check presentation with a deterministic audit of structured proposal/evidence mismatches. It leaves original receipts unchanged and treats human-comprehension benefits as hypotheses to test.

@@ -1,0 +1,118 @@
+/* Owed's Streamlit layer. Loaded after anomalon.css, an exact copy of https://anomalon.com/ds/v1/anomalon.css;
+   every colour, font and radius below is one of that file's tokens, so Owed follows the shared skin in light and dark. */
+:root{--an-canvas:var(--an-bg);--an-surface-2:var(--an-bg);--an-navy:var(--an-surface);--an-navy-2:var(--an-mute-soft);--an-navy-ink:var(--an-ink);--an-navy-mute:var(--an-ink-3);--an-teal:var(--an-accent);--an-teal-strong:var(--an-accent-hover);--an-teal-soft:var(--an-accent-soft);--an-amber:var(--an-warn);--an-amber-soft:var(--an-warn-soft);--an-red:var(--an-bad);--an-red-soft:var(--an-bad-soft);--an-green:var(--an-ok);--an-green-soft:var(--an-ok-soft);--an-radius-sm:var(--an-radius);--an-shadow:none;--an-font:var(--an-sans)}
+[data-testid=stAppViewContainer],[data-testid=stMain]{background:var(--an-canvas);color:var(--an-ink);font-family:var(--an-font)}
+[data-testid=stHeader]{background:var(--an-canvas)}
+[data-testid=stMainBlockContainer]{max-width:1200px;padding:2.5rem 2rem 4rem}
+[data-testid=stMain] h1{font-size:clamp(1.6rem,2.4vw,2.25rem);line-height:1.2;letter-spacing:-.035em;max-width:900px}
+[data-testid=stMain] h2{font-size:1.15rem;letter-spacing:-.01em}
+[data-testid=stMain] p,[data-testid=stMain] label{color:var(--an-ink);line-height:1.55}
+[data-testid=stSidebar]{background:var(--an-navy);border-right:1px solid var(--an-line);min-width:270px;max-width:290px}
+[data-testid=stSidebar]{font-family:var(--an-font)}
+[data-testid=stSidebar] *{color:var(--an-navy-ink)}
+[data-testid=stSidebar] hr{border-color:var(--an-line)}
+[data-testid=stSidebar] [data-testid=stRadio] label{padding:5px 8px;border-radius:6px;font-size:.88rem}
+[data-testid=stSidebar] [data-testid=stRadio] label:hover{background:var(--an-navy-2)}
+[data-testid=stSidebar] [data-testid=stRadio] label:has(input:checked){background:var(--an-teal-soft);box-shadow:inset 3px 0 var(--an-teal)}
+[data-testid=stSidebar] [data-baseweb=select] *{color:var(--an-ink)}
+/* Streamlit dims captions with opacity:.6; keep them at full opacity and use ink-2 (7.4:1 on the light background) */
+[data-testid=stCaptionContainer]{opacity:1}
+[data-testid=stCaptionContainer],[data-testid=stCaptionContainer] *{color:var(--an-ink-2)}
+[data-testid=stSidebar] [data-testid=stCaptionContainer] *{color:var(--an-ink-2)}
+/* Streamlit sets fonts on Markdown and heading containers directly, so inheritance never reaches them */
+[data-testid=stMarkdownContainer] :not(code):not(pre):not(pre *):not([data-testid=stIconMaterial]),
+[data-testid=stHeading] :not([data-testid=stIconMaterial]),[data-testid=stCaptionContainer] :not(code),
+[data-testid=stSidebar] :is(p,span,label,a,div):not([data-testid=stIconMaterial]):not(code),
+h1,h2,h3,h4,h5,h6,.stButton>button,[data-testid=stWidgetLabel] *{font-family:var(--an-font)!important}
+h1,h2,h3,h4,h5,h6,[data-testid=stHeading] :is(h1,h2,h3,h4,h5,h6){font-weight:600!important}
+
+.stButton>button,[data-testid=stDownloadButton]>button{font-weight:600;border-radius:var(--an-radius-sm);min-height:44px;transition:background-color .15s,border-color .15s}
+.stButton>button[kind=primary]{background:var(--an-teal);border-color:var(--an-teal-strong);color:var(--an-accent-ink)}
+.stButton>button[kind=primary]:hover{background:var(--an-teal-strong);color:var(--an-accent-ink)}
+[data-testid=stSidebar] .stButton>button{background:var(--an-surface);border:1px solid var(--an-line-strong);color:var(--an-ink)}
+[data-testid=stSidebar] .stButton>button[kind=primary]{background:var(--an-teal);border-color:var(--an-teal);color:#fff}
+.stButton>button:focus-visible,[data-testid=stRadio] label:focus-within{outline:none;box-shadow:var(--an-focus)}
+.an-brand{display:flex;align-items:center;gap:10px;padding:0 0 16px;border-bottom:1px solid var(--an-line);margin-bottom:16px;text-decoration:none}
+.an-brand__mark{width:26px;height:26px;flex:none;color:var(--an-ink)}
+.an-brand__name{font-weight:600;font-size:1.05rem;letter-spacing:-.01em;color:var(--an-ink)}
+.an-brand__sub{display:block;font-size:.72rem;color:var(--an-navy-mute);letter-spacing:.08em;text-transform:uppercase}
+.an-side-step{margin:0 0 14px;padding:12px;border-radius:6px;background:var(--an-teal-soft);border-left:3px solid var(--an-teal)}
+.an-side-step__label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--an-navy-mute)}
+.an-side-step__title{font-size:1rem;font-weight:600;color:var(--an-ink)}
+.an-eyebrow{font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--an-teal-strong);font-weight:600;margin-bottom:8px}
+.an-journey{list-style:none;margin:14px 0 18px;padding:0;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;counter-reset:an-step}
+.an-journey li{counter-increment:an-step;padding:7px 3px;border-top:3px solid var(--an-line);font-size:.74rem;color:var(--an-ink-3);line-height:1.3}
+.an-journey li:before{content:counter(an-step) ' / ';font-family:var(--an-mono)}
+.an-journey .an-done{border-top-color:var(--an-teal);color:var(--an-ink-2)}
+.an-journey .an-current{border-top-color:var(--an-teal-strong);color:var(--an-ink);font-weight:600}
+.an-status{display:grid;grid-template-columns:1fr 1.25fr .65fr;gap:16px;padding:14px 18px;margin-bottom:20px;background:var(--an-surface);border:1px solid var(--an-line);border-left:4px solid var(--an-amber);border-radius:6px;font-size:.88rem}
+.an-status--ok{border-left-color:var(--an-green);background:var(--an-green-soft)}
+.an-status strong{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--an-ink-2);margin-bottom:3px}
+.an-scene{display:grid;grid-template-columns:minmax(0,1fr) minmax(80px,160px) minmax(0,1fr);gap:0;background:var(--an-surface);border:1px solid var(--an-line);border-radius:var(--an-radius);box-shadow:var(--an-shadow);padding:18px;margin:12px 0}
+.an-scene *{box-sizing:border-box}
+.an-scene__head{height:30px;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--an-ink-3);font-weight:600}
+.an-card{height:100px;margin:0 0 12px;padding:11px 14px;background:var(--an-surface-2);border:1px solid var(--an-line);border-left:4px solid var(--an-navy-2);border-radius:6px;display:flex;flex-direction:column;justify-content:center;animation:an-fade .25s ease-out}
+.an-card__name{font-weight:600;font-size:1rem;color:var(--an-ink)}
+.an-card__amount{font-family:var(--an-mono);font-size:1.25rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--an-ink)}
+.an-card__meta{font-size:.72rem;color:var(--an-ink-2)}
+.an-card--dest{border-left-color:var(--an-line-strong);background:var(--an-surface-2)}
+.an-card--known{border-left-color:var(--an-teal);background:var(--an-teal-soft)}
+.an-card__owner{font-size:.8rem;color:var(--an-ink-2)}
+.an-card__previous{font-size:.74rem;color:var(--an-ink-2)}
+.an-conn{width:100%;margin-top:30px;display:block}
+.an-conn__line{stroke:var(--an-line-strong);stroke-width:2;fill:none;stroke-dasharray:5 5}
+.an-conn__line--verified{stroke:var(--an-teal);stroke-width:3;stroke-dasharray:none;animation:an-fade .4s ease-out}
+.an-rel{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;list-style:none}
+.an-rel li{padding:9px 12px;border-left:3px solid var(--an-teal);background:var(--an-surface);margin-bottom:7px;font-size:.85rem}
+.an-possible{margin:12px 0;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.an-possible__panel{background:var(--an-surface);border:1px solid var(--an-line);border-top:3px solid var(--an-amber);border-radius:6px;padding:12px 14px}
+.an-possible__title{font-weight:600;font-size:.9rem;margin-bottom:8px}
+.an-possible__row{display:flex;justify-content:space-between;gap:8px;font-size:.83rem;padding:7px 4px;border-bottom:1px dashed var(--an-line)}
+.an-possible__row--different{background:var(--an-amber-soft);border-radius:4px}
+.an-possible__id{font-family:var(--an-mono);color:var(--an-ink-2)}
+.an-note{font-size:.83rem;color:var(--an-ink-2);margin:8px 0 16px}
+.an-callout{padding:12px 15px;border:1px solid #9fcbc6;background:var(--an-teal-soft);border-radius:6px;font-size:.9rem;margin:12px 0}
+@keyframes an-fade{from{opacity:.35;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media(max-width:760px){[data-testid=stMainBlockContainer]{padding:2rem 1rem}.an-journey{grid-template-columns:repeat(3,1fr)}.an-status{grid-template-columns:1fr;gap:10px}.an-scene{grid-template-columns:1fr;padding:12px;gap:12px}.an-conn{display:none}.an-rel{position:static;width:auto;height:auto;margin:10px 0;overflow:visible;clip-path:none;white-space:normal}.an-possible{grid-template-columns:1fr}.an-card{height:auto;min-height:98px}.an-card__amount{font-size:1.1rem}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+[data-testid=stMainBlockContainer]>[data-testid=stVerticalBlock]{gap:.65rem}
+[data-testid=stMain] h1{padding:.2rem 0 .5rem}
+.an-card{height:88px;margin-bottom:8px}
+.an-journey{margin:8px 0 10px}
+.an-status{margin-bottom:8px}
+.an-workspace{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,1fr);gap:20px;align-items:start}
+.an-workspace .an-scene{grid-template-columns:minmax(0,1fr) 70px minmax(0,1fr);padding:12px}
+.an-workspace .an-card{padding:9px 10px}
+.an-workspace .an-card__name{font-size:.88rem}
+.an-workspace .an-card__amount{font-size:1.1rem}
+.an-consequences{margin-top:12px;background:var(--an-surface);border:1px solid var(--an-line);border-radius:6px;padding:14px}
+.an-consequences h2{font-size:1rem!important;padding:0 0 4px!important}
+.an-consequences .an-note{font-size:.76rem;margin:4px 0 8px;line-height:1.4}
+.an-consequences .an-possible{grid-template-columns:1fr;gap:8px;margin:8px 0}
+.an-consequences .an-possible__panel{padding:8px 10px}
+.an-consequences .an-possible__row{font-size:.74rem;padding:5px 3px}
+.an-consequences .an-possible__title{font-size:.8rem;margin-bottom:4px}
+.an-check-row{display:flex;justify-content:space-between;gap:8px;padding:11px 0;border-bottom:1px solid var(--an-line);font-size:.8rem}
+.an-check-row strong{color:var(--an-teal-strong)}
+@media(max-width:1080px){.an-workspace{grid-template-columns:1fr}.an-consequences .an-possible{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.an-scene,.an-workspace .an-scene{grid-template-columns:1fr 1fr;gap:10px}.an-scene>svg{display:none}.an-card{height:102px;min-height:102px}.an-consequences .an-possible{grid-template-columns:1fr}.an-card__owner{font-size:.74rem}}
+
+[data-testid=stSidebar] [data-testid=stProgressBarTrack]>div{background:var(--an-teal)}
+.an-balance-label{font:500 .61rem var(--an-font);color:var(--an-ink-2);vertical-align:middle}
+@media(max-width:760px){[data-testid=stSidebar]{min-width:unset!important;max-width:unset!important}}
+[data-testid=stHeader] button,[data-testid=stHeader] button *{color:var(--an-ink)}
+
+[data-testid=stMainBlockContainer]{padding-top:4rem}
+@media(max-width:760px){.an-eyebrow{display:none}[data-testid=stMainBlockContainer]{padding-top:4rem}}
+
+[data-testid=stMain] button[kind=primary] p,[data-testid=stMain] button[kind=primary] span{color:#fff}
+
+.an-brand__links{display:flex;gap:14px;font-size:.78rem;margin:-6px 0 14px}
+[data-testid=stSidebar] .an-brand__links a{color:var(--an-ink-2);text-decoration:none}
+[data-testid=stSidebar] .an-brand__links a:hover{color:var(--an-ink);text-decoration:underline}
+[data-testid=stSidebar] a.an-brand,[data-testid=stSidebar] a.an-brand *{text-decoration:none!important}
+/* button labels are Markdown paragraphs; keep them on the accent ink in both themes */
+.stButton>button[kind=primary] p{color:var(--an-accent-ink)}
+/* sidebar fields sit on the surface colour; give them the shared field border so they stay visible */
+[data-testid=stSidebar] div:has(>input),[data-testid=stSidebar] div:has(>textarea){border-color:var(--an-line-strong)!important}

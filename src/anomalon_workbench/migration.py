@@ -118,6 +118,8 @@ def evidence_status(
         return "unavailable"
     if observation.scope != scenario.scope:
         return "stale"
+    if not observation.links:
+        return "invalid"
     if any(
         p.source not in {a.id for a in scenario.accounts}
         or p.destination not in scenario.destinations
@@ -222,13 +224,37 @@ class EvidencePort(Protocol):
     def obtain(self, scope: Scope, action: EvidenceAction) -> Observation: ...
 
 
-def response_matches_action(action: EvidenceAction, observation: Observation) -> bool:
-    """Same acquisition/replay contract, including excluded or unavailable responses."""
+def response_matches_action(
+    scenario: Scenario, action: EvidenceAction, observation: Observation
+) -> bool:
+    """Observed responses must cover their request; unavailable carries no claims.
+
+    Full requests require one claim per source. Global consistency is evaluated
+    separately, so complete but conflicting claims remain detectable as conflicts.
+    A source request may return conflicting claims about that requested source.
+    """
     if observation.status == "unavailable":
         return not observation.links
-    return action.kind == "full_crosswalk" or (
-        action.kind == "source" and all(p.source == action.source for p in observation.links)
-    )
+    if not observation.links:
+        return False
+    sources = {a.id for a in scenario.accounts}
+    destinations = set(scenario.destinations)
+    if any(p.source not in sources or p.destination not in destinations for p in observation.links):
+        return False
+    if action.kind == "full_crosswalk":
+        return len(observation.links) == len(scenario.accounts) and {
+            p.source for p in observation.links
+        } == {a.id for a in scenario.accounts}
+    return action.kind == "source" and all(p.source == action.source for p in observation.links)
+
+
+def evidence_actions(scenario: Scenario) -> list[EvidenceAction]:
+    """The declared finite menu; no authority or hidden mapping is consulted."""
+    return [
+        EvidenceAction(kind="repeat_total", cost=0),
+        EvidenceAction(kind="full_crosswalk", cost=max(1, len(scenario.accounts) - 1)),
+        *(EvidenceAction(kind="source", source=a.id, cost=2) for a in scenario.accounts),
+    ]
 
 
 def select_action(
@@ -241,11 +267,7 @@ def select_action(
     states = compatible(scenario, observations)
     if len(states) < 2:
         return None
-    actions = [
-        EvidenceAction(kind="repeat_total", cost=0),
-        EvidenceAction(kind="full_crosswalk", cost=max(1, len(scenario.accounts) - 1)),
-    ]
-    actions += [EvidenceAction(kind="source", source=a.id, cost=2) for a in scenario.accounts]
+    actions = evidence_actions(scenario)
 
     def informative(action: EvidenceAction) -> bool:
         if action.kind == "repeat_total":

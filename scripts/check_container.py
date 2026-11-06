@@ -40,20 +40,34 @@ def main():
         migration_check = """
 from pathlib import Path
 from streamlit.testing.v1 import AppTest
-from anomalon_workbench.migration_demo import export, replay
+from anomalon_workbench.migration_demo import export, investigation_timeline, replay
 from anomalon_workbench.migration_proof import proof_status
 before = set(Path('/tmp').glob('owed-migration-*'))
 assert proof_status()['status'] == 'verified_during_build'
 app = AppTest.from_file('/app/app.py', default_timeout=20).run()
+app = app.sidebar.radio[0].set_value('Migration challenge').run()
 assert not app.exception
-next(b for b in app.button if b.label == 'Run the migration challenge').click().run()
+next(b for b in app.main.button if b.label == 'Inspect the proposal').click().run()
 assert not app.exception
 assert app.session_state['migration_receipt'].initial.ownership == 'underdetermined'
-next(b for b in app.button if b.label == 'Obtain selected evidence and apply justified repair').click().run()
+next(b for b in app.main.button if b.label == 'Make your prediction').click().run()
+app.main.radio(key='migration_prediction').set_value('Not enough information').run()
+next(b for b in app.main.button if b.label == 'Test my prediction').click().run()
+assert app.session_state['migration_receipt'].steps == ()
+assert any('Possible assignment A' in m.value for m in app.markdown)
+assert not any(b.label == 'Run this investigation' for b in app.sidebar.button)
+app.main.selectbox(key='migration_investigation').set_value('Check the total again').run()
+next(b for b in app.main.button if b.label == 'Run this investigation').click().run()
+assert len(app.session_state['migration_receipt'].investigations) == 1
+assert app.session_state['migration_receipt'].observations == ()
+app.main.selectbox(key='migration_investigation').set_value('Ask Owed to choose').run()
+next(b for b in app.main.button if b.label == 'Run this investigation').click().run()
+next(b for b in app.main.button if b.label == 'Verify the result').click().run()
 assert not app.exception
 receipt = app.session_state['migration_receipt']
 assert receipt.execution.ownership_preserved and receipt.execution.identity_coverage
 assert replay(export(receipt))
+assert investigation_timeline(receipt)[0]['compatible_after'] == 6
 assert not any(b.label == 'Run with live model' for b in app.button)
 assert set(Path('/tmp').glob('owed-migration-*')) == before
 """

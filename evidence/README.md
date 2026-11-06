@@ -11,7 +11,7 @@ comparison, scenario checks, 331 passing tests and desktop/mobile viewport revie
 Its screenshots are distinct from the historical hosted release evidence below.
 
 The deployed migration challenge is documented in the
-[requirements-to-tests report](../docs/migration-acceptance.md),
+[requirements-to-tests report](../docs/design/migration-acceptance.md),
 [browser observations](migration-browser.json), [core timings](migration-core.json),
 and [three-theorem Lean audit](migration-lean.json). Historical ledger/provider
 results below remain separate. The [PR review](migration-pr-review.json) binds the

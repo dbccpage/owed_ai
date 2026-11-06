@@ -28,7 +28,7 @@ Unresolved cases show **Not established**, without reading the authority's priva
 mapping into the display. Equal balances do not imply financial loss. Scenario changes
 invalidate the displayed result and replay badge. These presentation choices aim to
 make the checked distinction legible within a minute; no reader study has measured
-that goal. See [validation evidence](../evidence/migration-story.json).
+that goal. See [validation evidence](../../evidence/migration-story.json).
 
 For a later user study, compare the compact result card with the raw receipt view using the same cases. Ask readers to identify (1) the actual checked claim, (2) the missing observation, and (3) whether action is authorized. Measure correctness, time to answer, and unsupported-action choices; counterbalance presentation order. Do not report improved comprehension until that comparison is actually run.
 

@@ -34,22 +34,26 @@ def test_replay_badge_belongs_to_exact_receipt(monkeypatch, transition):
     monkeypatch.setenv("WORKBENCH_LIVE_ENABLED", "false")
     monkeypatch.setenv("WORKBENCH_AUTH_ENABLED", "false")
     app = AppTest.from_file(str(Path(__file__).parents[1] / "app.py"), default_timeout=20).run()
+    app.sidebar.radio[0].set_value("Migration challenge").run()
 
     def click(label):
         next(b for b in app.button if b.label == label).click().run()
         assert not app.exception
 
-    click("Run the migration challenge")
+    from test_migration_ui import investigate, predict
+
+    predict(app)
     click("Replay this receipt offline")
-    assert any("Offline semantic replay matched" in m.value for m in app.markdown)
+    assert any("Offline replay: recorded results are semantically consistent." in c.value for c in app.caption)
     if transition == "another_case":
         click("Generate another reproducible case")
-        click("Run the migration challenge")
+        click("Inspect the proposal")
     elif transition == "acquire":
-        click("Obtain selected evidence and apply justified repair")
+        investigate(app, "Ask Owed to choose")
     else:
-        click("Run the migration challenge")
-    assert not any("Offline semantic replay matched" in m.value for m in app.markdown)
+        click("Restart the walkthrough")
+        click("Inspect the proposal")
+    assert not any("Offline replay: recorded results are semantically consistent." in c.value for c in app.caption)
     assert "migration_replay" not in app.session_state
     click("Replay this receipt offline")
     assert app.session_state["migration_replay"] == {
