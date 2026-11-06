@@ -1,7 +1,7 @@
 name: Validate workbench
 on:
   push:
-    branches: [main, feat/render-hosted-mvp]
+    branches: [main, feat/render-hosted-mvp, "overnight/**"]
   pull_request:
 permissions:
   contents: read
