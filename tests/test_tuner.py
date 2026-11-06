@@ -54,7 +54,9 @@ class RubberStamp:
     def __init__(self, name: str) -> None:
         self.name = name
 
-    def authorize(self, candidate: Candidate, verdict: Verdict, policy: Policy) -> Authorization:
+    def authorize(
+        self, candidate: Candidate, verdict: Verdict, policy: Policy
+    ) -> Authorization:
         return Authorization("approved", self.name, "stamped", policy.policy_id)
 
 
@@ -62,7 +64,9 @@ def cand(name: str, kind: str = "tweak") -> Candidate:
     return Candidate(kind, {"name": name}, "fixed-proposer")
 
 
-POLICY = Policy("test/auto", auto_approve_kinds=frozenset({"tweak"}), min_improvement=0.0)
+POLICY = Policy(
+    "test/auto", auto_approve_kinds=frozenset({"tweak"}), min_improvement=0.0
+)
 
 
 def test_receipt_chain_detects_corruption() -> None:
@@ -86,8 +90,12 @@ def test_receipt_chain_detects_corruption() -> None:
 def test_loop_refuses_broken_chain() -> None:
     log = ReceiptLog()
     log.append("proposed", "c1", {})
-    broken = ReceiptLog([Receipt(0, "proposed", "c1", {}, tuner.GENESIS_HASH, "0" * 64)])
-    loop = Loop(FixedProposer([]), TableEvaluator({}), PolicyAuthorizer(), POLICY, log=broken)
+    broken = ReceiptLog(
+        [Receipt(0, "proposed", "c1", {}, tuner.GENESIS_HASH, "0" * 64)]
+    )
+    loop = Loop(
+        FixedProposer([]), TableEvaluator({}), PolicyAuthorizer(), POLICY, log=broken
+    )
     with pytest.raises(ReceiptChainBroken):
         loop.run_once({}, None)
 
@@ -111,7 +119,9 @@ def test_self_authorization_is_refused() -> None:
         name = "forwarder"
 
         def authorize(self, c: Candidate, v: Verdict, p: Policy) -> Authorization:
-            return Authorization("approved", c.origin, "forwarded to the proposer", p.policy_id)
+            return Authorization(
+                "approved", c.origin, "forwarded to the proposer", p.policy_id
+            )
 
     with pytest.raises(SelfAuthorization):
         authorize(Forwarder(), candidate, verdict, POLICY)
@@ -127,7 +137,12 @@ def test_approval_requires_supported_verdict() -> None:
 
 
 def test_policy_authorizer_rules() -> None:
-    policy = Policy("p", auto_approve_kinds=frozenset({"a"}), human_review_kinds=frozenset({"h"}), min_improvement=0.5)
+    policy = Policy(
+        "p",
+        auto_approve_kinds=frozenset({"a"}),
+        human_review_kinds=frozenset({"h"}),
+        min_improvement=0.5,
+    )
     pa = PolicyAuthorizer()
     good = Verdict("supported", "e", "ok", {"improvement": 0.9})
     assert pa.authorize(Candidate("a", {}, "p1"), good, policy).status == "approved"
@@ -136,13 +151,29 @@ def test_policy_authorizer_rules() -> None:
     weak = Verdict("supported", "e", "ok", {"improvement": 0.1})
     assert pa.authorize(Candidate("a", {}, "p1"), weak, policy).status == "denied"
     missing = Verdict("supported", "e", "ok", {})
-    assert pa.authorize(Candidate("a", {}, "p1"), missing, policy).status == "needs_human"
-    assert pa.authorize(Candidate("a", {}, "p1"), Verdict("refuted", "e", "no"), policy).status == "denied"
-    assert pa.authorize(Candidate("a", {}, "p1"), Verdict("underdetermined", "e", "?"), policy).status == "needs_human"
+    assert (
+        pa.authorize(Candidate("a", {}, "p1"), missing, policy).status == "needs_human"
+    )
+    assert (
+        pa.authorize(
+            Candidate("a", {}, "p1"), Verdict("refuted", "e", "no"), policy
+        ).status
+        == "denied"
+    )
+    assert (
+        pa.authorize(
+            Candidate("a", {}, "p1"), Verdict("underdetermined", "e", "?"), policy
+        ).status
+        == "needs_human"
+    )
 
 
 def test_loop_records_every_step_and_skips_known_mistakes() -> None:
-    table = {"good": ("supported", 0.3), "bad": ("refuted", -0.2), "meh": ("underdetermined", 0.0)}
+    table = {
+        "good": ("supported", 0.3),
+        "bad": ("refuted", -0.2),
+        "meh": ("underdetermined", 0.0),
+    }
     proposer = FixedProposer([cand("good"), cand("bad"), cand("meh")])
     loop = Loop(proposer, TableEvaluator(table), PolicyAuthorizer(), POLICY)
     applied: list[str] = []
@@ -152,15 +183,33 @@ def test_loop_records_every_step_and_skips_known_mistakes() -> None:
         return {"ok": True}
 
     first = loop.run_once({}, None, apply=apply, run_label="r1")
-    assert (first.proposed, first.supported, first.refuted, first.underdetermined) == (3, 1, 1, 1)
-    assert (first.approved, first.denied, first.needs_human, first.applied) == (1, 1, 1, 1)
+    assert (first.proposed, first.supported, first.refuted, first.underdetermined) == (
+        3,
+        1,
+        1,
+        1,
+    )
+    assert (first.approved, first.denied, first.needs_human, first.applied) == (
+        1,
+        1,
+        1,
+        1,
+    )
     assert applied == ["good"]
     assert first.proposal_error_rate == pytest.approx(1 / 3)
     steps = [r.step for r in loop.log]
     assert steps == [
-        "proposed", "evaluated", "authorized", "applied",
-        "proposed", "evaluated", "learned", "authorized",
-        "proposed", "evaluated", "authorized",
+        "proposed",
+        "evaluated",
+        "authorized",
+        "applied",
+        "proposed",
+        "evaluated",
+        "learned",
+        "authorized",
+        "proposed",
+        "evaluated",
+        "authorized",
     ]
     assert loop.log.verify() == -1
 
@@ -168,7 +217,10 @@ def test_loop_records_every_step_and_skips_known_mistakes() -> None:
     assert second.skipped_known_mistakes == 1
     assert second.refuted == 0
     assert [r.step for r in loop.log][11] in ("proposed", "skipped_known_mistake")
-    assert any(r.step == "skipped_known_mistake" and r.candidate_id == cand("bad").candidate_id for r in loop.log)
+    assert any(
+        r.step == "skipped_known_mistake" and r.candidate_id == cand("bad").candidate_id
+        for r in loop.log
+    )
 
     state = replay(loop.log)
     assert state["applied"] == [cand("good").candidate_id] * 2
@@ -178,11 +230,18 @@ def test_loop_records_every_step_and_skips_known_mistakes() -> None:
 
     # memory rebuilt from receipts alone matches the live memory
     rebuilt = learn(ReceiptLog.loads(loop.log.dumps()))
-    assert [m.candidate_id for m in rebuilt.mistakes] == [m.candidate_id for m in loop.memory.mistakes]
+    assert [m.candidate_id for m in rebuilt.mistakes] == [
+        m.candidate_id for m in loop.memory.mistakes
+    ]
 
 
 def test_apply_failure_is_a_receipt_not_a_crash() -> None:
-    loop = Loop(FixedProposer([cand("good")]), TableEvaluator({"good": ("supported", 1.0)}), PolicyAuthorizer(), POLICY)
+    loop = Loop(
+        FixedProposer([cand("good")]),
+        TableEvaluator({"good": ("supported", 1.0)}),
+        PolicyAuthorizer(),
+        POLICY,
+    )
 
     def apply(c: Candidate) -> Mapping[str, Any]:
         raise RuntimeError("store unavailable")
@@ -195,8 +254,15 @@ def test_apply_failure_is_a_receipt_not_a_crash() -> None:
 
 def test_per_run_cap_defers_extra_changes() -> None:
     table = {"a": ("supported", 1.0), "b": ("supported", 1.0)}
-    policy = Policy("cap", auto_approve_kinds=frozenset({"tweak"}), max_applied_per_run=1)
-    loop = Loop(FixedProposer([cand("a"), cand("b")]), TableEvaluator(table), PolicyAuthorizer(), policy)
+    policy = Policy(
+        "cap", auto_approve_kinds=frozenset({"tweak"}), max_applied_per_run=1
+    )
+    loop = Loop(
+        FixedProposer([cand("a"), cand("b")]),
+        TableEvaluator(table),
+        PolicyAuthorizer(),
+        policy,
+    )
     summary = loop.run_once({}, None, apply=lambda c: {})
     assert (summary.applied, summary.deferred) == (1, 1)
     assert loop.log.receipts[-1].step == "deferred"
@@ -227,7 +293,12 @@ def test_demo_is_deterministic() -> None:
 
 
 def test_mutation_corrupted_receipt_hash_is_caught() -> None:
-    loop = Loop(FixedProposer([cand("good")]), TableEvaluator({"good": ("supported", 1.0)}), PolicyAuthorizer(), POLICY)
+    loop = Loop(
+        FixedProposer([cand("good")]),
+        TableEvaluator({"good": ("supported", 1.0)}),
+        PolicyAuthorizer(),
+        POLICY,
+    )
     loop.run_once({}, None)
     receipts = loop.log.to_json()
     receipts[0]["hash"] = receipts[0]["hash"][::-1]
@@ -239,30 +310,55 @@ def test_mutation_corrupted_receipt_hash_is_caught() -> None:
 
 def test_mutation_memory_removed_repeats_the_mistake() -> None:
     table = {"bad": ("refuted", -1.0)}
-    loop = Loop(FixedProposer([cand("bad")]), TableEvaluator(table), PolicyAuthorizer(), POLICY, memory=tuner_demo.NullMemory())
+    loop = Loop(
+        FixedProposer([cand("bad")]),
+        TableEvaluator(table),
+        PolicyAuthorizer(),
+        POLICY,
+        memory=tuner_demo.NullMemory(),
+    )
     loop.run_once({}, None)
     second = loop.run_once({}, None)
-    assert second.refuted == 1 and second.skipped_known_mistakes == 0  # the fault is visible
-    intact = Loop(FixedProposer([cand("bad")]), TableEvaluator(table), PolicyAuthorizer(), POLICY)
+    assert (
+        second.refuted == 1 and second.skipped_known_mistakes == 0
+    )  # the fault is visible
+    intact = Loop(
+        FixedProposer([cand("bad")]), TableEvaluator(table), PolicyAuthorizer(), POLICY
+    )
     intact.run_once({}, None)
-    assert intact.run_once({}, None).skipped_known_mistakes == 1  # the fix restores the skip
+    assert (
+        intact.run_once({}, None).skipped_known_mistakes == 1
+    )  # the fix restores the skip
 
 
 def test_mutation_evaluator_that_never_refutes_is_caught_by_receipt_audit() -> None:
     """Mutate the evaluator to call everything supported. The authorizer then approves bad
-    swaps. The receipt audit (an independent recount from the recorded trace) catches it."""
+    swaps. The receipt audit (an independent recount from the recorded trace) catches it.
+    """
 
     class AlwaysSupported:
         name = "always-supported"
 
         def evaluate(self, candidate: Candidate, history: Any) -> Verdict:
             state: tuner_demo.CacheState = history
-            return Verdict("supported", self.name, "mutated", {"improvement": 1.0, "pinned_before": sorted(state.pinned_at_run_start)})
+            return Verdict(
+                "supported",
+                self.name,
+                "mutated",
+                {
+                    "improvement": 1.0,
+                    "pinned_before": sorted(state.pinned_at_run_start),
+                },
+            )
 
     trace = tuner_demo.zipf_trace(7, runs=8)
     state = tuner_demo.CacheState()
-    policy = Policy("m", auto_approve_kinds=frozenset({"pin", "swap"}), max_applied_per_run=1)
-    loop = Loop(tuner_demo.ToggleProposer(), AlwaysSupported(), PolicyAuthorizer(), policy)
+    policy = Policy(
+        "m", auto_approve_kinds=frozenset({"pin", "swap"}), max_applied_per_run=1
+    )
+    loop = Loop(
+        tuner_demo.ToggleProposer(), AlwaysSupported(), PolicyAuthorizer(), policy
+    )
     for index, segment in enumerate(trace):
         state.pinned_at_run_start = state.pinned
 
@@ -274,6 +370,10 @@ def test_mutation_evaluator_that_never_refutes_is_caught_by_receipt_audit() -> N
         state.last_segment = list(segment)
     mismatches = tuner_demo.verify_receipts(loop.log, trace)
     assert mismatches, "the audit must flag the lying evaluator"
-    assert all(r.step != "learned" for r in loop.log)  # nothing was ever refuted: the tell-tale
+    assert all(
+        r.step != "learned" for r in loop.log
+    )  # nothing was ever refuted: the tell-tale
     honest = tuner_demo.run_demo(seed=7, runs=8)
-    assert tuner_demo.verify_receipts(honest.log, tuner_demo.zipf_trace(7, runs=8)) == []
+    assert (
+        tuner_demo.verify_receipts(honest.log, tuner_demo.zipf_trace(7, runs=8)) == []
+    )
