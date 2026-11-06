@@ -1,0 +1,741 @@
+{
+ "capacity": 4,
+ "keys": 12,
+ "reads_per_run": 600,
+ "replay_of_memory_run": {
+  "applied": [
+   "acdabd341ca4ae85340428a634f1311c4cf9514881d562babc0b719ad284c752",
+   "effc0eefa821481361ef2e643efec67a35f1ef156ffb3b33483859de1589664c",
+   "e47ed9a2a8724129b1e22eafae723cd1813c9dd2f46c990e7fd51fa1728b362d",
+   "5d2fd07c635effa89bce320b6873f5a7d6bcaf9ff7c1bdbd6828ba97cfeb96e2"
+  ],
+  "head": "efda4ec602c9cc3003cd3bf06ef01f78313925d99eea8be025c3ecaca0bfaf78",
+  "mistakes": [
+   {
+    "candidate_id": "e04c1c7002f8f1c7353d418bfacd8d3fc125161e63848240bde5044482ca0316",
+    "evidence": {
+     "improvement": -0.028333333333333332,
+     "misses_after": 200,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -17 reads, below 1%",
+    "receipt_seq": 169
+   },
+   {
+    "candidate_id": "50ca523fd6b5b2019ecb8e86034bbf7a97778f4a19b020e834904cf15f9da14f",
+    "evidence": {
+     "improvement": -0.043333333333333335,
+     "misses_after": 209,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -26 reads, below 1%",
+    "receipt_seq": 173
+   },
+   {
+    "candidate_id": "a3e4027c8dc2075dbdc2592670676b7e98f974c1af5bbb84ca526d13dec90f0b",
+    "evidence": {
+     "improvement": -0.08833333333333333,
+     "misses_after": 236,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -53 reads, below 1%",
+    "receipt_seq": 177
+   },
+   {
+    "candidate_id": "f1b9754f221df51d32fc3b85a802a7a1f3bdfc91de138a3895301dd3f53378d2",
+    "evidence": {
+     "improvement": -0.28833333333333333,
+     "misses_after": 356,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -173 reads, below 1%",
+    "receipt_seq": 181
+   },
+   {
+    "candidate_id": "04fd73adab99d1da86b897105a268359e6f7964ea35d61c5431bf2f106e53f18",
+    "evidence": {
+     "improvement": -0.041666666666666664,
+     "misses_after": 208,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -25 reads, below 1%",
+    "receipt_seq": 185
+   },
+   {
+    "candidate_id": "c62c29c81c4771d4e4bec74b3fd9cb21c442c41ea1f0c09743dd723771a7aa40",
+    "evidence": {
+     "improvement": -0.056666666666666664,
+     "misses_after": 217,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -34 reads, below 1%",
+    "receipt_seq": 189
+   },
+   {
+    "candidate_id": "61a3f25dc1ebc6c71ccdc8cf2eabb3fe2343fe25fbb6464c0a2034008b409ea9",
+    "evidence": {
+     "improvement": -0.10166666666666667,
+     "misses_after": 244,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -61 reads, below 1%",
+    "receipt_seq": 193
+   },
+   {
+    "candidate_id": "6c9433b0119dd4c45057a84a6b08d789e06e6d853d2b004788e084cab62f9be8",
+    "evidence": {
+     "improvement": -0.3016666666666667,
+     "misses_after": 364,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -181 reads, below 1%",
+    "receipt_seq": 197
+   },
+   {
+    "candidate_id": "57ea221f121309d2f579c47ff4fee59afcd2a1faf52b644516dff9babe3dbf95",
+    "evidence": {
+     "improvement": -0.05,
+     "misses_after": 213,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -30 reads, below 1%",
+    "receipt_seq": 201
+   },
+   {
+    "candidate_id": "6312429a77e232b869d8b8a4e76c0f9c7e3ebfe86af7b46d1b24ffa42996a6f4",
+    "evidence": {
+     "improvement": -0.065,
+     "misses_after": 222,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -39 reads, below 1%",
+    "receipt_seq": 205
+   },
+   {
+    "candidate_id": "725d9dc20008afa55c6ad16cbf4869a4d28afe63fe5620fc7856b9b7e09e3226",
+    "evidence": {
+     "improvement": -0.11,
+     "misses_after": 249,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -66 reads, below 1%",
+    "receipt_seq": 209
+   },
+   {
+    "candidate_id": "883d7a85f02487f2846c66e9851d61b6376e3c4b728a4ac07a361e57e510d2fa",
+    "evidence": {
+     "improvement": -0.31,
+     "misses_after": 369,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -186 reads, below 1%",
+    "receipt_seq": 213
+   },
+   {
+    "candidate_id": "82b4d7b6d2f1ad77b0d25950873cc1c98904325d82bb645225bc01ab0d005ad6",
+    "evidence": {
+     "improvement": -0.051666666666666666,
+     "misses_after": 214,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -31 reads, below 1%",
+    "receipt_seq": 217
+   },
+   {
+    "candidate_id": "452dc7538fe7abec88608f77dce2dc6ee8ed78a3cc4ba07c6a7a218da7866306",
+    "evidence": {
+     "improvement": -0.06666666666666667,
+     "misses_after": 223,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -40 reads, below 1%",
+    "receipt_seq": 221
+   },
+   {
+    "candidate_id": "db777643a34b1d979b9883e4a58a9c088a65b3a5d60ea642488c66aeedffd725",
+    "evidence": {
+     "improvement": -0.11166666666666666,
+     "misses_after": 250,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -67 reads, below 1%",
+    "receipt_seq": 225
+   },
+   {
+    "candidate_id": "08dd1b14044bd16838b836c230e2303ea2d42032cfb152255eb4a5696c4fd648",
+    "evidence": {
+     "improvement": -0.31166666666666665,
+     "misses_after": 370,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -187 reads, below 1%",
+    "receipt_seq": 229
+   },
+   {
+    "candidate_id": "3b314e6baa3d58480098b9c14c4d9eca1445c8d265b4926930c5da198ae07d3e",
+    "evidence": {
+     "improvement": -0.05333333333333334,
+     "misses_after": 215,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -32 reads, below 1%",
+    "receipt_seq": 233
+   },
+   {
+    "candidate_id": "fe26edbcdd3e90ca9729206502fa089d5688bc0702255d492f88bccd943eaf57",
+    "evidence": {
+     "improvement": -0.06833333333333333,
+     "misses_after": 224,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -41 reads, below 1%",
+    "receipt_seq": 237
+   },
+   {
+    "candidate_id": "6928a5e83dfdad4ced142791341addbe736ac89e2cffb2790b5452977adb95a0",
+    "evidence": {
+     "improvement": -0.11333333333333333,
+     "misses_after": 251,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -68 reads, below 1%",
+    "receipt_seq": 241
+   },
+   {
+    "candidate_id": "e79c6fb882d58e19da53a15c5be95c1ac317d8b2d66871f7cb0ab1e4c570d1c0",
+    "evidence": {
+     "improvement": -0.31333333333333335,
+     "misses_after": 371,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -188 reads, below 1%",
+    "receipt_seq": 245
+   },
+   {
+    "candidate_id": "9e83c3471dc3384d59889bf191df318a57ee2cecf631957aa8ff920e27301231",
+    "evidence": {
+     "improvement": -0.058333333333333334,
+     "misses_after": 218,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -35 reads, below 1%",
+    "receipt_seq": 249
+   },
+   {
+    "candidate_id": "92c4bd99d2986e45292566df989cd26a4cd63df60b6b760b98c4388eb897178b",
+    "evidence": {
+     "improvement": -0.07333333333333333,
+     "misses_after": 227,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -44 reads, below 1%",
+    "receipt_seq": 253
+   },
+   {
+    "candidate_id": "08d153cf455192af6b9ae4506ffb4abe229e7a228e3306424f93334e7f9861ea",
+    "evidence": {
+     "improvement": -0.11833333333333333,
+     "misses_after": 254,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -71 reads, below 1%",
+    "receipt_seq": 257
+   },
+   {
+    "candidate_id": "fb2e31dc4931d6c9e86230a39d35ab2ed81bc96c4e24a0b4dcc21e441e2e3bf9",
+    "evidence": {
+     "improvement": -0.31833333333333336,
+     "misses_after": 374,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -191 reads, below 1%",
+    "receipt_seq": 261
+   },
+   {
+    "candidate_id": "a7765cf5d0e1fef9bdea02dc6cab4057953cbcc6d1ef11fdb834c105dfcd88d6",
+    "evidence": {
+     "improvement": -0.06,
+     "misses_after": 219,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -36 reads, below 1%",
+    "receipt_seq": 265
+   },
+   {
+    "candidate_id": "008bf0b1cc8cc9e6b72352d1defa225251efb23d2959dea1f8331e68ec4ea154",
+    "evidence": {
+     "improvement": -0.075,
+     "misses_after": 228,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -45 reads, below 1%",
+    "receipt_seq": 269
+   },
+   {
+    "candidate_id": "5b55add2aa5c4538fd333ddce4ec8e1637818f6a2bab0da73ef98dd6d70a1d4c",
+    "evidence": {
+     "improvement": -0.12,
+     "misses_after": 255,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -72 reads, below 1%",
+    "receipt_seq": 273
+   },
+   {
+    "candidate_id": "570cee7ccff52c5a469da9953609379fbf6e96fe5f502416dac9733ebe56f2fa",
+    "evidence": {
+     "improvement": -0.32,
+     "misses_after": 375,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -192 reads, below 1%",
+    "receipt_seq": 277
+   },
+   {
+    "candidate_id": "b798bcabf48b7f4c659745edd2cc6f0a3a6475a8fbb5cf6e96342d2e62925e33",
+    "evidence": {
+     "improvement": -0.07166666666666667,
+     "misses_after": 226,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -43 reads, below 1%",
+    "receipt_seq": 281
+   },
+   {
+    "candidate_id": "ebef5d8acfec19e6da660f7a09fac2a238d5cf68baeef74f8d506ff3bb7bf6aa",
+    "evidence": {
+     "improvement": -0.08666666666666667,
+     "misses_after": 235,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -52 reads, below 1%",
+    "receipt_seq": 285
+   },
+   {
+    "candidate_id": "241deaa765e051ce2c961e5ec2bb24b5fcd325b77669d450f8582350428aaaf9",
+    "evidence": {
+     "improvement": -0.13166666666666665,
+     "misses_after": 262,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -79 reads, below 1%",
+    "receipt_seq": 289
+   },
+   {
+    "candidate_id": "17f415a3b3cd65ebd52e6ed95c1a49080cbad330ae5f340304af6d88f9706bfa",
+    "evidence": {
+     "improvement": -0.33166666666666667,
+     "misses_after": 382,
+     "misses_before": 183,
+     "pinned_before": [
+      3,
+      7,
+      10,
+      11
+     ],
+     "reads": 600
+    },
+    "kind": "swap",
+    "reason": "saves -199 reads, below 1%",
+    "receipt_seq": 293
+   }
+  ],
+  "pending_human": [],
+  "receipts": 360
+ },
+ "results": [
+  {
+   "applied": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "apply_failed": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "chain_intact": true,
+   "final_pinned": [
+    3,
+    7,
+    10,
+    11
+   ],
+   "label": "with memory",
+   "proposal_error": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0
+   ],
+   "proposals": [
+    0,
+    12,
+    11,
+    10,
+    9,
+    32,
+    32,
+    32
+   ],
+   "receipt_head": "efda4ec602c9cc3003cd3bf06ef01f78313925d99eea8be025c3ecaca0bfaf78",
+   "receipts": 360,
+   "skipped_known_mistakes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    32,
+    32
+   ],
+   "task_error": [
+    1.0,
+    0.6433333333333333,
+    0.49333333333333335,
+    0.37,
+    0.305,
+    0.2866666666666667,
+    0.31666666666666665,
+    0.32166666666666666
+   ]
+  },
+  {
+   "applied": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "apply_failed": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "chain_intact": true,
+   "final_pinned": [
+    3,
+    7,
+    10,
+    11
+   ],
+   "label": "no memory",
+   "proposal_error": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "proposals": [
+    0,
+    12,
+    11,
+    10,
+    9,
+    32,
+    32,
+    32
+   ],
+   "receipt_head": "23c950855285f243e8d008fc35528d503c1bb8e769602c493fb0d6fdb30071b3",
+   "receipts": 552,
+   "skipped_known_mistakes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "task_error": [
+    1.0,
+    0.6433333333333333,
+    0.49333333333333335,
+    0.37,
+    0.305,
+    0.2866666666666667,
+    0.31666666666666665,
+    0.32166666666666666
+   ]
+  }
+ ],
+ "seed": 7
+}
